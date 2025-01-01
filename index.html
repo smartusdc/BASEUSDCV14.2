@@ -789,6 +789,7 @@ function formatNumber(number, decimals = 6) {
             userAddress = null;
             document.getElementById('connectWallet').textContent = 'Connect Wallet';
             document.getElementById('mainContent').style.display = 'none';
+              document.getElementById('landingContent').style.display = 'block'; // 追加
             updateNetworkStatus(false);
             showDebugInfo('Wallet disconnected');
         } else if (accounts[0] !== userAddress) {
@@ -803,9 +804,11 @@ function formatNumber(number, decimals = 6) {
         if (chainId !== BASE_CHAIN_ID) {
             showAlert('Please switch to BASE Network', 'error');
             document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('landingContent').style.display = 'block'; // 追加
             updateNetworkStatus(false);
         } else {
             document.getElementById('mainContent').style.display = 'block';
+              document.getElementById('landingContent').style.display = 'none'; // 追加
             updateNetworkStatus(true);
             updateUI();
         }
@@ -871,12 +874,13 @@ function formatNumber(number, decimals = 6) {
         }
     }
 
-    function onConnect() {
-        document.getElementById('connectWallet').textContent = 
-            `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
-        document.getElementById('mainContent').style.display = 'block';
-        updateUI();
-    }
+ function onConnect() {
+    document.getElementById('connectWallet').textContent = 
+        `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+    document.getElementById('mainContent').style.display = 'block';
+    document.getElementById('landingContent').style.display = 'none'; // 追加
+    updateUI();
+}
 
   async function updateUI() {
     if (!userAddress) return;
