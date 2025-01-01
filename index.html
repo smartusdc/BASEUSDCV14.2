@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BASEUSDC.COM - Earn High Yields with USDC on Base Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+    <style>
+        /* ベーススタイル */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* ヘッダー */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            color: #1a237e;
+            margin: 0;
+        }
+
+        /* ボタンスタイル */
+        .button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .button:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* ヒーローセクション */
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .hero-title {
+            font-size: 2.5em;
+            color: #1a237e;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            color: #424242;
+            margin-bottom: 30px;
+        }
+
+        /* プラットフォーム情報カード */
+        .platform-info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-item {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        /* ステップセクション */
+        .steps-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .step-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            background: #2196F3;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* 特徴セクション */
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h3 {
+            color: #1a237e;
+            margin-bottom: 15px;
+        }
+
+        /* FAQ セクション */
+        .faq-section {
+            margin: 40px 0;
+        }
+
+        .faq-item {
+            background: white;
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: #2196F3;
+        }
+
+        .faq-item.active .faq-question::after {
+            content: '-';
+        }
+
+        .faq-answer {
+            display: none;
+            color: #666;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* コンテンツクリエイターセクション */
+        .creators-section {
+            padding: 40px 0;
+            margin: 40px 0;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .creators-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a237e;
+        }
+
+        .creators-empty-state {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .creators-empty-state p {
+            margin: 15px 0;
+        }
+
+        .creators-empty-state ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .creators-empty-state li {
+            margin: 10px 0;
+            color: #2196F3;
+        }
+
+        /* フッター */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+
+        .footer-link {
+            color: #2196F3;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #1976D2;
+        }
+
+        /* 既存の機能用スタイル */
+        #mainContent {
+            display: none;
+        }
+
+        .network-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .network-status.wrong {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .network-status.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* アラートとローディング */
+        .alert {
+            padding: 14px;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: none;
+        }
+
+        .alert.success {
+            background: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+
+        .alert.error {
+            background: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero-title {
+                font-size: 2em;
+            }
+
+            .info-item {
+                min-width: 150px;
+            }
+
+            .step-card {
+                margin-top: 20px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <h1>BASEUSDC.COM</h1>
+            <div style="display: flex; align-items: center;">
+                <span id="networkStatus" class="network-status"></span>
+                <button id="connectWallet" class="button">Connect Wallet</button>
+            </div>
+        </div>
+
+        <!-- アラートとローディング -->
+        <div id="alert" class="alert"></div>
+        <div id="loading" class="loading">Processing transaction...</div>
+
+        <!-- ランディングページコンテンツ -->
+        <div id="landingContent">
+            <!-- ヒーローセクション -->
+            <div class="hero-section">
+                <h2 class="hero-title">Earn High Yields with USDC on Base Network</h2>
+                <p class="hero-subtitle">Safe, Simple, and Rewarding Staking Platform backed by Coinbase</p>
+                <div class="platform-info-card">
+                    <div class="info-item">
+                        <span class="info-label">Current APR</span>
+                        <span class="info-value"><span id="currentAPR">0</span>%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Referrer Reward</span>
+                        <span class="info-value"><span id="referrerReward">0</span>%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Referred Reward</span>
+                        <span class="info-value"><span id="referredReward">0</span>%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ステップセクション -->
+            <div class="steps-section">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Create Coinbase Account</h3>
+                    <p>Start by creating a Coinbase account to purchase USDC. This is your gateway to cryptocurrency.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Setup Wallet</h3>
+                    <p>Install MetaMask and purchase USDC from Coinbase. Transfer USDC to your MetaMask wallet.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Connect to BASE</h3>
+                    <p>Switch to BASE Network using MetaMask. BASE is Coinbase's secure and efficient network.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Start Staking</h3>
+                    <p>Connect wallet and start earning rewards. You can start with as little as $1 USDC.</p>
+                </div>
+            </div>
+
+            <!-- 特徴セクション -->
+            <div class="features-section">
+                <div class="feature-card">
+                    <h3>Security First</h3>
+                    <p>Built on Coinbase's BASE Network, ensuring maximum security for your assets.</p>
+                    <p>Transparent smart contracts that anyone can verify.</p>
+                    <p>Free withdrawals available anytime without restrictions.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>High Yields</h3>
+                    <p>Competitive APR rates that maximize your USDC earnings.</p>
+                    <p>Additional referral rewards for community growth.</p>
+                    <p>Future platform token rewards for early adopters.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Easy to Start</h3>
+                    <p>Begin with just $1 USDC to test the platform.</p>
+                    <p>User-friendly interface for seamless staking.</p>
+                    <p>Instant reward tracking and calculations.</p>
+                </div>
+            </div>
+
+            <!-- FAQ セクション -->
+            <div class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <div class="faq-question">How safe is my investment?</div>
+                    <div class="faq-answer">
+                        Your funds are secured by smart contracts on the BASE Network, operated by Coinbase. All contracts are public and verifiable, ensuring complete transparency. We utilize only proven yield strategies to maintain security.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What are the platform tokens?</div>
+                    <div class="faq-answer">
+                        Early users of BASEUSDC.COM will receive platform tokens as a reward for their early support. These tokens will provide governance rights and additional benefits in the ecosystem. The earlier you join, the more tokens you can earn.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Can I withdraw anytime?</div>
+                    <div class="faq-answer">
+                        Yes, you can withdraw your funds at any time without any restrictions or fees. Your funds remain under your control, and withdrawals are processed immediately through our smart contracts.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">How does the referral program work?</div>
+                    <div class="faq-answer">
+                        Share your referral code with others, and both you and your referrals earn extra rewards. You'll earn additional APR on referral's stakes, while they get a bonus APR too. It's a win-win situation that rewards community growth.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What's the minimum stake amount?</div>
+                    <div class="faq-answer">
+                        You can start with as little as $1 USDC. We recommend starting small to get familiar with the platform, then increasing your stake as you become more comfortable.
+                    </div>
+                </div>
+            </div>
+
+            <!-- コンテンツクリエイターセクション -->
+            <div class="creators-section">
+                <h2>Featured Content Creators</h2>
+                <div class="creators-empty-state">
+                    <p>Are you a content creator? Create a video or article about BASEUSDC.COM and get featured here!</p>
+                    <p>Benefits of being featured:</p>
+                    <ul>
+                        <li>Direct exposure to our growing user base</li>
+                        <li>Permanent backlink to your content</li>
+                        <li>Special referral tracking</li>
+                        <li>Priority support and early access to new features</li>
+                        <li>Opportunity to be highlighted as a trusted community voice</li>
+                    </ul>
+                    <p>Contact us through our form to get your content featured. Quality content that helps users understand our platform will be prioritized for featuring.</p>
+                </div>
+            </div>
+
+            <!-- フッター -->
+            <div class="footer-links">
+                <a href="https://discord.gg/yourserver" class="footer-link" target="_blank">Join Discord</a>
+                <a href="#" class="footer-link" target="_blank">Contact Us</a>
+            </div>
+        </div>
+
+        <!-- 既存の機能用コンテンツ -->
+        <div id="mainContent">
+            <!-- この部分は既存コードをそのまま使用 -->
+        </div>
+    </div>
+
+    <script>
+        // 既存のJavaScript部分はそのまま使用し、以下の機能のみ追加
+
+        // FAQ機能の追加
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
+        // ウォレット接続時の表示切替を拡張
+        const originalOnConnect = window.onConnect || function() {};
+        window.onConnect = function() {
+            originalOnConnect.apply(this, arguments);
+            document.getElementById('landingContent').style.display = 'none';
+        };
+
+        // アカウント切断時の表示切替を拡張
+        const originalHandleAccountsChanged = window.handleAccountsChanged || function() {};
+        window.handleAccountsChanged = function(accounts) {
+            originalHandleAccountsChanged.apply(this, arguments);
+            if (accounts.length === 0) {
+                document.getElementById('landingContent').style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
