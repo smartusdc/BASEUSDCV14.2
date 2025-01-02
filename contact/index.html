@@ -4,90 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - BASEUSDC</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #374151;
+            font-size: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2563eb;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
         @media (max-width: 640px) {
-            input, select, textarea {
-                font-size: 16px !important; /* iOSでズームを防ぐ */
+            .container {
+                padding: 20px;
             }
-        }
-        .form-input {
-            transition: all 0.2s ease;
-        }
-        .form-input:focus {
-            transform: translateY(-1px);
-        }
-        .submit-button {
-            transition: all 0.2s ease;
-        }
-        .submit-button:active {
-            transform: translateY(1px);
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
+            body {
+                padding: 10px;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-6 sm:py-12">
-    <div class="max-w-lg mx-auto">
-        <div class="card rounded-xl shadow-lg p-6 sm:p-8">
-            <!-- Header -->
-            <div class="text-center mb-6">
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Contact Us</h1>
-                <p class="text-gray-600 text-sm sm:text-base mt-2">Questions? We're here to help.</p>
+<body>
+    <div class="container">
+        <h1>Contact Us</h1>
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
             </div>
 
-            <!-- Form -->
-            <form id="contactForm" class="space-y-5">
-                <!-- Name Input -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Name</label>
-                    <input type="text" id="name" required 
-                           class="form-input block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2.5">
-                </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" required>
+                    <option value="">Select a subject</option>
+                    <option value="General">General Inquiry</option>
+                    <option value="Technical">Technical Support</option>
+                    <option value="Investment">Investment Questions</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
 
-                <!-- Subject Selection -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
-                    <div class="relative">
-                        <select id="subject" required 
-                                class="form-input block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2.5 appearance-none">
-                            <option value="">Select a subject</option>
-                            <option value="General">General Inquiry</option>
-                            <option value="Technical">Technical Support</option>
-                            <option value="Investment">Investment Questions</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" required></textarea>
+            </div>
 
-                <!-- Message Input -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Message</label>
-                    <textarea id="message" required rows="4"
-                            class="form-input block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent px-3 py-2.5"></textarea>
-                </div>
+            <button type="submit">Send Message</button>
+        </form>
 
-                <!-- Submit Button -->
-                <button type="submit" 
-                        class="submit-button mt-3 w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Send Message
-                </button>
-            </form>
-
-            <!-- Footer -->
-            <p class="text-center text-sm text-gray-500 mt-6">
-                Or email us directly at<br class="sm:hidden">
-                <a href="#" class="text-blue-600 hover:text-blue-800 ml-1" id="emailLink">
-                    contact@baseusdc.com
-                </a>
-            </p>
+        <div class="footer">
+            Or email us directly at 
+            <a href="#" id="emailLink">contact@baseusdc.com</a>
         </div>
     </div>
 
