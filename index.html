@@ -513,22 +513,26 @@
                     <p>Referral Rewards: <span id="referralRewards">0</span> USDC</p>
                 </div>
             </div>
-
             <div class="card">
-                <h3>Stake USDC</h3>
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <input type="number" id="stakeAmount" class="with-max" placeholder="Amount" step="0.01" min="0.01">
-                        <button class="max-button" id="maxStakeButton">MAX</button>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="number" id="referralCode" placeholder="Referral Code (Optional)">
-                        <span id="referralStatus" class="referral-status"></span>
-                    </div>
-                    <button id="approveButton" class="button" style="display: none;">Approve USDC</button>
-                    <button id="stakeButton" class="button">Stake</button>
-                </div>
-            </div>
+    <h3>Apply Referral Code</h3>
+    <div class="input-group">
+        <div class="input-wrapper">
+            <input type="number" id="applyReferralCode" placeholder="Enter Referral Code">
+        </div>
+        <button id="applyReferralButton" class="button">Apply Referral</button>
+    </div>
+</div>
+
+ <div class="card">
+    <h3>Stake USDC</h3>
+    <div class="input-group">
+        <div class="input-wrapper">
+            <input type="number" id="stakeAmount" class="with-max" placeholder="Amount" step="0.01" min="0.01">
+            <button class="max-button" id="maxStakeButton">MAX</button>
+        </div>
+        <button id="stakeButton" class="button">Stake USDC</button>
+    </div>
+</div>
 
             <div class="card">
                 <h3>Manage Stake</h3>
