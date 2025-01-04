@@ -1203,6 +1203,7 @@ function formatNumber(number, decimals = 6) {
             const existingCode = await contract.methods.userToReferralCode(userAddress).call();
             if (existingCode !== '0') {
                 document.getElementById('yourReferralCode').textContent = existingCode;
+                generateButton.style.display = 'none'; 
                 showAlert('You already have a referral code', 'success');
                 showDebugInfo('User already has referral code: ' + existingCode);
                 return;
@@ -1218,6 +1219,7 @@ function formatNumber(number, decimals = 6) {
             if (event) {
                 const generatedCode = event.returnValues.referralCode;
                 document.getElementById('yourReferralCode').textContent = generatedCode;
+                generateButton.style.display = 'none'; 
                 showAlert('Referral code generated successfully', 'success');
                 showDebugInfo('Generated referral code: ' + generatedCode);
             }
