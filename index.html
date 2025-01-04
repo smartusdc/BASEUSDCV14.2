@@ -802,15 +802,15 @@ function formatNumber(number, decimals = 6) {
                 
                 await updatePlatformInfo();
                 
-                document.getElementById('connectWallet').addEventListener('click', connectWallet);
-                document.getElementById('approveButton').addEventListener('click', approveUSDC);
-                document.getElementById('stakeButton').addEventListener('click', stake);
-                document.getElementById('withdrawButton').addEventListener('click', withdraw);
-                document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
-                document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
-                document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
-                document.getElementById('stakeAmount').addEventListener('input', checkAllowance);
-                document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
+         // initWeb3 関数内のイベントリスナー設定部分を以下のように変更
+document.getElementById('connectWallet').addEventListener('click', connectWallet);
+document.getElementById('stakeButton').addEventListener('click', stake);
+document.getElementById('withdrawButton').addEventListener('click', withdraw);
+document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
+document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
+document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
+document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
+document.getElementById('applyReferralButton').addEventListener('click', applyReferral);
 
                 setInterval(updatePlatformInfo, 15 * 60 * 1000);
 
