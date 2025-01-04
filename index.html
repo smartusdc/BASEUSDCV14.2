@@ -1190,7 +1190,7 @@ function formatNumber(number, decimals = 6) {
     }
 }
 
-    async function generateReferralCode() {
+  async function generateReferralCode() {
         if (!userAddress) {
             showAlert('Please connect your wallet first', 'error');
             return;
@@ -1200,6 +1200,7 @@ function formatNumber(number, decimals = 6) {
             showLoading(true);
             showDebugInfo('Attempting to generate referral code');
 
+            const generateButton = document.getElementById('generateReferralCode');
             const existingCode = await contract.methods.userToReferralCode(userAddress).call();
             if (existingCode !== '0') {
                 document.getElementById('yourReferralCode').textContent = existingCode;
