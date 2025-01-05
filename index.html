@@ -1022,18 +1022,15 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
             contract.methods.userToReferrer(userAddress).call()
         ]);
 
-        const referralInput = document.getElementById('referralCode');
-        const referralStatus = document.getElementById('referralStatus');
-
-        if (referrer !== '0x0000000000000000000000000000000000000000') {
-            referralInput.style.display = 'none';
-            referralStatus.textContent = '✓ Referral Applied';
-            referralStatus.classList.add('active');
-        } else {
-            referralInput.style.display = 'block';
-            referralStatus.textContent = '';
-            referralStatus.classList.remove('active');
-        }
+// This section in updateUI should be replaced with:
+if (referrer !== '0x0000000000000000000000000000000000000000') {
+    document.getElementById('applyReferralCode').disabled = true;
+    document.getElementById('applyReferralButton').disabled = true;
+    showDebugInfo('User already has a referrer');
+} else {
+    document.getElementById('applyReferralCode').disabled = false;
+    document.getElementById('applyReferralButton').disabled = false;
+}
 
 
     } catch (error) {
