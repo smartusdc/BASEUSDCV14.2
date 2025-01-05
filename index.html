@@ -1238,6 +1238,7 @@ async function claimReferralRewards() {
         const tx = await contract.methods.claimReferralReward()
             .send({ 
                 from: userAddress,
+                gas: Math.floor(await contract.methods.claimReferralReward().estimateGas({from: userAddress}) * 1.2),
                 gasPrice: await getOptimalGasPrice()
             });
         showAlert('Referral rewards claimed successfully', 'success');
