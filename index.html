@@ -1047,53 +1047,61 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
 }
 
 
-    async function stake() {
-        if (!userAddress) return;
-        
-        const amount = document.getElementById('stakeAmount').value;
-        
-        if (!amount || amount <= 0) {
-            showAlert('Please enter a valid amount', 'error');
-            return;
-        }
-
-        try {
-            showLoading(true);
-            const amountWei = web3.utils.toWei(amount, 'mwei');
-            showDebugInfo('Attempting to stake: ' + amount + ' USDC');
-
-            const allowance = await usdcContract.methods.allowance(userAddress, CONTRACT_ADDRESS).call();
-            if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
-                showAlert('Please approve USDC first', 'error');
-                document.getElementById('approveButton').style.display = 'inline-block';
-                return;
-            }
-
-            const referralCode = document.getElementById('referralCode').value || '0';
-
-            const tx = await contract.methods.depositFunds(amountWei, referralCode)
-                .send({ 
-                    from: userAddress,
-                    gasPrice: await web3.eth.getGasPrice()
-                });
-            showAlert('Staking successful', 'success');
-            showDebugInfo('Stake transaction: ' + tx.transactionHash);
-            updateUI();
-        } catch (error) {
-            console.error('Staking error:', error);
-            let errorMessage = error.message;
-            if (error.message.includes('paused')) {
-                errorMessage = 'Staking is currently paused';
-            } else if (error.message.includes('amount too low')) {
-                errorMessage = 'Deposit amount is below minimum requirement';
-            }
-            showAlert('Failed to stake: ' + errorMessage, 'error');
-            showDebugInfo('Stake error: ' + errorMessage);
-        } finally {
-            showLoading(false);
-        }
+async function stake() {
+    if (!userAddress) return;
+    
+    const amount = document.getElementById('stakeAmount').value;
+    if (!amount || amount <= 0) {
+        showAlert('Please enter a valid amount', 'error');
+        return;
     }
 
+    try {
+        showLoading(true);
+        const amountWei = web3.utils.toWei(amount, 'mwei');
+        showDebugInfo('Attempting to stake: ' + amount + ' USDC');
+
+        // 承認状態の確認と承認処理
+        const allowance = await usdcContract.methods.allowance(userAddress, CONTRACT_ADDRESS).call();
+        if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+            showDebugInfo('Approval required. Processing approval...');
+            showAlert('Approving USDC...', 'info');
+            
+            try {
+                const approveTx = await usdcContract.methods.approve(CONTRACT_ADDRESS, amountWei)
+                    .send({ 
+                        from: userAddress,
+                        gasPrice: await web3.eth.getGasPrice()
+                    });
+                showDebugInfo('Approval successful: ' + approveTx.transactionHash);
+            } catch (approvalError) {
+                throw new Error('Failed to approve USDC: ' + approvalError.message);
+            }
+        }
+
+        // ステーク処理
+        const tx = await contract.methods.depositFunds(amountWei, '0')
+            .send({ 
+                from: userAddress,
+                gasPrice: await web3.eth.getGasPrice()
+            });
+        showAlert('Staking successful', 'success');
+        showDebugInfo('Stake transaction: ' + tx.transactionHash);
+        updateUI();
+    } catch (error) {
+        console.error('Transaction error:', error);
+        let errorMessage = error.message;
+        if (error.message.includes('paused')) {
+            errorMessage = 'Staking is currently paused';
+        } else if (error.message.includes('amount too low')) {
+            errorMessage = 'Deposit amount is below minimum requirement';
+        }
+        showAlert('Failed to stake: ' + errorMessage, 'error');
+        showDebugInfo('Stake error: ' + errorMessage);
+    } finally {
+        showLoading(false);
+    }
+}
     async function withdraw() {
         if (!userAddress) return;
         
