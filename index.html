@@ -1035,7 +1035,6 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
             referralStatus.classList.remove('active');
         }
 
-        await checkAllowance();
 
     } catch (error) {
         console.error('Error updating UI:', error);
@@ -1259,8 +1258,7 @@ async function stake() {
             const maxAmount = web3.utils.fromWei(balance, 'mwei');
             document.getElementById('stakeAmount').value = maxAmount;
             
-            // 既存のallowanceチェックをトリガー
-            checkAllowance();
+  
         } catch (error) {
             console.error('Error setting max amount:', error);
             showDebugInfo('Error setting max amount: ' + error.message);
