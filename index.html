@@ -1028,13 +1028,13 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
         ]);
 
 // This section in updateUI should be replaced with:
+const referralCard = document.getElementById('applyReferralCode').closest('.card');
 if (referrer !== '0x0000000000000000000000000000000000000000') {
-    document.getElementById('applyReferralCode').disabled = true;
-    document.getElementById('applyReferralButton').disabled = true;
-    showDebugInfo('User already has a referrer');
+    referralCard.style.display = 'none';
+    showDebugInfo('User already has a referrer - hiding referral input section');
 } else {
-    document.getElementById('applyReferralCode').disabled = false;
-    document.getElementById('applyReferralButton').disabled = false;
+    referralCard.style.display = 'block';
+    showDebugInfo('User has no referrer - showing referral input section');
 }
 
 
