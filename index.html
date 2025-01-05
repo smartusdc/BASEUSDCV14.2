@@ -1250,6 +1250,43 @@ async function stake() {
         }
     }
 
+        async function applyReferral() {
+    if (!userAddress) return;
+    
+    const referralCode = document.getElementById('applyReferralCode').value;
+    if (!referralCode) {
+        showAlert('Please enter a valid referral code', 'error');
+        return;
+    }
+
+    try {
+        showLoading(true);
+        showDebugInfo('Attempting to apply referral code: ' + referralCode);
+
+        const tx = await contract.methods.processReferral(referralCode)
+            .send({ 
+                from: userAddress,
+                gasPrice: await web3.eth.getGasPrice()
+            });
+            
+        showAlert('Referral code applied successfully', 'success');
+        showDebugInfo('Referral transaction: ' + tx.transactionHash);
+        updateUI();
+    } catch (error) {
+        console.error('Referral error:', error);
+        let errorMessage = error.message;
+        if (error.message.includes('Already has referrer')) {
+            errorMessage = 'You already have a referrer';
+        } else if (error.message.includes('Must have active deposit')) {
+            errorMessage = 'You need to make a deposit first';
+        }
+        showAlert('Failed to apply referral: ' + errorMessage, 'error');
+        showDebugInfo('Referral error: ' + error.message);
+    } finally {
+        showLoading(false);
+    }
+}
+
     async function setMaxStakeAmount() {
         if (!userAddress) return;
         
