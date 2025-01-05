@@ -836,19 +836,6 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
         }
     }
 
-    async function checkAllowance() {
-        if (!userAddress) return;
-        
-        const amount = document.getElementById('stakeAmount').value;
-        if (amount) {
-            const amountWei = web3.utils.toWei(amount, 'mwei');
-            const allowance = await usdcContract.methods.allowance(userAddress, CONTRACT_ADDRESS).call();
-            document.getElementById('approveButton').style.display = 
-                web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei)) ? 'inline-block' : 'none';
-        } else {
-            document.getElementById('approveButton').style.display = 'none';
-        }
-    }
 
     async function connectWallet() {
         if (!window.ethereum) {
@@ -1058,36 +1045,7 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
         showLoading(false);
     }
 }
-    async function approveUSDC() {
-        if (!userAddress) return;
-        
-        const amount = document.getElementById('stakeAmount').value;
-        if (!amount || amount <= 0) {
-            showAlert('Please enter a valid amount', 'error');
-            return;
-        }
-        
-        try {
-            showLoading(true);
-            const amountWei = web3.utils.toWei(amount, 'mwei');
-            showDebugInfo('Approving amount: ' + amount + ' USDC');
 
-            const tx = await usdcContract.methods.approve(CONTRACT_ADDRESS, amountWei)
-                .send({ 
-                    from: userAddress,
-                    gasPrice: await web3.eth.getGasPrice()
-                });
-            showAlert('USDC approved successfully', 'success');
-            showDebugInfo('Approval transaction: ' + tx.transactionHash);
-            document.getElementById('approveButton').style.display = 'none';
-        } catch (error) {
-            console.error('Approval error:', error);
-            showAlert('Failed to approve: ' + error.message, 'error');
-            showDebugInfo('Approval error: ' + error.message);
-        } finally {
-            showLoading(false);
-        }
-    }
 
     async function stake() {
         if (!userAddress) return;
