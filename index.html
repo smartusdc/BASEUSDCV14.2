@@ -559,7 +559,12 @@ const CONTRACT_ADDRESS = '0xc6970dd77117906593937642206F22B15fbc0c02';
     const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
     const BASE_CHAIN_ID = '0x2105';
     const DEBUG_MODE = true;
-    
+
+        async function getOptimalGasPrice() {
+    const currentGasPrice = await getOptimalGasPrice();
+    return Math.floor(currentGasPrice * 1.85).toString(); // 85%バッファー
+}
+        
     // Global Variables
     let web3;
     let contract;
@@ -1067,7 +1072,7 @@ async function stake() {
                 const approveTx = await usdcContract.methods.approve(CONTRACT_ADDRESS, amountWei)
                     .send({ 
                         from: userAddress,
-                        gasPrice: await web3.eth.getGasPrice()
+                        gasPrice: await getOptimalGasPrice()
                     });
                 showDebugInfo('Approval successful: ' + approveTx.transactionHash);
             } catch (approvalError) {
@@ -1079,7 +1084,7 @@ async function stake() {
         const tx = await contract.methods.depositFunds(amountWei, '0')
             .send({ 
                 from: userAddress,
-                gasPrice: await web3.eth.getGasPrice()
+                gasPrice: await getOptimalGasPrice()
             });
         showAlert('Staking successful', 'success');
         showDebugInfo('Stake transaction: ' + tx.transactionHash);
@@ -1115,7 +1120,7 @@ async function stake() {
             const tx = await contract.methods.withdraw(amountWei)
                 .send({ 
                     from: userAddress,
-                    gasPrice: await web3.eth.getGasPrice()
+                    gasPrice: await getOptimalGasPrice()
                 });
             showAlert('Withdrawal successful', 'success');
             showDebugInfo('Withdrawal transaction: ' + tx.transactionHash);
@@ -1154,7 +1159,7 @@ async function stake() {
             .send({ 
                 from: userAddress,
                 gas: Math.floor(gasEstimate * 1.2), // 20%のバッファを追加
-                gasPrice: await web3.eth.getGasPrice()
+                gasPrice: await getOptimalGasPrice()
             });
             
         showAlert('Rewards claimed successfully', 'success');
@@ -1201,7 +1206,7 @@ async function stake() {
             const tx = await contract.methods.generateReferralCode()
                 .send({ 
                     from: userAddress,
-                    gasPrice: await web3.eth.getGasPrice()
+                    gasPrice: await getOptimalGasPrice()
                 });
 
             const event = tx.events.ReferralCodeCreated;
@@ -1233,7 +1238,7 @@ async function stake() {
             const tx = await contract.methods.claimReferralReward()
                 .send({ 
                     from: userAddress,
-                    gasPrice: await web3.eth.getGasPrice()
+                    gasPrice: await getOptimalGasPrice()
                 });
             showAlert('Referral rewards claimed successfully', 'success');
             showDebugInfo('Claim referral rewards transaction: ' + tx.transactionHash);
@@ -1263,7 +1268,7 @@ async function stake() {
         const tx = await contract.methods.processReferral(referralCode)
             .send({ 
                 from: userAddress,
-                gasPrice: await web3.eth.getGasPrice()
+                gasPrice: await getOptimalGasPrice()
             });
             
         showAlert('Referral code applied successfully', 'success');
