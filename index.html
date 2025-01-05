@@ -561,7 +561,7 @@ const CONTRACT_ADDRESS = '0xc6970dd77117906593937642206F22B15fbc0c02';
     const DEBUG_MODE = true;
 
         async function getOptimalGasPrice() {
-    const currentGasPrice = await getOptimalGasPrice();
+    const currentGasPrice = await web3.eth.getGasPrice();
     return Math.floor(currentGasPrice * 1.85).toString(); // 85%バッファー
 }
         
