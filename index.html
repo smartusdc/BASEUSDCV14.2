@@ -1108,6 +1108,16 @@ async function stake() {
             return;
         }
 
+        // Get current staked amount first
+            const userInfo = await contract.methods.getUserInfo(userAddress).call();
+            const stakedAmount = web3.utils.fromWei(userInfo[0], 'mwei');
+            
+            // Validate withdrawal amount against staked balance
+            if (parseFloat(amount) > parseFloat(stakedAmount)) {
+                showAlert(`Cannot withdraw more than your staked balance of ${stakedAmount} USDC`, 'error');
+                return;
+            }
+
         try {
             showLoading(true);
             const amountWei = web3.utils.toWei(amount, 'mwei');
