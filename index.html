@@ -1225,26 +1225,41 @@ async function stake() {
     }
 
 async function claimReferralRewards() {
-    if (!userAddress) return;
-    
-    try {
-        showLoading(true);
-        const tx = await contract.methods.claimReferralReward()
-            .send({ 
-                from: userAddress,
-                gasPrice: await getOptimalGasPrice()
-            });
-            
-        showAlert('Referral rewards claimed successfully', 'success');
-        showDebugInfo('Claim referral rewards transaction: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Referral claim error:', error);
-        showAlert('Failed to claim referral rewards: ' + error.message, 'error');
-        showDebugInfo('Claim referral rewards error: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
+   try {
+       showLoading(true);
+       showDebugInfo('Checking referral rewards amount');
+       
+       const rewardsAmount = await contract.methods.referralRewards(userAddress).call();
+       
+       if (web3.utils.toBN(rewardsAmount).isZero()) {
+           showAlert('No referral rewards available to claim', 'error');
+           showDebugInfo('No referral rewards available');
+           return;
+       }
+
+       if (web3.utils.fromWei(rewardsAmount, 'mwei') < 0.1) {
+           showAlert('Minimum claimable amount is 0.1 USDC to avoid high gas fees', 'error');
+           return;
+       }
+       
+       showDebugInfo('Attempting to claim referral rewards: ' + web3.utils.fromWei(rewardsAmount, 'mwei') + ' USDC');
+       
+       const tx = await contract.methods.claimReferralReward()
+           .send({ 
+               from: userAddress,
+               gasPrice: await getOptimalGasPrice()
+           });
+           
+       showAlert('Referral rewards claimed successfully', 'success');
+       showDebugInfo('Claim referral rewards transaction: ' + tx.transactionHash);
+       updateUI();
+   } catch (error) {
+       console.error('Referral claim error:', error);
+       showAlert('Failed to claim referral rewards: ' + error.message, 'error');
+       showDebugInfo('Claim referral rewards error: ' + error.message);
+   } finally {
+       showLoading(false);
+   }
 }
 
         async function applyReferral() {
