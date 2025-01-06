@@ -965,7 +965,7 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
     updateUI();
 }
 
-  async function updateUI() {
+async function updateUI() {
     if (!userAddress) return;
     
     try {
@@ -1013,30 +1013,26 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
             showDebugInfo(`Actual Reward (raw): ${reward}`);
         }
 
-        // UI更新（変更なし）
+        // Update all dashboard elements
         document.getElementById('userBalance').textContent = 
             formatNumber(web3.utils.fromWei(balance, 'mwei'));
         document.getElementById('stakedAmount').textContent = 
             formatNumber(web3.utils.fromWei(userInfo[0], 'mwei'));
         document.getElementById('pendingRewards').textContent = 
             formatNumber(web3.utils.fromWei(userInfo[1], 'mwei'));
-
-        // リファラル情報の更新（変更なし）
-        const [referralCode, referrer] = await Promise.all([
-            contract.methods.userToReferralCode(userAddress).call(),
-            contract.methods.userToReferrer(userAddress).call()
-        ]);
-
-// This section in updateUI should be replaced with:
-const referralCard = document.getElementById('applyReferralCode').closest('.card');
-if (referrer !== '0x0000000000000000000000000000000000000000') {
-    referralCard.style.display = 'none';
-    showDebugInfo('User already has a referrer - hiding referral input section');
-} else {
-    referralCard.style.display = 'block';
-    showDebugInfo('User has no referrer - showing referral input section');
-}
-
+        document.getElementById('totalReferrals').textContent = userInfo[3];
+        document.getElementById('referralRewards').textContent = 
+            formatNumber(web3.utils.fromWei(userInfo[2], 'mwei'));
+            
+        // Update referral code section visibility
+        const referralCard = document.getElementById('applyReferralCode').closest('.card');
+        if (await contract.methods.userToReferrer(userAddress).call() !== '0x0000000000000000000000000000000000000000') {
+            referralCard.style.display = 'none';
+            showDebugInfo('User already has a referrer - hiding referral input section');
+        } else {
+            referralCard.style.display = 'block';
+            showDebugInfo('User has no referrer - showing referral input section');
+        }
 
     } catch (error) {
         console.error('Error updating UI:', error);
