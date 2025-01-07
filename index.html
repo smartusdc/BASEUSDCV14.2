@@ -1301,10 +1301,10 @@ async function claimReferralRewards() {
         console.error('Referral claim error:', error);
         
         // エラーメッセージをより分かりやすく変換
-        let userFriendlyMessage = 'Unable to claim rewards. Please try again later.';
-        if (error.message.includes('execution reverted')) {
-            userFriendlyMessage = 'Transaction cannot be completed at this time. This might be due to network conditions or insufficient funds for transaction fees.';
-        }
+     let userFriendlyMessage = 'Your request could not be processed. Please try again in a few minutes.';
+if (error.message.includes('execution reverted')) {
+    userFriendlyMessage = 'Transaction failed. Please check that you have enough ETH for network fees and try again. If the problem persists, wait a few minutes before retrying.';
+}
         
         showAlert(userFriendlyMessage, 'error');
         showDebugInfo('Claim referral rewards error: ' + error.message);
@@ -1339,10 +1339,10 @@ async function claimReferralRewards() {
         console.error('Referral error:', error);
         let errorMessage = error.message;
         if (error.message.includes('Already has referrer')) {
-            errorMessage = 'You already have a referrer';
-        } else if (error.message.includes('Must have active deposit')) {
-            errorMessage = 'You need to make a deposit first';
-        }
+    errorMessage = 'This wallet is already linked to a referral code. Each wallet can only use one referral code.';
+} else if (error.message.includes('Must have active deposit')) {
+    errorMessage = 'Please make a deposit first before applying a referral code. This helps prevent referral abuse.';
+}
         showAlert('Failed to apply referral: ' + errorMessage, 'error');
         showDebugInfo('Referral error: ' + error.message);
     } finally {
