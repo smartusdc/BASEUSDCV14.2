@@ -1122,11 +1122,11 @@ async function stake() {
     } catch (error) {
         console.error('Transaction error:', error);
         let errorMessage = error.message;
-        if (error.message.includes('paused')) {
-            errorMessage = 'Staking is currently paused';
-        } else if (error.message.includes('amount too low')) {
-            errorMessage = 'Deposit amount is below minimum requirement';
-        }
+      if (error.message.includes('paused')) {
+    errorMessage = 'Staking is temporarily unavailable. Please try again later.';
+} else if (error.message.includes('amount too low')) {
+    errorMessage = 'Please enter a larger amount to stake. The minimum required amount is 0.01 USDC.';
+}
         showAlert('Failed to stake: ' + errorMessage, 'error');
         showDebugInfo('Stake error: ' + errorMessage);
     } finally {
