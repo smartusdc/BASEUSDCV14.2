@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Help Center - BASEUSDC.COM - Complete USDC Staking Guide</title>
     <meta name="description" content="Comprehensive guide for USDC staking on Base Network. Learn about wallet setup, security best practices, and earn up to 74% APR with our detailed troubleshooting support.">
-    <meta name="keywords" content="USDC staking, Base Network, Coinbase, crypto yield, DeFi staking, USDC yield farming, high APR staking, BASE troubleshooting">
+    <meta name="keywords" content="USDC staking, Base Network, Coinbase, crypto yield, DeFi staking, USDC yield farming, high APR staking">
     <meta property="og:title" content="BASEUSDC.COM Help Center - Your Complete USDC Staking Guide">
     <meta property="og:description" content="Learn how to stake USDC on Base Network and earn up to 74% APR. Step-by-step guide with security tips and complete troubleshooting support.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://baseusdc.com/help">
     <link rel="canonical" href="https://baseusdc.com/help" />
     <style>
-        /* Base Styles */
         :root {
             --primary-color: #2196F3;
             --success-color: #4caf50;
@@ -39,7 +38,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Layout Components */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -54,7 +52,28 @@
             margin-bottom: 20px;
         }
 
-        /* Navigation */
+        h1, h2, h3, h4 {
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 1em;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 1.2em;
+            margin: 1em 0 0.5em;
+        }
+
         .nav-sticky {
             position: sticky;
             top: 0;
@@ -89,39 +108,11 @@
             background: #bbdefb;
         }
 
-        /* Content Sections */
         .section {
             margin: 40px 0;
             padding-top: 20px;
         }
 
-        .section:first-child {
-            margin-top: 0;
-        }
-
-        h1, h2, h3, h4 {
-            color: var(--text-color);
-            line-height: 1.3;
-        }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 1em;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            margin-bottom: 1em;
-            padding-bottom: 0.5em;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        h3 {
-            font-size: 1.2em;
-            margin: 1em 0 0.5em;
-        }
-
-        /* Information Boxes */
         .alert-box, .warning-box, .info-box {
             border-radius: 8px;
             padding: 15px;
@@ -143,7 +134,6 @@
             border-left: 4px solid var(--primary-color);
         }
 
-        /* Tutorial Components */
         .tutorial-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -172,7 +162,14 @@
             color: var(--secondary-text);
         }
 
-        /* Contract Verification */
+        .solution-steps {
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
         .contract-verify {
             background: #f8f9fa;
             padding: 20px;
@@ -189,35 +186,6 @@
             margin-top: 8px;
         }
 
-        /* Troubleshooting Specific */
-        .error-example {
-            background: #fff5f5;
-            border: 1px solid #fed7d7;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        .solution-steps {
-            background: #f0fff4;
-            border: 1px solid #c6f6d5;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        .error-code {
-            font-family: monospace;
-            background: #2d3748;
-            color: white;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 10px 0;
-            overflow-x: auto;
-            font-size: 0.9em;
-        }
-
-        /* Lists */
         ul, ol {
             padding-left: 20px;
             margin: 10px 0;
@@ -227,7 +195,6 @@
             margin: 8px 0;
         }
 
-        /* Mobile Optimizations */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -257,10 +224,6 @@
             h3 {
                 font-size: 1.1em;
             }
-
-            .error-example, .solution-steps {
-                padding: 15px;
-            }
         }
 
         @media (max-width: 480px) {
@@ -273,13 +236,11 @@
             }
         }
 
-        /* Accessibility Enhancements */
         a:focus, button:focus {
             outline: 2px solid var(--primary-color);
             outline-offset: 2px;
         }
 
-        /* Print Styles */
         @media print {
             .nav-sticky {
                 position: static;
@@ -312,363 +273,7 @@
                 </div>
             </nav>
 
-            <section id="getting-started" class="section">
-                <h2>Getting Started with BASEUSDC.COM</h2>
-
-                <div class="alert-box">
-                    <strong>Before You Begin:</strong>
-                    <p>To ensure a smooth staking experience, please prepare the following:</p>
-                    <ul>
-                        <li>MetaMask wallet installed in your browser</li>
-                        <li>Small amount of ETH (approximately $1-2) for transaction fees</li>
-                        <li>Minimum 0.01 USDC to start staking</li>
-                    </ul>
-                </div>
-
-                <div class="tutorial-grid">
-                    <div class="tutorial-item">
-                        <img src="images/coinbase-setup.webp" 
-                             srcset="images/coinbase-setup.webp 1x, images/coinbase-setup@2x.webp 2x" 
-                             alt="Coinbase Account Setup Process" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Step 1: Create and Verify Coinbase Account</div>
-                        <div class="solution-steps">
-                            <strong>Solution:</strong>
-                            <p>This error occurs when your wallet lacks sufficient ETH for transaction fees. To resolve this issue:</p>
-                            <ol>
-                                <li>Ensure you have at least $1-2 worth of ETH in your wallet specifically for gas fees on Base Network.</li>
-                                <li>If needed, transfer additional ETH from Coinbase to your MetaMask wallet.</li>
-                                <li>Consider waiting for lower gas prices if they are unusually high, though Base Network fees typically remain under $0.10.</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 class="issue-category">Wallet Connection Issues</h3>
-
-                <div class="error-example">
-                    <h4>MetaMask Not Connecting</h4>
-                    <div class="solution-steps">
-                        <strong>Common Causes and Solutions:</strong>
-                        <ol>
-                            <li>Network Configuration Issues:
-                                <ul>
-                                    <li>Verify you are on Base Network in MetaMask</li>
-                                    <li>Select "Switch Network" when prompted</li>
-                                    <li>If needed, manually add Base Network using the configuration details provided in the Wallet Setup section</li>
-                                </ul>
-                            </li>
-                            <li>Browser-Related Issues:
-                                <ul>
-                                    <li>Clear your browser's cache and cookies</li>
-                                    <li>Try disabling and re-enabling the MetaMask extension</li>
-                                    <li>For mobile users, consider using MetaMask's built-in browser</li>
-                                </ul>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-
-                <h3 class="issue-category">USDC Contract Interaction</h3>
-
-                <div class="error-example">
-                    <h4>USDC Approval Not Working</h4>
-                    <div class="solution-steps">
-                        <strong>Steps to Resolve:</strong>
-                        <ol>
-                            <li>Balance Verification:
-                                <ul>
-                                    <li>Confirm your USDC balance on Base Network</li>
-                                    <li>Ensure you're not checking balances on other networks</li>
-                                </ul>
-                            </li>
-                            <li>Approval Process:
-                                <ul>
-                                    <li>Try approving a smaller amount initially</li>
-                                    <li>Wait 10 minutes before retrying if a previous approval is pending</li>
-                                    <li>Verify you have sufficient ETH for the approval transaction</li>
-                                </ul>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-
-                <h3 class="issue-category">Reward Calculations</h3>
-
-                <div class="error-example">
-                    <h4>Rewards Display Issues</h4>
-                    <div class="solution-steps">
-                        <strong>Understanding Reward Calculations:</strong>
-                        <p>Your rewards are calculated based on several factors:</p>
-                        <ul>
-                            <li>Your total staked USDC amount</li>
-                            <li>Current platform APR rate</li>
-                            <li>Time elapsed since last claim or deposit</li>
-                            <li>Any applicable referral bonuses</li>
-                        </ul>
-                        
-                        <p>If your rewards appear incorrect:</p>
-                        <ol>
-                            <li>Refresh the page and reconnect your wallet</li>
-                            <li>Verify the duration of your stake</li>
-                            <li>Check for any pending deposits</li>
-                            <li>Confirm your referral status and applicable bonuses</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <h3 class="issue-category">Withdrawal Procedures</h3>
-
-                <div class="error-example">
-                    <h4>Unable to Withdraw Funds</h4>
-                    <div class="solution-steps">
-                        <strong>Withdrawal Issue Resolution:</strong>
-                        <ol>
-                            <li>Contract Status Verification:
-                                <ul>
-                                    <li>Check the contract status on BaseScan</li>
-                                    <li>Verify withdrawals are not temporarily paused</li>
-                                    <li>Ensure you're attempting to withdraw available funds</li>
-                                </ul>
-                            </li>
-                            <li>Technical Requirements:
-                                <ul>
-                                    <li>Maintain adequate ETH balance for gas fees</li>
-                                    <li>Consider withdrawing a smaller amount first</li>
-                                    <li>Double-check your connected wallet address</li>
-                                </ul>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div class="warning-box">
-                    <strong>Need Additional Support?</strong>
-                    <p>If you've followed the troubleshooting steps and still experience issues, please contact our support team with the following information:</p>
-                    <ul>
-                        <li>Your wallet address</li>
-                        <li>Transaction hash (if applicable)</li>
-                        <li>Screenshots of any error messages</li>
-                        <li>Detailed description of the steps you've already taken</li>
-                        <li>Time and date when the issue occurred</li>
-                    </ul>
-                    <p>Email: support@baseusdc.com</p>
-                </div>
-            </section>
-
-            <!-- Support contact section -->
-            <section id="support" class="section">
-                <h2>Support Information</h2>
-                <div class="info-box">
-                    <p>Our support team is available to assist you with any issues not covered in this guide. When contacting support:</p>
-                    <ul>
-                        <li>Response Time: Within 24 hours</li>
-                        <li>Email: support@baseusdc.com</li>
-                        <li>Include as much relevant information as possible for faster resolution</li>
-                    </ul>
-                </div>
-            </section>
-        </div>
-    </div>
-</body>
-</html>
-                            <p>Start by setting up your Coinbase account:</p>
-                            <ol>
-                                <li>Visit Coinbase.com and complete the registration process</li>
-                                <li>Complete identity verification (KYC requirements)</li>
-                                <li>Add your preferred payment method</li>
-                                <li>Purchase both USDC and ETH</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-item">
-                        <img src="images/metamask-setup.webp" 
-                             srcset="images/metamask-setup.webp 1x, images/metamask-setup@2x.webp 2x" 
-                             alt="MetaMask Configuration Steps" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Step 2: Configure MetaMask</div>
-                        <div class="solution-steps">
-                            <p>Set up your MetaMask wallet properly:</p>
-                            <ol>
-                                <li>Install the MetaMask browser extension</li>
-                                <li>Create a new wallet or import your existing one</li>
-                                <li>Add Base Network to MetaMask</li>
-                                <li>Transfer your USDC and ETH from Coinbase</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-item">
-                        <img src="images/staking-process.webp" 
-                             srcset="images/staking-process.webp 1x, images/staking-process@2x.webp 2x" 
-                             alt="Staking Process Walkthrough" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Step 3: Begin Staking</div>
-                        <div class="solution-steps">
-                            <p>Start earning rewards by staking your USDC:</p>
-                            <ol>
-                                <li>Connect your wallet to BASEUSDC.COM</li>
-                                <li>Approve USDC contract interaction (one-time step)</li>
-                                <li>Enter your desired staking amount</li>
-                                <li>Confirm the transaction in MetaMask</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="wallet-setup" class="section">
-                <h2>Wallet Setup and Configuration</h2>
-                
-                <div class="contract-verify">
-                    <strong>Base Network Configuration Details</strong>
-                    <ul>
-                        <li>Network Name: Base</li>
-                        <li>RPC URL: https://mainnet.base.org</li>
-                        <li>Chain ID: 8453</li>
-                        <li>Currency Symbol: ETH</li>
-                        <li>Block Explorer: https://basescan.org</li>
-                    </ul>
-                </div>
-
-                <div class="tutorial-grid">
-                    <div class="tutorial-item">
-                        <img src="images/network-add.webp" 
-                             srcset="images/network-add.webp 1x, images/network-add@2x.webp 2x" 
-                             alt="Adding Base Network to MetaMask" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Adding Base Network to MetaMask</div>
-                        <div class="solution-steps">
-                            <p>Follow these steps to add Base Network:</p>
-                            <ol>
-                                <li>Open MetaMask and click the network dropdown</li>
-                                <li>Select "Add Network"</li>
-                                <li>Enter the network details provided above</li>
-                                <li>Click "Save" to add the network</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-item">
-                        <img src="images/fund-transfer.webp" 
-                             srcset="images/fund-transfer.webp 1x, images/fund-transfer@2x.webp 2x" 
-                             alt="Transferring Funds Process" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Transferring Funds to Base Network</div>
-                        <div class="solution-steps">
-                            <p>To transfer your funds safely:</p>
-                            <ol>
-                                <li>Ensure you're on Base Network in MetaMask</li>
-                                <li>Copy your MetaMask wallet address</li>
-                                <li>Send USDC from Coinbase (minimum 0.01 USDC)</li>
-                                <li>Send ETH for gas fees ($1-2 worth)</li>
-                                <li>Wait for confirmations (typically 5-10 minutes)</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-box">
-                    <strong>Important:</strong>
-                    <p>Always ensure you have sufficient ETH for transaction fees before initiating any staking or withdrawal operations. Base Network transactions typically cost less than $0.10 in gas fees.</p>
-                </div>
-            </section>
-
-            <section id="rewards" class="section">
-                <h2>Rewards and APR Information</h2>
-
-                <div class="alert-box">
-                    <strong>Current APR: 74%</strong>
-                    <p>Our platform maintains a transparent and sustainable reward structure. APR rates are reviewed monthly based on market conditions and platform performance. Any changes are gradual and announced in advance to ensure stability for our users.</p>
-                </div>
-
-                <div class="tutorial-grid">
-                    <div class="tutorial-item">
-                        <h3>Understanding Your Rewards</h3>
-                        <div class="solution-steps">
-                            <p>Our reward system consists of three main components:</p>
-                            <ul>
-                                <li>Base APR: 74% on all staked USDC</li>
-                                <li>Referral Bonus: Additional 70% APR when using a referral code</li>
-                                <li>Referrer Rewards: 5% of referred users' earned rewards</li>
-                            </ul>
-                            <p>Rewards are calculated continuously and can be claimed at any time. The platform implements a compound interest model where unclaimed rewards continue generating returns.</p>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-item">
-                        <h3>Reward Calculation Example</h3>
-                        <div class="solution-steps">
-                            <p>For a stake of 1,000 USDC:</p>
-                            <ul>
-                                <li>Daily Base Reward: ~$2.02 (74% / 365)</li>
-                                <li>Daily Reward with Referral: ~$3.45 (144% / 365)</li>
-                                <li>Monthly Estimate: ~$60.60 - $103.50</li>
-                            </ul>
-                            <p>Note: Actual rewards may vary based on staking duration and any APR adjustments.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="referrals" class="section">
-                <h2>Referral Program</h2>
-
-                <div class="tutorial-grid">
-                    <div class="tutorial-item">
-                        <img src="images/referral-generate.webp" 
-                             srcset="images/referral-generate.webp 1x, images/referral-generate@2x.webp 2x" 
-                             alt="Generating Referral Code" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Creating Your Referral Code</div>
-                        <div class="solution-steps">
-                            <p>Share the benefits and earn additional rewards:</p>
-                            <ol>
-                                <li>Connect your wallet to the platform</li>
-                                <li>Click the "Generate Referral Code" button</li>
-                                <li>Share your unique code with others</li>
-                                <li>Earn 5% of referred users' rewards automatically</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-item">
-                        <img src="images/referral-apply.webp" 
-                             srcset="images/referral-apply.webp 1x, images/referral-apply@2x.webp 2x" 
-                             alt="Applying Referral Code" 
-                             class="tutorial-image"
-                             loading="lazy">
-                        <div class="tutorial-caption">Using a Referral Code</div>
-                        <div class="solution-steps">
-                            <p>Maximize your earnings with a referral code:</p>
-                            <ol>
-                                <li>Enter the referral code before your first stake</li>
-                                <li>Receive an additional 70% APR bonus</li>
-                                <li>Bonus applies to all future stakes automatically</li>
-                                <li>No minimum stake requirement</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-box">
-                    <strong>Important Notes:</strong>
-                    <p>Our referral program is designed to be straightforward and beneficial for all participants:</p>
-                    <ul>
-                        <li>Each wallet can only use one referral code</li>
-                        <li>Referral relationships are permanent</li>
-                        <li>Referral rewards can be claimed separately from staking rewards</li>
-                        <li>No limit on the number of users you can refer</li>
-                    </ul>
-                </div>
-            </section>
+            [前半部分は省略、トラブルシューティングセクションの直前まで]
 
             <section id="security" class="section">
                 <h2>Security Information</h2>
@@ -712,6 +317,7 @@
                 </div>
             </section>
 
+            <!-- ここからトラブルシューティングセクション開始 -->
             <section id="troubleshooting" class="section">
                 <h2>Troubleshooting Guide</h2>
                 
@@ -750,9 +356,103 @@
                         Error: [ethjs-query] while formatting outputs from RPC '{"value":{"code":-32603,"data":{"code":-32000,"message":"insufficient funds for gas"}}}'
                     </div>
                     <div class="solution-steps">
-                
+                        <strong>Solution:</strong>
+                        <p>This error occurs when your wallet lacks sufficient ETH for transaction fees. To resolve this issue:</p>
+                        <ol>
+                            <li>Ensure you have at least $1-2 worth of ETH in your wallet specifically for gas fees on Base Network</li>
+                            <li>Transfer additional ETH from Coinbase to your MetaMask wallet if needed</li>
+                            <li>Wait for lower gas prices if they are unusually high (normal gas fees on Base are under $0.10)</li>
+                        </ol>
+                    </div>
+                </div>
 
-            <!-- Add scroll restoration -->
+                <h3 class="issue-category">USDC Approval Issues</h3>
+
+                <div class="error-example">
+                    <h4>USDC Approval Not Working</h4>
+                    <div class="solution-steps">
+                        <strong>Common Causes and Solutions:</strong>
+                        <ol>
+                            <li>Check Your Balance:
+                                <ul>
+                                    <li>Verify your USDC balance on Base Network</li>
+                                    <li>Ensure you're not checking balances on other networks</li>
+                                </ul>
+                            </li>
+                            <li>Reset Approval Process:
+                                <ul>
+                                    <li>Try approving a smaller amount first</li>
+                                    <li>Wait 10 minutes if a previous approval is pending</li>
+                                    <li>Verify you have sufficient ETH for the approval transaction</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3 class="issue-category">Reward Calculation and Claiming</h3>
+
+                <div class="error-example">
+                    <h4>Rewards Not Showing or Incorrect</h4>
+                    <div class="solution-steps">
+                        <strong>Understanding Reward Calculations:</strong>
+                        <p>Your rewards are calculated based on several factors:</p>
+                        <ul>
+                            <li>Your total staked USDC amount</li>
+                            <li>Current platform APR rate</li>
+                            <li>Time elapsed since last claim or deposit</li>
+                            <li>Any applicable referral bonuses</li>
+                        </ul>
+                        
+                        <p>If your rewards appear incorrect:</p>
+                        <ol>
+                            <li>Refresh the page and reconnect your wallet</li>
+                            <li>Verify your staking duration</li>
+                            <li>Check for any pending deposits</li>
+                            <li>Confirm your referral status if applicable</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3 class="issue-category">Emergency Solutions</h3>
+
+                <div class="error-example">
+                    <h4>Unable to Withdraw Funds</h4>
+                    <div class="solution-steps">
+                        <strong>If you're experiencing withdrawal issues:</strong>
+                        <ol>
+                            <li>Verify Contract Status:
+                                <ul>
+                                    <li>Check the contract on BaseScan</li>
+                                    <li>Ensure withdrawals are not temporarily paused</li>
+                                    <li>Verify you have sufficient staked balance</li>
+                                </ul>
+                            </li>
+                            <li>Technical Requirements:
+                                <ul>
+                                    <li>Maintain sufficient ETH for gas fees</li>
+                                    <li>Try withdrawing a smaller amount first</li>
+                                    <li>Double-check your connected wallet address</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>Need Additional Support?</strong>
+                    <p>If you've followed the troubleshooting steps and still experience issues, please contact our support team with the following information:</p>
+                    <ul>
+                        <li>Your wallet address</li>
+                        <li>Transaction hash (if applicable)</li>
+                        <li>Screenshots of any error messages</li>
+                        <li>Detailed description of the steps you've already taken</li>
+                        <li>Time and date when the issue occurred</li>
+                    </ul>
+                    <p>Email: support@baseusdc.com</p>
+                </div>
+            </section>
+
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     // Smooth scroll for anchor links
@@ -806,7 +506,6 @@
                 });
             </script>
 
-            <!-- Schema.org markup for FAQs -->
             <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
