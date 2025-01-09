@@ -109,6 +109,7 @@
     </div>
 
     <script>
+        const OWNER_ADDRESS = '0x415104A2E3617dA833f0e889C185CAB86b947450'.toLowerCase();
         const BASE_CHAIN_ID = '0x2105';
         const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
         const GAS_SETTINGS = {
@@ -195,7 +196,10 @@
 
                 web3 = new Web3(window.ethereum);
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                currentAccount = accounts[0];
+                currentAccount = accounts[0].toLowerCase();
+if (currentAccount !== OWNER_ADDRESS) {
+    throw new Error('管理者権限がありません');
+}
                 contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
                 document.getElementById('walletStatus').innerHTML = 
@@ -338,8 +342,15 @@
         window.ethereum?.on('chainChanged', connectWallet);
 
         // Initial Setup
+        document.querySelector('.container').style.display = 'none';
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.ethereum) connectWallet();
+          if (window.ethereum) {
+    connectWallet().then(() => {
+        if (currentAccount === OWNER_ADDRESS) {
+            document.querySelector('.container').style.display = 'block';
+        }
+    });
+}
             
             document.getElementById('connectWallet').addEventListener('click', connectWallet);
             document.getElementById('refreshBalance').addEventListener('click', getBalanceSummary);
