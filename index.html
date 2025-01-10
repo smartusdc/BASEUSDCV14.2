@@ -886,45 +886,47 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
     }
 
 
+function detectEthereumProvider() {
+    if (window.ethereum) {
+        return window.ethereum;
+    }
+    if (window.coinbaseWalletExtension) {
+        return window.coinbaseWalletExtension;
+    }
+    return null;
+}
+
 async function connectWallet() {
     try {
         showLoading(true);
-        let provider;
         
-        if (window.ethereum) {
-            provider = window.ethereum;
-            web3 = new Web3(provider);
-            const accounts = await provider.request({ method: 'eth_requestAccounts' });
-            userAddress = accounts[0];
-        } else {
+        const provider = detectEthereumProvider();
+        if (!provider) {
             const WalletConnectProvider = window.WalletConnectProvider.default;
-            provider = new WalletConnectProvider({
+            const wcProvider = new WalletConnectProvider({
                 rpc: {
                     8453: "https://mainnet.base.org"
                 }
             });
-            await provider.enable();
-            web3 = new Web3(provider);
+            
+            await wcProvider.enable();
+            web3 = new Web3(wcProvider);
             const accounts = await web3.eth.getAccounts();
+            userAddress = accounts[0];
+            
+        } else {
+            web3 = new Web3(provider);
+            const accounts = await provider.request({ 
+                method: 'eth_requestAccounts' 
+            });
             userAddress = accounts[0];
         }
 
-        if (!userAddress) {
-            throw new Error('Failed to get user address');
-        }
-
         showDebugInfo('Wallet connected: ' + userAddress);
-        
         await checkAndSwitchNetwork();
-        
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", () => {
-            handleAccountsChanged([]);
-        });
-
         onConnect();
         showAlert('Wallet connected successfully!', 'success');
+        
     } catch (error) {
         console.error("Connection error:", error);
         showAlert('Failed to connect wallet: ' + error.message, 'error');
