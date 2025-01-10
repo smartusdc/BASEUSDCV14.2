@@ -402,6 +402,75 @@
         height: 40px;
     }
 }
+      /* モバイル対応の追加スタイル */
+@media (max-width: 768px) {
+    /* 入力フィールドとボタンの調整 */
+    .input-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .input-wrapper {
+        width: 100%;
+    }
+    
+    .button {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0;
+        min-height: 48px; /* タップターゲットサイズの確保 */
+    }
+    
+    /* プラットフォーム情報カードの調整 */
+    .platform-info-card {
+        padding: 15px;
+    }
+    
+    .info-item {
+        width: 100%;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* カード内の余白調整 */
+    .card {
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    /* フォントサイズの調整 */
+    .hero-title {
+        font-size: 1.8em;
+    }
+    
+    .hero-subtitle {
+        font-size: 1em;
+    }
+    
+    /* ステップカードの調整 */
+    .step-card {
+        margin-left: 10px;
+        padding: 20px 15px 20px 25px;
+    }
+    
+    .step-number {
+        left: -15px;
+        width: 30px;
+        height: 30px;
+        font-size: 1em;
+    }
+}
+
+/* タッチデバイス向けのインタラクション改善 */
+@media (hover: none) {
+    .button:hover {
+        transform: none;
+    }
+    
+    .card:hover {
+        transform: none;
+    }
+}
     </style>
 </head>
 <body>
