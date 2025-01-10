@@ -901,8 +901,30 @@ async function connectWallet() {
     try {
         showLoading(true);
         
-        const provider = detectEthereumProvider();
-        if (!provider) {
+        if (window.ethereum) {
+            // MetaMaskが存在する場合の処理
+            try {
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+                userAddress = accounts[0];
+                
+                // コントラクトインスタンスの再初期化
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+                
+                // イベントリスナーの設定
+                window.ethereum.on("accountsChanged", handleAccountsChanged);
+                window.ethereum.on("chainChanged", handleChainChanged);
+                window.ethereum.on("disconnect", () => {
+                    handleAccountsChanged([]);
+                });
+            } catch (err) {
+                throw new Error('Failed to connect to MetaMask: ' + err.message);
+            }
+        } else {
+            // MetaMaskが存在しない場合のWalletConnect処理
             const WalletConnectProvider = window.WalletConnectProvider.default;
             const wcProvider = new WalletConnectProvider({
                 rpc: {
@@ -915,12 +937,16 @@ async function connectWallet() {
             const accounts = await web3.eth.getAccounts();
             userAddress = accounts[0];
             
-        } else {
-            web3 = new Web3(provider);
-            const accounts = await provider.request({ 
-                method: 'eth_requestAccounts' 
+            // WalletConnectのイベントリスナー設定
+            wcProvider.on("accountsChanged", handleAccountsChanged);
+            wcProvider.on("chainChanged", handleChainChanged);
+            wcProvider.on("disconnect", () => {
+                handleAccountsChanged([]);
             });
-            userAddress = accounts[0];
+            
+            // コントラクトインスタンスの再初期化
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
         }
 
         showDebugInfo('Wallet connected: ' + userAddress);
