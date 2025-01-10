@@ -978,46 +978,60 @@ async function connectWallet() {
     }
 
     async function checkAndSwitchNetwork() {
+    // web3.eth.getChainId()を使用して現在のチェーンIDを取得
+    // これはMetaMaskでもWalletConnectでも共通して動作
+    const chainId = await web3.eth.getChainId();
+    
+    // BASE_CHAIN_IDは16進数文字列なので、数値に変換して比較
+    const targetChainId = parseInt(BASE_CHAIN_ID, 16);
+    
+    if (chainId !== targetChainId) {
+        // MetaMaskの場合
         if (window.ethereum) {
-            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-            if (chainId !== BASE_CHAIN_ID) {
-                try {
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: BASE_CHAIN_ID }],
-                    });
-                } catch (error) {
-                    if (error.code === 4902) {
-                        try {
-                            await window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [{
-                                    chainId: BASE_CHAIN_ID,
-                                    chainName: 'Base',
-                                    nativeCurrency: {
-                                        name: 'ETH',
-                                        symbol: 'ETH',
-                                        decimals: 18
-                                    },
-                                    rpcUrls: ['https://mainnet.base.org'],
-                                    blockExplorerUrls: ['https://basescan.org']
-                                }]
-                            });
-                        } catch (addError) {
-                            showAlert('Failed to add BASE network', 'error');
-                            showDebugInfo('Failed to add BASE network: ' + addError.message);
-                            throw addError;
-                        }
-                    } else {
-                        showAlert('Failed to switch to BASE network', 'error');
-                        showDebugInfo('Failed to switch network: ' + error.message);
-                        throw error;
-                    }
+            try {
+                // チェーンの切り替えを試みる
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: BASE_CHAIN_ID }],
+                });
+            } catch (error) {
+                // エラーコード4902は「ネットワークが未追加」を意味する
+                if (error.code === 4902) {
+                    // 別関数としてネットワーク追加処理を分離
+                    await addBaseNetwork();
+                } else {
+                    throw error;
                 }
             }
-            updateNetworkStatus(true);
+        } else {
+            // WalletConnectなど、MetaMask以外の場合
+            // 自動切り替えができないため、ユーザーに手動での切り替えを促す
+            showAlert('Please switch to BASE Network in your wallet', 'error');
+            throw new Error('Please switch to BASE Network');
         }
     }
+    
+    // ネットワークステータスの表示を更新
+    updateNetworkStatus(true);
+}
+
+// ネットワーク追加用の補助関数として分離
+async function addBaseNetwork() {
+    await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+            chainId: BASE_CHAIN_ID,
+            chainName: 'Base',
+            nativeCurrency: {
+                name: 'ETH',
+                symbol: 'ETH',
+                decimals: 18
+            },
+            rpcUrls: ['https://mainnet.base.org'],
+            blockExplorerUrls: ['https://basescan.org']
+        }]
+    });
+}
 
  function onConnect() {
     document.getElementById('connectWallet').textContent = 
