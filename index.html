@@ -511,6 +511,70 @@
         gap: 15px;
     }
 }
+      /* モバイル対応の強化用スタイル */
+.input-wrapper {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-wrapper input {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 12px;
+    width: 100%;
+}
+
+/* モバイルデバイス向けの調整 */
+@media (max-width: 768px) {
+    /* 入力フォームのレイアウト調整 */
+    .input-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* カード要素の調整 */
+    .card {
+        padding: 20px 15px;
+        margin: 15px 0;
+    }
+    
+    /* 統計情報の間隔調整 */
+    .stats {
+        gap: 15px;
+    }
+    
+    /* プラットフォーム情報カードの調整 */
+    .platform-info-card {
+        padding: 15px;
+    }
+    
+    /* 情報アイテムの表示調整 */
+    .info-item {
+        padding: 15px 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+    
+    /* 数値表示の調整 */
+    .info-value {
+        font-size: 1.4rem;
+    }
+
+    /* ヒーローセクションの調整 */
+    .hero-section {
+        padding: 30px 15px;
+    }
+
+    .hero-title {
+        font-size: 1.8em;
+    }
+
+    .hero-subtitle {
+        font-size: 1em;
+        margin-bottom: 20px;
+    }
+}
     </style>
 </head>
 <body>
