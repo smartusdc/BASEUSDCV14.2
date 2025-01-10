@@ -894,6 +894,8 @@ async function connectWallet() {
         if (window.ethereum) {
             provider = window.ethereum;
             web3 = new Web3(provider);
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+            userAddress = accounts[0];
         } else {
             const WalletConnectProvider = window.WalletConnectProvider.default;
             provider = new WalletConnectProvider({
@@ -903,15 +905,18 @@ async function connectWallet() {
             });
             await provider.enable();
             web3 = new Web3(provider);
+            const accounts = await web3.eth.getAccounts();
+            userAddress = accounts[0];
         }
 
-        const accounts = await web3.eth.getAccounts();
-        userAddress = accounts[0];
+        if (!userAddress) {
+            throw new Error('Failed to get user address');
+        }
+
         showDebugInfo('Wallet connected: ' + userAddress);
         
         await checkAndSwitchNetwork();
         
-        // プロバイダーのイベントリスナーを設定
         provider.on("accountsChanged", handleAccountsChanged);
         provider.on("chainChanged", handleChainChanged);
         provider.on("disconnect", () => {
@@ -1033,11 +1038,13 @@ async function addBaseNetwork() {
     });
 }
 
- function onConnect() {
-    document.getElementById('connectWallet').textContent = 
-        `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+function onConnect() {
+    const connectWalletButton = document.getElementById('connectWallet');
+    if (userAddress && connectWalletButton) {
+        connectWalletButton.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+    }
     document.getElementById('mainContent').style.display = 'block';
-    document.getElementById('landingContent').style.display = 'none'; // 追加
+    document.getElementById('landingContent').style.display = 'none';
     updateUI();
 }
 
