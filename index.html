@@ -886,30 +886,48 @@ document.getElementById('applyReferralButton').addEventListener('click', applyRe
     }
 
 
-    async function connectWallet() {
-        if (!window.ethereum) {
-            showAlert('Please install MetaMask!', 'error');
-            return;
+async function connectWallet() {
+    try {
+        showLoading(true);
+        let provider;
+        
+        if (window.ethereum) {
+            provider = window.ethereum;
+            web3 = new Web3(provider);
+        } else {
+            const WalletConnectProvider = window.WalletConnectProvider.default;
+            provider = new WalletConnectProvider({
+                rpc: {
+                    8453: "https://mainnet.base.org"
+                }
+            });
+            await provider.enable();
+            web3 = new Web3(provider);
         }
 
-        try {
-            showLoading(true);
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userAddress = accounts[0];
-            showDebugInfo('Wallet connected: ' + userAddress);
-            
-            await checkAndSwitchNetwork();
-            
-            onConnect();
-            showAlert('Wallet connected successfully!', 'success');
-        } catch (error) {
-            console.error("Connection error:", error);
-            showAlert('Failed to connect wallet: ' + error.message, 'error');
-            showDebugInfo('Wallet connection error: ' + error.message);
-        } finally {
-            showLoading(false);
-        }
+        const accounts = await web3.eth.getAccounts();
+        userAddress = accounts[0];
+        showDebugInfo('Wallet connected: ' + userAddress);
+        
+        await checkAndSwitchNetwork();
+        
+        // プロバイダーのイベントリスナーを設定
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
+            handleAccountsChanged([]);
+        });
+
+        onConnect();
+        showAlert('Wallet connected successfully!', 'success');
+    } catch (error) {
+        console.error("Connection error:", error);
+        showAlert('Failed to connect wallet: ' + error.message, 'error');
+        showDebugInfo('Wallet connection error: ' + error.message);
+    } finally {
+        showLoading(false);
     }
+}
 
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
