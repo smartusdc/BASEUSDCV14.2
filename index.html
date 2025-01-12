@@ -1670,6 +1670,8 @@ async function claimReferralRewards() {
         });
         const adjustedGas = Math.floor(gasEstimate * 1.2);
 
+        showDebugInfo(`Gas estimate: ${gasEstimate}, Adjusted gas: ${adjustedGas}, Gas price: ${adjustedGasPrice}`);
+
         // トランザクション実行
         const tx = await contract.methods.claimReferralReward()
             .send({ 
@@ -1683,7 +1685,21 @@ async function claimReferralRewards() {
         updateUI();
     } catch (error) {
         console.error('Referral claim error:', error);
-        showAlert('Transaction failed. Please try again later.', 'error');
+        let errorMessage = 'Transaction failed. ';
+        
+        if (error.message.includes('gas required exceeds allowance')) {
+            errorMessage += 'Insufficient gas limit. Please try again.';
+        } else if (error.message.includes('insufficient funds')) {
+            errorMessage += 'Insufficient ETH for gas fees.';
+        } else if (error.message.includes('execution reverted')) {
+            errorMessage += error.message.includes('No rewards') ? 
+                'No rewards available to claim.' : 
+                'Transaction was reverted. Please try again.';
+        } else {
+            errorMessage += 'Please try again later. ' + error.message;
+        }
+        
+        showAlert(errorMessage, 'error');
         showDebugInfo('Claim error: ' + error.message);
     } finally {
         showLoading(false);
