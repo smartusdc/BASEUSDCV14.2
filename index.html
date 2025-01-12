@@ -184,7 +184,7 @@
     border-radius: 8px;
     margin: 0;
     display: none;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.5;
     transition: all 0.3s ease-in-out;
     z-index: 1000;
@@ -1118,15 +1118,19 @@ const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
         debugDiv.scrollTop = debugDiv.scrollHeight;
     }
 
-    function showAlert(message, type) {
-        const alert = document.getElementById('alert');
-        alert.textContent = message;
-        alert.className = `alert ${type}`;
-        alert.style.display = 'block';
-        setTimeout(() => {
-            alert.style.display = 'none';
-        }, 5000);
-    }
+function showAlert(message, type) {
+    const alert = document.getElementById('alert');
+    alert.textContent = message;
+    alert.className = `alert ${type}`;
+    alert.style.display = 'block';
+    
+    // トランザクション関連のメッセージは表示時間を延長
+    const duration = message.includes('successful') || message.includes('Failed to') ? 8000 : 5000;
+    
+    setTimeout(() => {
+        alert.style.display = 'none';
+    }, duration);
+}
 
     function showLoading(show) {
         document.getElementById('loading').style.display = show ? 'block' : 'none';
