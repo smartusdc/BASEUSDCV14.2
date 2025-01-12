@@ -1648,43 +1648,58 @@ async function stake() {
 async function claimReferralRewards() {
     try {
         showLoading(true);
-        showDebugInfo('Checking referral rewards amount');
+        showDebugInfo('Starting referral rewards claim process');
         
+        // まず残高を確認
         const rewards = await contract.methods.referralRewards(userAddress).call();
         const rewardsInUSDC = web3.utils.fromWei(rewards, 'mwei');
+        showDebugInfo('Current rewards balance: ' + rewardsInUSDC + ' USDC');
         
         if (web3.utils.toBN(rewards).isZero()) {
             showAlert('No referral rewards available to claim', 'error');
-            showDebugInfo('No referral rewards available');
+            showDebugInfo('Rewards balance is zero');
             return;
         }
 
-        // 最小報酬額（0.01 USDC）のチェックを追加
-        if (parseFloat(rewardsInUSDC) < 0.01) {
-            showAlert('Please wait until your referral rewards reach 0.01 USDC to claim', 'info');
-            showDebugInfo('Reward amount too low: ' + rewardsInUSDC + ' USDC');
-            return;
+        // ガス見積もりを試みる
+        let gasEstimate;
+        try {
+            gasEstimate = await contract.methods.claimReferralReward().estimateGas({
+                from: userAddress
+            });
+            showDebugInfo('Gas estimate successful: ' + gasEstimate);
+        } catch (gasError) {
+            showDebugInfo('Gas estimation failed: ' + gasError.message);
+            throw gasError;
         }
 
-        showDebugInfo('Attempting to claim rewards: ' + rewardsInUSDC + ' USDC');
-
+        // トランザクション実行
+        showDebugInfo('Sending transaction with gas: ' + gasEstimate);
         const tx = await contract.methods.claimReferralReward()
             .send({ 
-                from: userAddress
+                from: userAddress,
+                gas: Math.floor(gasEstimate * 1.2)  // 20%バッファを追加
             });
             
         showAlert('Successfully claimed referral rewards', 'success');
-        showDebugInfo('Claim transaction successful: ' + tx.transactionHash);
+        showDebugInfo('Transaction successful: ' + tx.transactionHash);
         updateUI();
     } catch (error) {
         console.error('Referral claim error:', error);
+        let errorMsg = 'Transaction failed. ';
         
-        if (error.message.includes('No rewards to claim')) {
-            showAlert('No rewards available to claim at this time', 'error');
+        if (error.message.includes('execution reverted')) {
+            showDebugInfo('Contract execution reverted: ' + error.message);
+            errorMsg += 'Contract call reverted. Please try again later.';
+        } else if (error.message.includes('gas required exceeds')) {
+            showDebugInfo('Gas estimation issue: ' + error.message);
+            errorMsg += 'Gas estimation failed. Please try again.';
         } else {
-            showAlert('Transaction failed. Please check your rewards balance and try again later.', 'error');
+            showDebugInfo('Other error: ' + error.message);
+            errorMsg += 'Please try again later.';
         }
-        showDebugInfo('Detailed error: ' + error.message);
+        
+        showAlert(errorMsg, 'error');
     } finally {
         showLoading(false);
     }
