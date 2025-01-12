@@ -1651,13 +1651,12 @@ async function claimReferralRewards() {
         showDebugInfo('Starting referral rewards claim process');
         
         // まず残高を確認
-        const rewards = await contract.methods.referralRewards(userAddress).call();
-        const rewardsInUSDC = web3.utils.fromWei(rewards, 'mwei');
+        const userInfo = await contract.methods.getUserInfo(userAddress).call();
+        const rewardsInUSDC = web3.utils.fromWei(userInfo[2], 'mwei');
         showDebugInfo('Current rewards balance: ' + rewardsInUSDC + ' USDC');
         
-        if (web3.utils.toBN(rewards).isZero()) {
-            showAlert('No referral rewards available to claim', 'error');
-            showDebugInfo('Rewards balance is zero');
+        if (parseFloat(rewardsInUSDC) < 0.01) {
+            showAlert('Insufficient referral rewards. Rewards must be at least 0.01 USDC to claim. Current rewards: ' + rewardsInUSDC + ' USDC', 'error');
             return;
         }
 
@@ -1686,20 +1685,21 @@ async function claimReferralRewards() {
         updateUI();
     } catch (error) {
         console.error('Referral claim error:', error);
-        let errorMsg = 'Transaction failed. ';
+        let errorMsg = '';
         
-        if (error.message.includes('execution reverted')) {
-            showDebugInfo('Contract execution reverted: ' + error.message);
-            errorMsg += 'Contract call reverted. Please try again later.';
-        } else if (error.message.includes('gas required exceeds')) {
-            showDebugInfo('Gas estimation issue: ' + error.message);
-            errorMsg += 'Gas estimation failed. Please try again.';
+        // エラーメッセージの具体的な分岐処理
+        if (error.message.includes('gas required exceeds')) {
+            errorMsg = 'Unable to process the claim at this time due to high network activity. Please try again later.';
+        } else if (error.message.includes('execution reverted')) {
+            errorMsg = 'Your referral rewards must be at least 0.01 USDC to claim. Please wait for more rewards to accumulate.';
+        } else if (error.message.includes('User denied')) {
+            errorMsg = 'Transaction was cancelled by user.';
         } else {
-            showDebugInfo('Other error: ' + error.message);
-            errorMsg += 'Please try again later.';
+            errorMsg = 'Unable to process your claim at this moment. Please try again later.';
         }
         
         showAlert(errorMsg, 'error');
+        showDebugInfo('Error details: ' + error.message);
     } finally {
         showLoading(false);
     }
