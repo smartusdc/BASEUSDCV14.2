@@ -1651,6 +1651,7 @@ async function claimReferralRewards() {
         showDebugInfo('Checking referral rewards amount');
         
         const rewards = await contract.methods.referralRewards(userAddress).call();
+        const rewardsInUSDC = web3.utils.fromWei(rewards, 'mwei');
         
         if (web3.utils.toBN(rewards).isZero()) {
             showAlert('No referral rewards available to claim', 'error');
@@ -1658,7 +1659,14 @@ async function claimReferralRewards() {
             return;
         }
 
-        showDebugInfo('Attempting to claim rewards: ' + web3.utils.fromWei(rewards, 'mwei') + ' USDC');
+        // 最小報酬額（0.01 USDC）のチェックを追加
+        if (parseFloat(rewardsInUSDC) < 0.01) {
+            showAlert('Please wait until your referral rewards reach 0.01 USDC to claim', 'info');
+            showDebugInfo('Reward amount too low: ' + rewardsInUSDC + ' USDC');
+            return;
+        }
+
+        showDebugInfo('Attempting to claim rewards: ' + rewardsInUSDC + ' USDC');
 
         const tx = await contract.methods.claimReferralReward()
             .send({ 
