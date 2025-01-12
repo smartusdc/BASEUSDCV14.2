@@ -1100,27 +1100,45 @@ function formatNumber(number, decimals = 6) {
     const decimal = parts[1].padEnd(decimals, '0').slice(0, decimals);
     return parts[0] + '.' + decimal;
 }
-    async function updatePlatformInfo() {
-        try {
-            if (!contract) {
-                showDebugInfo('Contract not initialized for platform info update');
-                return;
-            }
-
-            const apr = await contract.methods.currentAPR().call();
-            const referrerRate = await contract.methods.referrerRewardRate().call();
-            const referredRate = await contract.methods.referredRewardRate().call();
-            
-            document.getElementById('currentAPR').textContent = (apr / 100).toFixed(2);
-            document.getElementById('referrerReward').textContent = (referrerRate / 100).toFixed(2);
-            document.getElementById('referredReward').textContent = (referredRate / 100).toFixed(2);
-            
-            showDebugInfo('Platform info updated successfully');
-        } catch (error) {
-            console.error('Error updating platform info:', error);
-            showDebugInfo('Platform info update error: ' + error.message);
+   async function updatePlatformInfo() {
+    try {
+        if (!contract) {
+            showDebugInfo('Contract not initialized for platform info update');
+            return;
         }
+
+        // APRの取得を試行
+        const getAPR = async (retryCount = 0) => {
+            try {
+                const apr = await contract.methods.currentAPR().call();
+                const referrerRate = await contract.methods.referrerRewardRate().call();
+                const referredRate = await contract.methods.referredRewardRate().call();
+                
+                // 値が取得できた場合のみUIを更新
+                if (apr !== undefined) {
+                    document.getElementById('currentAPR').textContent = (apr / 100).toFixed(2);
+                    document.getElementById('referrerReward').textContent = (referrerRate / 100).toFixed(2);
+                    document.getElementById('referredReward').textContent = (referredRate / 100).toFixed(2);
+                } else if (retryCount < 2) {  // 最大2回まで再試行
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return getAPR(retryCount + 1);
+                }
+            } catch (error) {
+                if (retryCount < 2) {  // エラー時も最大2回まで再試行
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return getAPR(retryCount + 1);
+                }
+                throw error;
+            }
+        };
+
+        await getAPR();
+        showDebugInfo('Platform info updated successfully');
+    } catch (error) {
+        console.error('Error updating platform info:', error);
+        showDebugInfo('Platform info update error: ' + error.message);
     }
+}
 
     // Web3 Initialization
     async function initWeb3() {
