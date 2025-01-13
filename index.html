@@ -1455,21 +1455,30 @@ async function connectWallet() {
             }
 } else {
     try {
-        const web3Modal = new window.Web3Modal.default({
+        const wcProvider = await WalletConnectProvider.init({
             projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+            showQrModal: true,
+            qrModalOptions: { themeMode: "light" },
             chains: [8453],
-            walletConnectVersion: 2
+            rpcMap: {
+                8453: "https://mainnet.base.org"
+            },
+            metadata: {
+                name: "BASEUSDC.COM",
+                description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
+                url: "https://baseusdc.com",
+                icons: ["/favicon.png"]
+            }
         });
 
-        const provider = await web3Modal.connectTo("walletconnect");
-        web3 = new Web3(provider);
-        
+        await wcProvider.connect();
+        web3 = new Web3(wcProvider);
         const accounts = await web3.eth.getAccounts();
         userAddress = accounts[0];
         
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", () => {
+        wcProvider.on("accountsChanged", handleAccountsChanged);
+        wcProvider.on("chainChanged", handleChainChanged);
+        wcProvider.on("disconnect", () => {
             handleAccountsChanged([]);
         });
         
