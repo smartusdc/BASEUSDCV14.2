@@ -1455,33 +1455,29 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
 } else {
-            // 新しいWalletConnect v2の実装
-            const ethereumProvider = await window.WalletConnectModal.EthereumProvider.init({
-                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                chains: [8453],
-                showQrModal: true,
-                rpcMap: {
-                    8453: "https://mainnet.base.org"
-                },
-                metadata: {
-                    name: "BASEUSDC.COM",
-                    description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
-                    url: "https://baseusdc.com",
-                    icons: ["/favicon.png"]
-                }
-            });
+            try {
+                const provider = await EthereumProvider.init({
+                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+                    chains: [8453],
+                    showQrModal: true,
+                    metadata: {
+                        name: "BASEUSDC.COM",
+                        description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
+                        url: "https://baseusdc.com",
+                        icons: ["/favicon.png"]
+                    }
+                });
 
-            await ethereumProvider.enable();
-            
-            web3 = new Web3(ethereumProvider);
-            const accounts = await web3.eth.getAccounts();
-            userAddress = accounts[0];
-            
-            ethereumProvider.on("accountsChanged", handleAccountsChanged);
-            ethereumProvider.on("chainChanged", handleChainChanged);
-            ethereumProvider.on("disconnect", () => {
-                handleAccountsChanged([]);
-            });
+                await provider.enable();
+                web3 = new Web3(provider);
+                const accounts = await web3.eth.getAccounts();
+                userAddress = accounts[0];
+                
+                provider.on("accountsChanged", handleAccountsChanged);
+                provider.on("chainChanged", handleChainChanged);
+                provider.on("disconnect", () => {
+                    handleAccountsChanged([]);
+                });
             
             // コントラクトインスタンスの再初期化
             contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
