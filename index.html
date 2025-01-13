@@ -1453,22 +1453,30 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
 } else {
-    const WalletConnectProvider = window.WalletConnectProvider.default;
-    const wcProvider = new WalletConnectProvider({
+    const provider = await WalletConnectProvider.init({
         projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        rpc: {
+        chains: [8453],
+        optionalChains: [8453],
+        showQrModal: true,
+        rpcMap: {
             8453: "https://mainnet.base.org"
+        },
+        metadata: {
+            name: "BASEUSDC.COM",
+            description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
+            url: "https://baseusdc.com",
+            icons: ["/favicon.png"]
         }
     });
-    
-    await wcProvider.enable();
-    web3 = new Web3(wcProvider);
+
+    await provider.connect();
+    web3 = new Web3(provider);
     const accounts = await web3.eth.getAccounts();
     userAddress = accounts[0];
     
-    wcProvider.on("accountsChanged", handleAccountsChanged);
-    wcProvider.on("chainChanged", handleChainChanged);
-    wcProvider.on("disconnect", () => {
+    provider.on("accountsChanged", handleAccountsChanged);
+    provider.on("chainChanged", handleChainChanged);
+    provider.on("disconnect", () => {
         handleAccountsChanged([]);
     });
     
