@@ -1432,7 +1432,7 @@ async function connectWallet() {
         showLoading(true);
         
         if (window.ethereum) {
-            // MetaMaskが存在する場合の処理
+            // MetaMask実装は現状のまま維持
             try {
                 web3 = new Web3(window.ethereum);
                 const accounts = await window.ethereum.request({ 
@@ -1440,11 +1440,9 @@ async function connectWallet() {
                 });
                 userAddress = accounts[0];
                 
-                // コントラクトインスタンスの再初期化
                 contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
                 usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
                 
-                // イベントリスナーの設定
                 window.ethereum.on("accountsChanged", handleAccountsChanged);
                 window.ethereum.on("chainChanged", handleChainChanged);
                 window.ethereum.on("disconnect", () => {
@@ -1453,41 +1451,63 @@ async function connectWallet() {
             } catch (err) {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-} else {
-    try {
-        const wcProvider = await WalletConnectProvider.init({
-            projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-            showQrModal: true,
-            qrModalOptions: { themeMode: "light" },
-            chains: [8453],
-            rpcMap: {
-                8453: "https://mainnet.base.org"
-            },
-            metadata: {
-                name: "BASEUSDC.COM",
-                description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
-                url: "https://baseusdc.com",
-                icons: ["/favicon.png"]
-            }
-        });
+        } else {
+            // WalletConnect v2の新しい実装
+            try {
+                const ethereumProvider = await window.EthereumProvider.init({
+                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+                    chains: [8453],
+                    optionalChains: [1], // Ethereum Mainnetもサポート
+                    showQrModal: true,
+                    methods: [
+                        "eth_sendTransaction",
+                        "personal_sign",
+                        "eth_accounts",
+                        "eth_requestAccounts",
+                        "eth_call",
+                        "eth_getBalance",
+                        "eth_sendRawTransaction",
+                        "eth_sign",
+                        "eth_signTransaction",
+                        "eth_signTypedData",
+                        "eth_signTypedData_v4",
+                        "wallet_switchEthereumChain",
+                        "wallet_addEthereumChain"
+                    ],
+                    events: ["chainChanged", "accountsChanged", "disconnect"],
+                    metadata: {
+                        name: "BASEUSDC.COM",
+                        description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
+                        url: "https://baseusdc.com",
+                        icons: ["/favicon.png"]
+                    }
+                });
 
-        await wcProvider.connect();
-        web3 = new Web3(wcProvider);
-        const accounts = await web3.eth.getAccounts();
-        userAddress = accounts[0];
-        
-        wcProvider.on("accountsChanged", handleAccountsChanged);
-        wcProvider.on("chainChanged", handleChainChanged);
-        wcProvider.on("disconnect", () => {
-            handleAccountsChanged([]);
-        });
-        
-        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-    } catch (error) {
-        throw new Error('Failed to connect wallet: ' + error.message);
-    }
-}
+                await ethereumProvider.connect();
+                
+                web3 = new Web3(ethereumProvider);
+                const accounts = await web3.eth.getAccounts();
+                userAddress = accounts[0];
+                
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+                
+                ethereumProvider.on("accountsChanged", handleAccountsChanged);
+                ethereumProvider.on("chainChanged", handleChainChanged);
+                ethereumProvider.on("disconnect", () => {
+                    handleAccountsChanged([]);
+                    // 切断時の追加クリーンアップ
+                    web3 = null;
+                    contract = null;
+                    usdcContract = null;
+                });
+
+            } catch (error) {
+                console.error('WalletConnect error:', error);
+                throw new Error('Failed to connect wallet: ' + error.message);
+            }
+        }
+
         showDebugInfo('Wallet connected: ' + userAddress);
         await checkAndSwitchNetwork();
         onConnect();
