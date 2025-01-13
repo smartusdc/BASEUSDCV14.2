@@ -38,7 +38,8 @@
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="https://unpkg.com/@web3modal/standalone@2.4.1/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.7.1/dist/index.umd.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1453,37 +1454,31 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
 } else {
-    const provider = await WalletConnectProvider.init({
-        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        chains: [8453],
-        optionalChains: [8453],
-        showQrModal: true,
-        rpcMap: {
-            8453: "https://mainnet.base.org"
-        },
-        metadata: {
-            name: "BASEUSDC.COM",
-            description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
-            url: "https://baseusdc.com",
-            icons: ["/favicon.png"]
-        }
-    });
+    try {
+        const web3Modal = new window.Web3Modal.default({
+            projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+            chains: [8453],
+            walletConnectVersion: 2
+        });
 
-    await provider.connect();
-    web3 = new Web3(provider);
-    const accounts = await web3.eth.getAccounts();
-    userAddress = accounts[0];
-    
-    provider.on("accountsChanged", handleAccountsChanged);
-    provider.on("chainChanged", handleChainChanged);
-    provider.on("disconnect", () => {
-        handleAccountsChanged([]);
-    });
-    
-    contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-    usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+        const provider = await web3Modal.connectTo("walletconnect");
+        web3 = new Web3(provider);
+        
+        const accounts = await web3.eth.getAccounts();
+        userAddress = accounts[0];
+        
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
+            handleAccountsChanged([]);
+        });
+        
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+    } catch (error) {
+        throw new Error('Failed to connect wallet: ' + error.message);
+    }
 }
-
         showDebugInfo('Wallet connected: ' + userAddress);
         await checkAndSwitchNetwork();
         onConnect();
