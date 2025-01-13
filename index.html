@@ -1453,62 +1453,36 @@ async function connectWallet() {
             } catch (err) {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-        } else {
-            // WalletConnect v2の新しい実装
-            try {
-                const ethereumProvider = await window.EthereumProvider.init({
-                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                    chains: [8453],
-                    optionalChains: [1], // Ethereum Mainnetもサポート
-                    showQrModal: true,
-                    methods: [
-                        "eth_sendTransaction",
-                        "personal_sign",
-                        "eth_accounts",
-                        "eth_requestAccounts",
-                        "eth_call",
-                        "eth_getBalance",
-                        "eth_sendRawTransaction",
-                        "eth_sign",
-                        "eth_signTransaction",
-                        "eth_signTypedData",
-                        "eth_signTypedData_v4",
-                        "wallet_switchEthereumChain",
-                        "wallet_addEthereumChain"
-                    ],
-                    events: ["chainChanged", "accountsChanged", "disconnect"],
-                    metadata: {
-                        name: "BASEUSDC.COM",
-                        description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
-                        url: "https://baseusdc.com",
-                        icons: ["/favicon.png"]
-                    }
-                });
-
-                await ethereumProvider.connect();
-                
-                web3 = new Web3(ethereumProvider);
-                const accounts = await web3.eth.getAccounts();
-                userAddress = accounts[0];
-                
-                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-                
-                ethereumProvider.on("accountsChanged", handleAccountsChanged);
-                ethereumProvider.on("chainChanged", handleChainChanged);
-                ethereumProvider.on("disconnect", () => {
-                    handleAccountsChanged([]);
-                    // 切断時の追加クリーンアップ
-                    web3 = null;
-                    contract = null;
-                    usdcContract = null;
-                });
-
-            } catch (error) {
-                console.error('WalletConnect error:', error);
-                throw new Error('Failed to connect wallet: ' + error.message);
-            }
+} else {
+    try {
+        if (!web3Modal) {
+            initWeb3Modal();
         }
+
+        wcProvider = await web3Modal.connect();
+        web3 = new Web3(wcProvider);
+        
+        const accounts = await web3.eth.getAccounts();
+        userAddress = accounts[0];
+
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
+        wcProvider.on("accountsChanged", handleAccountsChanged);
+        wcProvider.on("chainChanged", handleChainChanged);
+        wcProvider.on("disconnect", () => {
+            handleAccountsChanged([]);
+            web3 = null;
+            wcProvider = null;
+            contract = null;
+            usdcContract = null;
+        });
+
+    } catch (error) {
+        console.error('WalletConnect error:', error);
+        throw new Error('Failed to connect wallet: ' + error.message);
+    }
+}
 
         showDebugInfo('Wallet connected: ' + userAddress);
         await checkAndSwitchNetwork();
@@ -2004,6 +1978,24 @@ async function claimReferralRewards() {
     }
 }
 
+async function initWeb3Modal() {
+    web3Modal = new window.WalletConnectModal.default({
+        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+        chains: [8453],
+        enableExplorer: true,
+        explorerRecommendedWalletIds: [
+            'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+            '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'  // Trust Wallet
+        ],
+        metadata: {
+            name: "BASEUSDC.COM",
+            description: "The Future of Finance on BASE Network",
+            url: "https://baseusdc.com",
+            icons: ["/favicon.png"]
+        }
+    });
+}
+      
     async function setMaxStakeAmount() {
         if (!userAddress) return;
         
