@@ -1453,34 +1453,28 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
 } else {
-            try {
-                const provider = await EthereumProvider.init({
-                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                    chains: [8453],
-                    showQrModal: true,
-                    metadata: {
-                        name: "BASEUSDC.COM",
-                        description: "BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network",
-                        url: "https://baseusdc.com",
-                        icons: ["/favicon.png"]
-                    }
-                });
-
-                await provider.enable();
-                web3 = new Web3(provider);
-                const accounts = await web3.eth.getAccounts();
-                userAddress = accounts[0];
-                
-                provider.on("accountsChanged", handleAccountsChanged);
-                provider.on("chainChanged", handleChainChanged);
-                provider.on("disconnect", () => {
-                    handleAccountsChanged([]);
-                });
-            
-            // コントラクトインスタンスの再初期化
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+    const WalletConnectProvider = window.WalletConnectProvider.default;
+    const wcProvider = new WalletConnectProvider({
+        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+        rpc: {
+            8453: "https://mainnet.base.org"
         }
+    });
+    
+    await wcProvider.enable();
+    web3 = new Web3(wcProvider);
+    const accounts = await web3.eth.getAccounts();
+    userAddress = accounts[0];
+    
+    wcProvider.on("accountsChanged", handleAccountsChanged);
+    wcProvider.on("chainChanged", handleChainChanged);
+    wcProvider.on("disconnect", () => {
+        handleAccountsChanged([]);
+    });
+    
+    contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+    usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+}
 
         showDebugInfo('Wallet connected: ' + userAddress);
         await checkAndSwitchNetwork();
