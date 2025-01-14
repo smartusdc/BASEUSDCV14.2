@@ -1444,41 +1444,22 @@ function detectEthereumProvider() {
     return null;
 }
 
-// Replace the entire connectWallet() function with this:
+
 async function connectWallet() {
     try {
         showLoading(true);
+        document.getElementById('networkStatus').textContent = 'Connecting...';
         
-        if (window.ethereum) {
-            await window.ethereum.request({
-                method: 'wallet_requestPermissions',
-                params: [{ eth_accounts: {} }]
-            }).catch(() => {});
-
-            web3 = new Web3(window.ethereum);
-            const accounts = await window.ethereum.request({
-                method: 'eth_requestAccounts'
-            });
-            
+        const web3Modal = await initWeb3();
+        const provider = await web3Modal.connect();
+        web3 = new Web3(provider);
+        
+        const accounts = await web3.eth.getAccounts();
+        if (accounts.length > 0) {
             userAddress = accounts[0];
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-            
-            window.ethereum.on("accountsChanged", handleAccountsChanged);
-            window.ethereum.on("chainChanged", handleChainChanged);
-        } else {
-            if (!web3Modal) {
-                web3Modal = new window.WalletConnectModal({
-                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                    standaloneChains: ["eip155:8453"]
-                });
-            }
-
-            await web3Modal.openModal();
+            onConnect();
         }
-
-        await checkAndSwitchNetwork();
-        onConnect();
+        
         showAlert('Wallet connected successfully!', 'success');
     } catch (error) {
         console.error("Connection error:", error);
