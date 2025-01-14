@@ -1373,9 +1373,14 @@ function formatNumber(number, decimals = 6) {
     }
 }
 
-// 古い実装全体を削除し、新しい実装に置き換え
+// Enhanced Web3Modal initialization with proper error handling
 async function initWeb3() {
     try {
+        // Ensure required libraries are loaded
+        if (typeof window.Web3Modal === 'undefined') {
+            throw new Error('Web3Modal library not loaded');
+        }
+
         const web3Modal = new window.Web3Modal.default({
             projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
             standaloneChains: ["eip155:8453"],
@@ -1421,7 +1426,9 @@ async function initWeb3() {
             ]
         });
 
+        // Initialize connection event handlers
         web3Modal.subscribeModal((state) => {
+            console.log("Modal state changed:", state.open);
             if (!state.open) {
                 updateConnectionStatus('Wallet disconnected');
             }
@@ -1431,6 +1438,30 @@ async function initWeb3() {
     } catch (error) {
         console.error("Failed to initialize Web3Modal:", error);
         throw error;
+    }
+}
+
+        // Setup event listeners and initial state
+        const connectButton = document.getElementById('connectWallet');
+        connectButton.addEventListener('click', async () => {
+            try {
+                await web3Modal.openModal();
+                const provider = await web3Modal.connect();
+                web3 = new Web3(provider);
+                const accounts = await web3.eth.getAccounts();
+                if (accounts.length > 0) {
+                    userAddress = accounts[0];
+                    onConnect();
+                }
+            } catch (error) {
+                console.error("Connection error:", error);
+                showAlert('Failed to connect wallet', 'error');
+            }
+        });
+
+    } catch (error) {
+        console.error("Initialization error:", error);
+        showAlert('Failed to initialize wallet connection', 'error');
     }
 }
 
