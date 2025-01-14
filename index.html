@@ -1376,16 +1376,29 @@ function formatNumber(number, decimals = 6) {
 
 async function initWeb3() {
     try {
-        // Web3Modal初期化の前にライブラリの読み込みを確認
-        if (typeof window.Web3Modal === 'undefined') {
-            console.error("Required libraries not loaded");
-            showAlert('Please refresh the page and try again', 'error');
-            return;
-        }
+        const providerOptions = {
+            walletconnect: {
+                package: WalletConnectProvider,
+                options: {
+                    rpc: {
+                        8453: 'https://mainnet.base.org'
+                    },
+                    chainId: 8453
+                }
+            },
+            coinbasewallet: {
+                package: CoinbaseWalletSDK,
+                options: {
+                    appName: "BASEUSDC.COM",
+                    rpc: "https://mainnet.base.org",
+                    chainId: 8453
+                }
+            }
+        };
 
-        web3Modal = new window.Web3Modal({
-            projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-            chainId: 8453,
+        web3Modal = new Web3Modal({
+            cacheProvider: false,
+            providerOptions,
             theme: "light"
         });
 
@@ -1405,18 +1418,13 @@ async function initWeb3() {
         }
 
         await updatePlatformInfo();
-        
-        // イベントリスナーが重複して追加されないように確認
-        const connectButton = document.getElementById('connectWallet');
-        connectButton.removeEventListener('click', connectWallet);
-        connectButton.addEventListener('click', connectWallet);
+        document.getElementById('connectWallet').addEventListener('click', connectWallet);
         
     } catch (error) {
         console.error("Failed to initialize Web3:", error);
         showAlert('Failed to initialize Web3. Please refresh the page.', 'error');
     }
 }
-
 function detectEthereumProvider() {
     if (window.ethereum) {
         return window.ethereum;
