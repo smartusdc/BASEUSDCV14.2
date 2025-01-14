@@ -1461,21 +1461,23 @@ async function connectWallet() {
             initWeb3Modal();
         }
 
-        wcProvider = await web3Modal.connect();
-        web3 = new Web3(wcProvider);
-        
-        const accounts = await web3.eth.getAccounts();
-        userAddress = accounts[0];
+        const provider = await web3Modal.openModal({
+            standaloneChains: ["eip155:8453"]
+        });
 
+        const signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+        
+        web3 = new Web3(provider);
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
 
-        wcProvider.on("accountsChanged", handleAccountsChanged);
-        wcProvider.on("chainChanged", handleChainChanged);
-        wcProvider.on("disconnect", () => {
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
             handleAccountsChanged([]);
             web3 = null;
-            wcProvider = null;
+            provider = null;
             contract = null;
             usdcContract = null;
         });
