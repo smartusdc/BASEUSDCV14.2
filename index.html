@@ -37,8 +37,9 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://unpkg.com/@walletconnect/web3-modal@2.7.1/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+<script src="https://unpkg.com/@web3modal/ethereum@2.7.1/dist/cdn.js"></script>
+<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.7.1/dist/cdn.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1374,13 +1375,13 @@ function formatNumber(number, decimals = 6) {
 
 async function initWeb3() {
     try {
-        // Check if Web3Modal is loaded
-        if (!window.Web3Modal) {
-            console.error("Web3Modal is not loaded");
-            return;
-        }
+        web3Modal = new Web3Modal.default({
+            projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+            chains: [8453],
+            defaultChain: 8453
+        });
 
-        // Initialize provider
+        // 自動接続を試行
         if (window.ethereum) {
             web3 = new Web3(window.ethereum);
             contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
@@ -1392,22 +1393,11 @@ async function initWeb3() {
                 onConnect();
             }
 
-            // Setup MetaMask event listeners
             window.ethereum.on('accountsChanged', handleAccountsChanged);
             window.ethereum.on('chainChanged', handleChainChanged);
-        } else {
-            // Fallback to WalletConnect
-            web3Modal = new window.Web3Modal.default({
-                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                standaloneChains: ["eip155:8453"],
-                defaultChain: "eip155:8453"
-            });
         }
 
-        // Update platform info
         await updatePlatformInfo();
-        
-        // Setup connect button event listener
         document.getElementById('connectWallet').addEventListener('click', connectWallet);
         
     } catch (error) {
@@ -1427,25 +1417,14 @@ function detectEthereumProvider() {
 }
 
 
-// Connect Wallet Function
 async function connectWallet() {
     try {
         showLoading(true);
         document.getElementById('networkStatus').textContent = 'Connecting...';
 
-        let provider;
-        if (window.ethereum) {
-            // MetaMask case
-            provider = window.ethereum;
-            await provider.request({ method: 'eth_requestAccounts' });
-        } else if (web3Modal) {
-            // WalletConnect case
-            provider = await web3Modal.connect();
-        } else {
-            throw new Error('No web3 provider found');
-        }
-
+        const provider = await web3Modal.connect();
         web3 = new Web3(provider);
+        
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
 
