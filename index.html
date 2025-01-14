@@ -1373,29 +1373,19 @@ function formatNumber(number, decimals = 6) {
     }
 }
 
-    // Web3 Initialization
-    async function initWeb3() {
+// Replace the entire initWeb3() function with this:
+async function initWeb3() {
     try {
-      // Web3Modal初期化を最初に行う
-        initWeb3Modal();  // この行を追加
-        // イベントリスナーの設定（この部分は常に実行）
-        document.getElementById('connectWallet').addEventListener('click', connectWallet);
-        document.getElementById('stakeButton').addEventListener('click', stake);
-        document.getElementById('withdrawButton').addEventListener('click', withdraw);
-        document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
-        document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
-        document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
-        document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
-        document.getElementById('applyReferralButton').addEventListener('click', applyReferral);
+        web3Modal = new window.WalletConnectModal({
+            projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+            standaloneChains: ["eip155:8453"]
+        });
 
-        const provider = detectEthereumProvider();
+        const provider = window.ethereum;
         if (provider) {
             web3 = new Web3(provider);
             contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
             usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-            
-            provider.on("accountsChanged", handleAccountsChanged);
-            provider.on("chainChanged", handleChainChanged);
             
             const accounts = await web3.eth.getAccounts();
             if (accounts.length > 0) {
@@ -1403,21 +1393,15 @@ function formatNumber(number, decimals = 6) {
                 onConnect();
             }
         } else {
-            // 読み取り専用の初期化
-            const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
-            web3 = new Web3(readOnlyProvider);
+            web3 = new Web3('https://mainnet.base.org');
             contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
             usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
         }
 
+        document.getElementById('connectWallet').addEventListener('click', connectWallet);
         await updatePlatformInfo();
-        setInterval(updatePlatformInfo, 15 * 60 * 1000);
-        
-        showDebugInfo('Web3 initialized successfully');
     } catch (error) {
         console.error("Error initializing Web3:", error);
-        showAlert('Failed to initialize Web3: ' + error.message, 'error');
-        showDebugInfo('Web3 initialization error: ' + error.message);
     }
 }
 
