@@ -1376,6 +1376,8 @@ function formatNumber(number, decimals = 6) {
     // Web3 Initialization
     async function initWeb3() {
     try {
+      // Web3Modal初期化を最初に行う
+        initWeb3Modal();  // この行を追加
         // イベントリスナーの設定（この部分は常に実行）
         document.getElementById('connectWallet').addEventListener('click', connectWallet);
         document.getElementById('stakeButton').addEventListener('click', stake);
