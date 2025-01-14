@@ -38,8 +38,8 @@
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-<script src="https://unpkg.com/@web3modal/ethereum@2.7.1/dist/cdn.js"></script>
-<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.7.1/dist/cdn.js"></script>
+<script src="https://unpkg.com/@web3modal/standalone@2.7.1/dist/index.js"></script>
+<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.7.1/dist/umd/ethereum-provider.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1375,13 +1375,19 @@ function formatNumber(number, decimals = 6) {
 
 async function initWeb3() {
     try {
-        web3Modal = new Web3Modal.default({
+        // Web3Modal初期化の前にライブラリの読み込みを確認
+        if (typeof window.Web3Modal === 'undefined') {
+            console.error("Required libraries not loaded");
+            showAlert('Please refresh the page and try again', 'error');
+            return;
+        }
+
+        web3Modal = new window.Web3Modal({
             projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-            chains: [8453],
-            defaultChain: 8453
+            chainId: 8453,
+            theme: "light"
         });
 
-        // 自動接続を試行
         if (window.ethereum) {
             web3 = new Web3(window.ethereum);
             contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
@@ -1398,7 +1404,11 @@ async function initWeb3() {
         }
 
         await updatePlatformInfo();
-        document.getElementById('connectWallet').addEventListener('click', connectWallet);
+        
+        // イベントリスナーが重複して追加されないように確認
+        const connectButton = document.getElementById('connectWallet');
+        connectButton.removeEventListener('click', connectWallet);
+        connectButton.addEventListener('click', connectWallet);
         
     } catch (error) {
         console.error("Failed to initialize Web3:", error);
