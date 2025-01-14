@@ -1981,14 +1981,9 @@ async function claimReferralRewards() {
 }
 
 async function initWeb3Modal() {
-    web3Modal = new window.WalletConnectModal.default({
+    web3Modal = new window.WalletConnectModal({
         projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        chains: [8453],
-        enableExplorer: true,
-        explorerRecommendedWalletIds: [
-            'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
-            '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'  // Trust Wallet
-        ],
+        standaloneChains: ["eip155:8453"],
         metadata: {
             name: "BASEUSDC.COM",
             description: "The Future of Finance on BASE Network",
