@@ -1415,72 +1415,45 @@ function detectEthereumProvider() {
     return null;
 }
 
+// Replace the entire connectWallet() function with this:
 async function connectWallet() {
     try {
         showLoading(true);
         
         if (window.ethereum) {
-            // MetaMask実装は現状のまま維持
-            try {
-                web3 = new Web3(window.ethereum);
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
+            await window.ethereum.request({
+                method: 'wallet_requestPermissions',
+                params: [{ eth_accounts: {} }]
+            }).catch(() => {});
+
+            web3 = new Web3(window.ethereum);
+            const accounts = await window.ethereum.request({
+                method: 'eth_requestAccounts'
+            });
+            
+            userAddress = accounts[0];
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+            
+            window.ethereum.on("accountsChanged", handleAccountsChanged);
+            window.ethereum.on("chainChanged", handleChainChanged);
+        } else {
+            if (!web3Modal) {
+                web3Modal = new window.WalletConnectModal({
+                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+                    standaloneChains: ["eip155:8453"]
                 });
-                userAddress = accounts[0];
-                
-                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-                
-                window.ethereum.on("accountsChanged", handleAccountsChanged);
-                window.ethereum.on("chainChanged", handleChainChanged);
-                window.ethereum.on("disconnect", () => {
-                    handleAccountsChanged([]);
-                });
-            } catch (err) {
-                throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-} else {
-    try {
-        if (!web3Modal) {
-            initWeb3Modal();
+
+            await web3Modal.openModal();
         }
 
-        const provider = await web3Modal.openModal({
-            standaloneChains: ["eip155:8453"]
-        });
-
-        const signer = await provider.getSigner();
-        userAddress = await signer.getAddress();
-        
-        web3 = new Web3(provider);
-        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", () => {
-            handleAccountsChanged([]);
-            web3 = null;
-            provider = null;
-            contract = null;
-            usdcContract = null;
-        });
-
-    } catch (error) {
-        console.error('WalletConnect error:', error);
-        throw new Error('Failed to connect wallet: ' + error.message);
-    }
-}
-
-        showDebugInfo('Wallet connected: ' + userAddress);
         await checkAndSwitchNetwork();
         onConnect();
         showAlert('Wallet connected successfully!', 'success');
-        
     } catch (error) {
         console.error("Connection error:", error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
-        showDebugInfo('Wallet connection error: ' + error.message);
+        showAlert('Failed to connect wallet. Please try again.', 'error');
     } finally {
         showLoading(false);
     }
