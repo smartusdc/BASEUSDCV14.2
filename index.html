@@ -1373,27 +1373,46 @@ function formatNumber(number, decimals = 6) {
 }
 
 async function initWeb3() {
-        // Setup event listeners and initial state
-        const connectButton = document.getElementById('connectWallet');
-        connectButton.addEventListener('click', async () => {
-            try {
-                await web3Modal.openModal();
-                const provider = await web3Modal.connect();
-                web3 = new Web3(provider);
-                const accounts = await web3.eth.getAccounts();
-                if (accounts.length > 0) {
-                    userAddress = accounts[0];
-                    onConnect();
-                }
-            } catch (error) {
-                console.error("Connection error:", error);
-                showAlert('Failed to connect wallet', 'error');
-            }
-        });
+    try {
+        // Check if Web3Modal is loaded
+        if (!window.Web3Modal) {
+            console.error("Web3Modal is not loaded");
+            return;
+        }
 
+        // Initialize provider
+        if (window.ethereum) {
+            web3 = new Web3(window.ethereum);
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+            
+            const accounts = await web3.eth.getAccounts();
+            if (accounts.length > 0) {
+                userAddress = accounts[0];
+                onConnect();
+            }
+
+            // Setup MetaMask event listeners
+            window.ethereum.on('accountsChanged', handleAccountsChanged);
+            window.ethereum.on('chainChanged', handleChainChanged);
+        } else {
+            // Fallback to WalletConnect
+            web3Modal = new window.Web3Modal.default({
+                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+                standaloneChains: ["eip155:8453"],
+                defaultChain: "eip155:8453"
+            });
+        }
+
+        // Update platform info
+        await updatePlatformInfo();
+        
+        // Setup connect button event listener
+        document.getElementById('connectWallet').addEventListener('click', connectWallet);
+        
     } catch (error) {
-        console.error("Initialization error:", error);
-        showAlert('Failed to initialize wallet connection', 'error');
+        console.error("Failed to initialize Web3:", error);
+        showAlert('Failed to initialize Web3. Please refresh the page.', 'error');
     }
 }
 
