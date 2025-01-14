@@ -37,9 +37,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
-<script src="https://unpkg.com/@web3modal/ethereum@2.7.1/dist/index.js"></script>
-<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.7.1/dist/index.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+<script src="https://unpkg.com/@walletconnect/web3-modal@2.7.1/dist/index.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1373,71 +1372,45 @@ function formatNumber(number, decimals = 6) {
     }
 }
 
-// Enhanced Web3Modal initialization with proper error handling
+// Initialize Web3Modal
 async function initWeb3() {
     try {
-        // Ensure required libraries are loaded
-        if (typeof window.Web3Modal === 'undefined') {
-            throw new Error('Web3Modal library not loaded');
+        // Check if Web3Modal is loaded
+        if (!window.Web3Modal) {
+            console.error("Web3Modal is not loaded");
+            return;
         }
 
-        const web3Modal = new window.Web3Modal.default({
-            projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-            standaloneChains: ["eip155:8453"],
-            defaultChain: "eip155:8453",
-            metadata: {
-                name: "BASEUSDC.COM",
-                description: "The Future of Finance on BASE Network",
-                url: "https://baseusdc.com",
-                icons: ["https://baseusdc.com/favicon.png"]
-            },
-            walletConnectVersion: 2,
-            mobileWallets: [
-                {
-                    id: "trust",
-                    name: "Trust Wallet",
-                    links: {
-                        native: "trust://"
-                    }
-                },
-                {
-                    id: "metamask",
-                    name: "MetaMask",
-                    links: {
-                        native: "metamask://"
-                    }
-                }
-            ],
-            desktopWallets: [
-                {
-                    id: "metamask",
-                    name: "MetaMask",
-                    links: {
-                        native: "metamask://"
-                    }
-                }
-            ],
-            chains: [
-                {
-                    id: 8453,
-                    name: "Base",
-                    rpcUrl: "https://mainnet.base.org"
-                }
-            ]
-        });
-
-        // Initialize connection event handlers
-        web3Modal.subscribeModal((state) => {
-            console.log("Modal state changed:", state.open);
-            if (!state.open) {
-                updateConnectionStatus('Wallet disconnected');
+        // Initialize provider
+        if (window.ethereum) {
+            web3 = new Web3(window.ethereum);
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+            
+            const accounts = await web3.eth.getAccounts();
+            if (accounts.length > 0) {
+                userAddress = accounts[0];
+                onConnect();
             }
-        });
 
-        return web3Modal;
+            // Setup MetaMask event listeners
+            window.ethereum.on('accountsChanged', handleAccountsChanged);
+            window.ethereum.on('chainChanged', handleChainChanged);
+        } else {
+            // Fallback to WalletConnect
+            web3Modal = new window.Web3Modal.default({
+                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+                standaloneChains: ["eip155:8453"],
+                defaultChain: "eip155:8453"
+            });
+        }
+
+        // Update platform info
+        await updatePlatformInfo();
+        
     } catch (error) {
-        console.error("Failed to initialize Web3Modal:", error);
-        throw error;
+        console.error("Failed to initialize Web3:", error);
+        showAlert('Failed to initialize Web3. Please refresh the page.', 'error');
     }
 }
 
@@ -1476,25 +1449,39 @@ function detectEthereumProvider() {
 }
 
 
+// Connect Wallet Function
 async function connectWallet() {
     try {
         showLoading(true);
         document.getElementById('networkStatus').textContent = 'Connecting...';
-        
-        const web3Modal = await initWeb3();
-        const provider = await web3Modal.connect();
+
+        let provider;
+        if (window.ethereum) {
+            // MetaMask case
+            provider = window.ethereum;
+            await provider.request({ method: 'eth_requestAccounts' });
+        } else if (web3Modal) {
+            // WalletConnect case
+            provider = await web3Modal.connect();
+        } else {
+            throw new Error('No web3 provider found');
+        }
+
         web3 = new Web3(provider);
-        
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
         const accounts = await web3.eth.getAccounts();
         if (accounts.length > 0) {
             userAddress = accounts[0];
+            await checkAndSwitchNetwork();
             onConnect();
+            showAlert('Wallet connected successfully!', 'success');
         }
-        
-        showAlert('Wallet connected successfully!', 'success');
+
     } catch (error) {
         console.error("Connection error:", error);
-        showAlert('Failed to connect wallet. Please try again.', 'error');
+        showAlert('Failed to connect wallet: ' + error.message, 'error');
     } finally {
         showLoading(false);
     }
