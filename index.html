@@ -38,9 +38,10 @@
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://unpkg.com/@web3modal/ethereum@2.6.2/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@web3modal/ethereum@2.7.1/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@web3modal/html@2.7.1/dist/index.umd.js"></script>
+<script src="https://unpkg.com/viem@1.19.11/dist/index.umd.js"></script>
 <script src="https://unpkg.com/@wagmi/core@1.4.3/dist/wagmi-core.umd.js"></script>
-<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.10.0/dist/umd/index.umd.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1456,71 +1457,40 @@ async function connectWallet() {
             }
 } else {
     // WalletConnect v2の実装
-    const { EthereumClient, w3mConnectors, w3mProvider } = window.w3m;
-    const { Web3Modal } = window.w3m;
-    const { configureChains, createConfig } = window.wagmi;
-
-    // チェーンの設定
-    const chains = [{ 
-        id: 8453,
-        name: 'Base',
-        network: 'base',
-        rpcUrls: {
-            public: { http: ['https://mainnet.base.org'] },
-            default: { http: ['https://mainnet.base.org'] }
-        }
-    }];
-
-    const projectId = "9b35dd5097e09b9acfe04c3d8dc60b7b";
-
-    const wagmiConfig = createConfig({
-        autoConnect: true,
-        connectors: w3mConnectors({ projectId, chains }),
-        publicClient: configureChains(chains, [w3mProvider({ projectId })]).publicClient
+    const web3modal = new window.Web3Modal.Web3Modal({
+        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+        theme: "light",
+        chain: 8453,
+        defaultChain: 8453
     });
 
-    const ethereumClient = new EthereumClient(wagmiConfig, chains);
-    const web3modal = new Web3Modal({
-        projectId,
-        chains,
-        defaultChain: chains[0],
-        themeMode: "light",
-        themeVariables: {
-            '--w3m-font-family': 'Segoe UI, sans-serif',
-            '--w3m-accent-color': '#2196F3'
-        }
-    });
+    try {
+        const connection = await web3modal.connect();
+        const provider = connection.provider;
+        web3 = new Web3(provider);
+        
+        const accounts = await web3.eth.getAccounts();
+        userAddress = accounts[0];
 
-    const provider = await web3modal.connect();
-    web3 = new Web3(provider);
-    const accounts = await web3.eth.getAccounts();
-    userAddress = accounts[0];
+        // コントラクトインスタンスの初期化
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
 
-    // コントラクトインスタンスの初期化
-    contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-    usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-    // イベントリスナーの設定
-    provider.on("accountsChanged", handleAccountsChanged);
-    provider.on("chainChanged", handleChainChanged);
-    provider.on("disconnect", () => {
-        handleAccountsChanged([]);
-    });
+        // イベントリスナーの設定
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
+            handleAccountsChanged([]);
+        });
+    } catch (err) {
+        throw new Error('Failed to connect with WalletConnect: ' + err.message);
+    }
 }
 
 showDebugInfo('Wallet connected: ' + userAddress);
 await checkAndSwitchNetwork();
 onConnect();
 showAlert('Wallet connected successfully!', 'success');
-        
-    } catch (error) {
-        console.error("Connection error:", error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
-        showDebugInfo('Wallet connection error: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
-}
 
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
