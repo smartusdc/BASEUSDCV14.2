@@ -1464,8 +1464,8 @@ async function connectWallet() {
     });
 
     try {
-        const instance = await web3modal.connect();
-        web3 = new Web3(instance);
+        const provider = await web3modal.connect();
+        web3 = new Web3(provider);
         
         const accounts = await web3.eth.getAccounts();
         userAddress = accounts[0];
@@ -1475,9 +1475,9 @@ async function connectWallet() {
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
 
         // イベントリスナーの設定
-        instance.on("accountsChanged", handleAccountsChanged);
-        instance.on("chainChanged", handleChainChanged);
-        instance.on("disconnect", () => {
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
             handleAccountsChanged([]);
         });
     } catch (err) {
