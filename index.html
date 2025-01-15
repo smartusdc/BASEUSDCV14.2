@@ -1432,7 +1432,7 @@ async function connectWallet() {
         showLoading(true);
         
         if (window.ethereum) {
-            // MetaMaskが存在する場合の処理
+            // MetaMask用の既存の処理をそのまま維持
             try {
                 web3 = new Web3(window.ethereum);
                 const accounts = await window.ethereum.request({ 
@@ -1440,11 +1440,9 @@ async function connectWallet() {
                 });
                 userAddress = accounts[0];
                 
-                // コントラクトインスタンスの再初期化
                 contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
                 usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
                 
-                // イベントリスナーの設定
                 window.ethereum.on("accountsChanged", handleAccountsChanged);
                 window.ethereum.on("chainChanged", handleChainChanged);
                 window.ethereum.on("disconnect", () => {
@@ -1453,36 +1451,56 @@ async function connectWallet() {
             } catch (err) {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-} else {
-    // WalletConnect v2の実装
-    const web3modal = new window.Web3Modal.default({
-        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        theme: "light",
-        chainId: 8453
-    });
+        } else {
+            // WalletConnect v2の処理
+            const provider = new WalletConnectProvider({
+                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+                chains: [8453],
+                rpc: {
+                    8453: "https://mainnet.base.org"
+                }
+            });
 
-    try {
-        const provider = await web3modal.connect();
-        web3 = new Web3(provider);
+            try {
+                await provider.enable();
+                web3 = new Web3(provider);
+                
+                const accounts = await web3.eth.getAccounts();
+                userAddress = accounts[0];
+                
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+                
+                provider.on("accountsChanged", handleAccountsChanged);
+                provider.on("chainChanged", handleChainChanged);
+                provider.on("disconnect", () => {
+                    handleAccountsChanged([]);
+                });
+                
+                // チェーンIDの確認
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 8453) {
+                    showAlert('Please switch to BASE Network in your wallet', 'error');
+                    throw new Error('Incorrect network');
+                }
+            } catch (err) {
+                throw new Error('Failed to connect with WalletConnect: ' + err.message);
+            }
+        }
+
+        showDebugInfo('Wallet connected: ' + userAddress);
+        await checkAndSwitchNetwork();
+        onConnect();
+        showAlert('Wallet connected successfully!', 'success');
         
-        const accounts = await web3.eth.getAccounts();
-        userAddress = accounts[0];
-
-        // コントラクトインスタンスの初期化
-        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-        // イベントリスナーの設定
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", () => {
-            handleAccountsChanged([]);
-        });
-    } catch (err) {
-        throw new Error('Failed to connect with WalletConnect: ' + err.message);
+    } catch (error) {
+        console.error("Connection error:", error);
+        showAlert('Failed to connect wallet: ' + error.message, 'error');
+        showDebugInfo('Wallet connection error: ' + error.message);
+    } finally {
+        showLoading(false);
     }
 }
-
 showDebugInfo('Wallet connected: ' + userAddress);
 await checkAndSwitchNetwork();
 onConnect();
