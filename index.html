@@ -1577,14 +1577,19 @@ async function connectWallet() {
                 }
             }
         } else {
-            // WalletConnectなど、MetaMask以外の場合
-            // 自動切り替えができないため、ユーザーに手動での切り替えを促す
-            showAlert('Please switch to BASE Network in your wallet', 'error');
-            throw new Error('Please switch to BASE Network');
+            // WalletConnectの場合
+            try {
+                await web3.currentProvider.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: BASE_CHAIN_ID }]
+                });
+            } catch (error) {
+                showAlert('Please switch to BASE Network in your wallet', 'error');
+                throw new Error('Please switch to BASE Network');
+            }
         }
     }
     
-    // ネットワークステータスの表示を更新
     updateNetworkStatus(true);
 }
 
