@@ -1457,17 +1457,15 @@ async function connectWallet() {
             }
 } else {
     // WalletConnect v2の実装
-    const web3modal = new window.Web3Modal.Web3Modal({
+    const web3modal = new window.Web3Modal.default({
         projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
         theme: "light",
-        chain: 8453,
-        defaultChain: 8453
+        chainId: 8453
     });
 
     try {
-        const connection = await web3modal.connect();
-        const provider = connection.provider;
-        web3 = new Web3(provider);
+        const instance = await web3modal.connect();
+        web3 = new Web3(instance);
         
         const accounts = await web3.eth.getAccounts();
         userAddress = accounts[0];
@@ -1477,9 +1475,9 @@ async function connectWallet() {
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
 
         // イベントリスナーの設定
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", () => {
+        instance.on("accountsChanged", handleAccountsChanged);
+        instance.on("chainChanged", handleChainChanged);
+        instance.on("disconnect", () => {
             handleAccountsChanged([]);
         });
     } catch (err) {
