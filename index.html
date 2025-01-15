@@ -1456,6 +1456,7 @@ async function connectWallet() {
             // MetaMaskが存在しない場合のWalletConnect処理
             const WalletConnectProvider = window.WalletConnectProvider.default;
             const wcProvider = new WalletConnectProvider({
+              projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
                 rpc: {
                     8453: "https://mainnet.base.org"
                 }
