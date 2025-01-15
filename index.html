@@ -37,10 +37,10 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
 <script src="https://unpkg.com/@web3modal/ethereum@2.6.2/dist/index.umd.js"></script>
-<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.10.0/dist/umd/index.umd.js"></script>
 <script src="https://unpkg.com/@wagmi/core@1.4.3/dist/wagmi-core.umd.js"></script>
+<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.10.0/dist/umd/index.umd.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1454,44 +1454,71 @@ async function connectWallet() {
             } catch (err) {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-        } else {
-       // WalletConnect v2の実装
-            const ethereumClient = window.EthereumClient;
-            const web3modal = new window.Web3Modal({
-                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                chainConfig: {
-                    chainId: "0x2105", // BASE NetworkのチェーンID
-                    rpcUrl: "https://mainnet.base.org",
-                    chainName: "Base"
-                },
-                metadata: {
-                    name: 'BASEUSDC.COM',
-                    description: 'BASEUSDC.COM - The Future of Finance on Coinbase\'s BASE Network',
-                    icons: ['https://baseusdc.com/favicon.png']
-                }
-            });
+} else {
+    // WalletConnect v2の実装
+    const { EthereumClient, w3mConnectors, w3mProvider } = window.ethereum;
+    const { Web3Modal } = window;
+    const { configureChains, createConfig } = window.wagmi;
 
-            const provider = await web3modal.connect();
-            web3 = new Web3(provider);
-            const accounts = await web3.eth.getAccounts();
-            userAddress = accounts[0];
-
-            // コントラクトインスタンスの初期化
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-            // イベントリスナーの設定
-            provider.on("accountsChanged", handleAccountsChanged);
-            provider.on("chainChanged", handleChainChanged);
-            provider.on("disconnect", () => {
-                handleAccountsChanged([]);
-            });
+    // チェーンの設定
+    const chains = [{ 
+        id: 8453,
+        name: 'Base',
+        network: 'base',
+        rpcUrls: {
+            default: { http: ['https://mainnet.base.org'] }
+        },
+        blockExplorers: {
+            default: { url: 'https://basescan.org' }
+        },
+        nativeCurrency: {
+            name: 'ETH',
+            symbol: 'ETH',
+            decimals: 18
         }
+    }];
 
-        showDebugInfo('Wallet connected: ' + userAddress);
-        await checkAndSwitchNetwork();
-        onConnect();
-        showAlert('Wallet connected successfully!', 'success');
+    const projectId = "9b35dd5097e09b9acfe04c3d8dc60b7b";
+
+    const wagmiConfig = createConfig({
+        autoConnect: true,
+        connectors: w3mConnectors({ projectId, chains }),
+        publicClient: configureChains(chains, [w3mProvider({ projectId })]).publicClient
+    });
+
+    const ethereumClient = new EthereumClient(wagmiConfig, chains);
+    const web3modal = new Web3Modal(
+        {
+            projectId,
+            defaultChain: chains[0],
+            walletImages: {
+                safe: 'https://baseusdc.com/favicon.png'
+            }
+        },
+        ethereumClient
+    );
+
+    const provider = await web3modal.connect();
+    web3 = new Web3(provider);
+    const accounts = await web3.eth.getAccounts();
+    userAddress = accounts[0];
+
+    // コントラクトインスタンスの初期化
+    contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+    usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
+    // イベントリスナーの設定
+    provider.on("accountsChanged", handleAccountsChanged);
+    provider.on("chainChanged", handleChainChanged);
+    provider.on("disconnect", () => {
+        handleAccountsChanged([]);
+    });
+}
+
+showDebugInfo('Wallet connected: ' + userAddress);
+await checkAndSwitchNetwork();
+onConnect();
+showAlert('Wallet connected successfully!', 'success');
         
     } catch (error) {
         console.error("Connection error:", error);
