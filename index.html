@@ -1454,20 +1454,13 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
         } else {
-            // MetaMaskが存在しない場合のWalletConnect処理
-         //    const WalletConnectProvider = window.WalletConnectProvider.default;
-        //     const wcProvider = new WalletConnectProvider({
-        //       projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        //         rpc: {
-        //             8453: "https://mainnet.base.org"
-       //          }
-       //      });
-          const web3Modal = new Web3Modal({
+        // MetaMaskが存在しない場合のWalletConnect処理
+    const WalletConnectProvider = window.WalletConnectProvider.default;
+    const wcProvider = new WalletConnectProvider({
         projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        chains: [8453],
-        defaultChain: 8453,
-        walletConnectVersion: 2,
-        themeMode: "light"
+        rpc: {
+            8453: "https://mainnet.base.org"
+        }
     });
             
             await wcProvider.enable();
