@@ -1432,7 +1432,6 @@ async function connectWallet() {
         showLoading(true);
         
         if (window.ethereum) {
-            // MetaMask用の既存の処理をそのまま維持
             try {
                 web3 = new Web3(window.ethereum);
                 const accounts = await window.ethereum.request({ 
@@ -1452,12 +1451,19 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
         } else {
-            // WalletConnect v2の処理
+            const connector = new WalletConnect({
+                bridge: "https://bridge.walletconnect.org",
+                qrcode: true
+            });
+
             const provider = new WalletConnectProvider({
-                projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                chains: [8453],
                 rpc: {
                     8453: "https://mainnet.base.org"
+                },
+                connector: connector,
+                chainConfig: {
+                    chainNamespace: "eip155",
+                    chainId: "8453"
                 }
             });
 
@@ -1466,6 +1472,9 @@ async function connectWallet() {
                 web3 = new Web3(provider);
                 
                 const accounts = await web3.eth.getAccounts();
+                if (!accounts || accounts.length === 0) {
+                    throw new Error('No accounts found');
+                }
                 userAddress = accounts[0];
                 
                 contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
@@ -1475,9 +1484,9 @@ async function connectWallet() {
                 provider.on("chainChanged", handleChainChanged);
                 provider.on("disconnect", () => {
                     handleAccountsChanged([]);
+                    provider.disconnect();
                 });
                 
-                // チェーンIDの確認
                 const chainId = await web3.eth.getChainId();
                 if (chainId !== 8453) {
                     showAlert('Please switch to BASE Network in your wallet', 'error');
@@ -1501,10 +1510,6 @@ async function connectWallet() {
         showLoading(false);
     }
 }
-showDebugInfo('Wallet connected: ' + userAddress);
-await checkAndSwitchNetwork();
-onConnect();
-showAlert('Wallet connected successfully!', 'success');
 
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
