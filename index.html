@@ -1376,6 +1376,12 @@ function formatNumber(number, decimals = 6) {
 
 async function initWeb3() {
     try {
+             // 読み取り専用プロバイダーを先に初期化
+        const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
+        web3 = new Web3(readOnlyProvider);
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+      
         const providerOptions = {
             walletconnect: {
                 package: WalletConnectProvider,
@@ -1425,6 +1431,7 @@ async function initWeb3() {
         showAlert('Failed to initialize Web3. Please refresh the page.', 'error');
     }
 }
+      
 function detectEthereumProvider() {
     if (window.ethereum) {
         return window.ethereum;
