@@ -1,1991 +1,1877 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L4WJMTX5P1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-L4WJMTX5P1');
-</script>
-    <meta charset="UTF-8">
-<meta name="description" content="BASEUSDC.COM - The next evolution in digital finance on Coinbase's BASE Network. Join a revolutionary platform combining institutional-grade security with breakthrough blockchain technology.">
-
-<meta name="keywords" content="BASE Network, Coinbase, digital finance, institutional DeFi, blockchain innovation, USDC infrastructure, secure staking, community governance">
-
-<!-- OGPタイトルと説明文の更新 -->
-<meta property="og:title" content="BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network">
-<meta property="og:description" content="Experience the next generation of digital asset infrastructure. Built on Coinbase's BASE Network with institutional-grade security and revolutionary efficiency.">
-
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://baseusdc.com">
-<meta property="og:site_name" content="BASEUSDC.COM">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BASEUSDC.COM - The Future of Finance on BASE Network">
-<meta name="twitter:description" content="Join the next evolution in digital finance. Powered by Coinbase's revolutionary BASE Network with institutional-grade security.">
-  
 <meta name="robots" content="index, follow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/favicon.png">
 <meta name="theme-color" content="#2196F3">
-    <meta name="twitter:image" content="https://baseusdc.com/twitter-card.png">
+<meta name="twitter:image" content="https://baseusdc.com/twitter-card.png">
 <meta name="twitter:image:alt" content="BASEUSDC.COM - Next Generation Digital Asset Infrastructure on BASE Network">
-    <meta property="og:image" content="https://baseusdc.com/twitter-card.png">
+<meta property="og:image" content="https://baseusdc.com/twitter-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
-<script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
-<script src="https://unpkg.com/@coinbase/wallet-sdk@3.6.3/dist/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
 <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-<script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .card {
-            background: #fff;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s ease-in-out;
-            border: 1px solid #e9ecef;
-        }
-        .card:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 0 5px;
-            transition: all 0.2s ease-in-out;
-        }
-        .button:hover {
-            background: #45a049;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .button:active {
-            transform: translateY(0);
-        }
-        .button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .button.secondary {
-            background: #2196F3;
-        }
-        .button.secondary:hover {
-            background: #1e88e5;
-        }
-        .input-group {
-            margin: 10px 0;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: stretch;
-        }
-        .input-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            min-width: 200px;
-        }
-        .input-wrapper input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: all 0.2s ease-in-out;
-        }
-        .input-wrapper input.with-max {
-            padding-right: 60px;
-        }
-        .input-wrapper input:focus {
-            outline: none;
-            border-color: #2196F3;
-            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
-        }
-        .max-button {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .max-button:hover {
-            background: #1e88e5;
-        }
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .stats .card h3 {
-            color: #2196F3;
-            margin-bottom: 15px;
-        }
-        .stats .card p {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 12px 0;
-            padding: 8px 0;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        .stats .card p:last-child {
-            border-bottom: none;
-        }
-        .stats .card span:last-child {
-            font-weight: 500;
-            color: #2196F3;
-        }
-       .alert {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 20px;
-    width: 90%;
-    max-width: 400px;
-    padding: 16px;
-    border-radius: 8px;
-    margin: 0;
-    display: none;
-    font-size: 18px;
-    line-height: 1.5;
-    transition: all 0.3s ease-in-out;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    animation: slideUp 0.3s ease-out;
+<style>
+body {
+font-family: 'Segoe UI', sans-serif;
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+background: #f5f5f5;
+}
+.container {
+background: white;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.card {
+background: #fff;
+padding: 20px;
+margin: 10px 0;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+transition: all 0.2s ease-in-out;
+border: 1px solid #e9ecef;
+}
+.card:hover {
+box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+.button {
+background: #4CAF50;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 16px;
+margin: 0 5px;
+transition: all 0.2s ease-in-out;
+}
+.button:hover {
+background: #45a049;
+transform: translateY(-1px);
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.button:active {
+transform: translateY(0);
+}
+.button:disabled {
+background: #cccccc;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+.button.secondary {
+background: #2196F3;
+}
+.button.secondary:hover {
+background: #1e88e5;
+}
+.input-group {
+margin: 10px 0;
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+align-items: stretch;
+}
+.input-wrapper {
+position: relative;
+display: inline-flex;
+align-items: center;
+min-width: 200px;
+}
+.input-wrapper input {
+width: 100%;
+padding: 8px 12px;
+border: 1px solid #ddd;
+border-radius: 4px;
+font-size: 14px;
+transition: all 0.2s ease-in-out;
+}
+.input-wrapper input.with-max {
+padding-right: 60px;
+}
+.input-wrapper input:focus {
+outline: none;
+border-color: #2196F3;
+box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+.max-button {
+position: absolute;
+right: 8px;
+top: 50%;
+transform: translateY(-50%);
+background: #2196F3;
+color: white;
+border: none;
+border-radius: 4px;
+padding: 4px 8px;
+font-size: 12px;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+.max-button:hover {
+background: #1e88e5;
+}
+.stats {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 20px;
+margin: 20px 0;
+}
+.stats .card h3 {
+color: #2196F3;
+margin-bottom: 15px;
+}
+.stats .card p {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin: 12px 0;
+padding: 8px 0;
+border-bottom: 1px solid #f5f5f5;
+}
+.stats .card p:last-child {
+border-bottom: none;
+}
+.stats .card span:last-child {
+font-weight: 500;
+color: #2196F3;
+}
+.alert {
+position: fixed;
+left: 50%;
+transform: translateX(-50%);
+bottom: 20px;
+width: 90%;
+max-width: 400px;
+padding: 16px;
+border-radius: 8px;
+margin: 0;
+display: none;
+font-size: 18px;
+line-height: 1.5;
+transition: all 0.3s ease-in-out;
+z-index: 1000;
+box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+animation: slideUp 0.3s ease-out;
 }
 .alert.success {
-    background: #dff0d8;
-    color: #3c763d;
-    border: 1px solid #d6e9c6;
+background: #dff0d8;
+color: #3c763d;
+border: 1px solid #d6e9c6;
 }
 .alert.error {
-    background: #f2dede;
-    color: #a94442;
-    border: 1px solid #ebccd1;
+background: #f2dede;
+color: #a94442;
+border: 1px solid #ebccd1;
 }
 @keyframes slideUp {
-    from {
-        transform: translate(-50%, 100%);
-        opacity: 0;
-    }
-    to {
-        transform: translate(-50%, 0);
-        opacity: 1;
-    }
+from {
+transform: translate(-50%, 100%);
+opacity: 0;
 }
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-            color: #666;
-            font-size: 14px;
-        }
-        #mainContent {
-            display: none;
-        }
-        .network-status {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        .network-status.wrong {
-            background: #ffebee;
-            color: #c62828;
-        }
-        .network-status.correct {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .debug-info {
-            font-family: monospace;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 20px;
-            display: none;
-            font-size: 12px;
-            line-height: 1.4;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .platform-info-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e4e7eb 100%);
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease-in-out;
+to {
+transform: translate(-50%, 0);
+opacity: 1;
 }
-
-.platform-info-card:hover {
-    transform: translateY(-2px);
+}
+.loading {
+display: none;
+text-align: center;
+margin: 20px 0;
+color: #666;
+font-size: 14px;
+}
+#mainContent {
+display: none;
+}
+.network-status {
+padding: 5px 10px;
+border-radius: 4px;
+font-size: 14px;
+margin-left: 10px;
+}
+.network-status.wrong {
+background: #ffebee;
+color: #c62828;
+}
+.network-status.correct {
+background: #e8f5e9;
+color: #2e7d32;
+}
+.debug-info {
+font-family: monospace;
+background: #f8f9fa;
+padding: 10px;
+border-radius: 4px;
+margin-top: 20px;
+display: none;
+font-size: 12px;
+line-height: 1.4;
+max-height: 200px;
+overflow-y: auto;
+}
+.platform-info-card {
+background: linear-gradient(135deg, #f8f9fa 0%, #e4e7eb 100%);
+border-radius: 16px;
+padding: 1.5rem;
+margin: 1.5rem 0;
+display: flex;
+justify-content: space-around;
+flex-wrap: wrap;
+gap: 1.5rem;
+border: 1px solid #e9ecef;
+box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+transition: transform 0.2s ease-in-out;
+}
+  .platform-info-card:hover {
+transform: translateY(-2px);
 }
 
 .info-item {
-    flex: 1;
-    min-width: 200px;
-    padding: 1rem;
-    background: rgba(255,255,255,0.9);
-    border-radius: 12px;
-    text-align: center;
-    transition: transform 0.2s ease;
+flex: 1;
+min-width: 200px;
+padding: 1rem;
+background: rgba(255,255,255,0.9);
+border-radius: 12px;
+text-align: center;
+transition: transform 0.2s ease;
 }
 
 .info-label {
-    font-size: 1rem;
-    color: #1a237e;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
+font-size: 1rem;
+color: #1a237e;
+margin-bottom: 0.5rem;
+font-weight: 500;
 }
 
 .info-value {
-    font-size: 2rem;
-    font-weight: bold;
-    background: linear-gradient(45deg, #1a237e, #2196F3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.2;
+font-size: 2rem;
+font-weight: bold;
+background: linear-gradient(45deg, #1a237e, #2196F3);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+line-height: 1.2;
 }
-        .referral-section {
-            position: relative;
-            display: inline-block;
-        }
-        .referral-status {
-            font-size: 0.9em;
-            margin-left: 8px;
-            color: #4CAF50;
-        }
-        .referral-status.active {
-            display: inline-block;
-            padding: 2px 6px;
-            background: #e8f5e9;
-            border-radius: 4px;
-            color: #2e7d32;
-        }
-        @media (max-width: 768px) {
-            .platform-info-card {
-                padding: 1rem;
-            }
-            .info-item {
-                min-width: 120px;
-            }
-            .info-value {
-                font-size: 1.2rem;
-            }
-        }
-    
-        /* 既存のstyleタグ内に追加 */
-.features-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 40px 0;
+.referral-section {
+position: relative;
+display: inline-block;
+}
+.referral-status {
+font-size: 0.9em;
+margin-left: 8px;
+color: #4CAF50;
+}
+.referral-status.active {
+display: inline-block;
+padding: 2px 6px;
+background: #e8f5e9;
+border-radius: 4px;
+color: #2e7d32;
+}
+@media (max-width: 768px) {
+.platform-info-card {
+padding: 1rem;
+}
+.info-item {
+min-width: 120px;
+}
+.info-value {
+font-size: 1.2rem;
+}
+}
+  .features-section {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 20px;
+padding: 40px 0;
 }
 .feature-card {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+background: white;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .feature-card h3 {
-    color: #1a237e;
-    margin-bottom: 15px;
+color: #1a237e;
+margin-bottom: 15px;
 }
 .hero-section {
-    text-align: center;
-    padding: 3rem 1.5rem;
-    background: linear-gradient(135deg, #1a237e 0%, #2196F3 100%);
-    border-radius: 20px;
-    margin: 1.5rem 0;
-    color: white;
-    position: relative;
-    overflow: hidden;
+text-align: center;
+padding: 60px 20px;
+background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+border-radius: 15px;
+margin: 20px 0;
 }
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('pattern.svg') center/cover;
-    opacity: 0.1;
-    pointer-events: none;
-}
-
 .hero-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-    position: relative;
-    color: white;
+font-size: 2.5em;
+color: #1a237e;
+margin-bottom: 15px;
 }
-
 .hero-subtitle {
-    font-size: 1.2rem;
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 2rem 1rem;
-        margin: 1rem 0;
-        border-radius: 16px;
-    }
-    
-    .hero-title {
-        font-size: 1.75rem;
-        margin-bottom: 1rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1rem;
-        margin-bottom: 1rem;
-        padding: 0 0.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-section {
-        padding: 1.5rem 0.75rem;
-    }
-
-    .hero-title {
-        font-size: 1.5rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        padding: 0 0.25rem;
-    }
+font-size: 1.2em;
+color: #424242;
+margin-bottom: 30px;
 }
 .faq-section {
-    margin: 40px auto;
-    max-width: 900px;
-    padding: 0 20px;
+margin: 40px auto;
+max-width: 900px;
+padding: 0 20px;
 }
 
 .faq-section h2 {
-    font-size: 2rem;
-    color: #1a237e;
-    margin-bottom: 2rem;
-    text-align: center;
+font-size: 2rem;
+color: #1a237e;
+margin-bottom: 2rem;
+text-align: center;
 }
 
 .faq-item {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
+background: white;
+border-radius: 12px;
+padding: 24px;
+margin-bottom: 20px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+border: 1px solid #e0e0e0;
 }
 
 .faq-question {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: #1a237e;
-    margin-bottom: 16px;
+font-weight: 600;
+font-size: 1.1rem;
+color: #1a237e;
+margin-bottom: 16px;
 }
 
 .faq-answer {
-    color: #424242;
-    line-height: 1.6;
+color: #424242;
+line-height: 1.6;
 }
 
 .faq-answer strong {
-    color: #1a237e;
+color: #1a237e;
 }
 
 @media (max-width: 768px) {
-    .faq-section {
-        padding: 0 16px;
-        margin: 30px auto;
-    }
-    
-    .faq-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .faq-item {
-        padding: 16px;
-        margin-bottom: 16px;
-    }
-    
-    .faq-question {
-        font-size: 1.1rem;
-        line-height: 1.4;
-        margin-bottom: 12px;
-    }
-    
-    .faq-answer {
-        font-size: 1rem;
-        line-height: 1.5;
-    }
-    
-    .faq-answer br {
-        display: none;
-    }
-    
-    .faq-answer strong {
-        display: block;
-        margin: 12px 0 8px;
-    }
+.faq-section {
+padding: 0 16px;
+margin: 30px auto;
+}
+  .faq-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
-@media (max-width: 480px) {
-    .faq-section {
-        padding: 0 12px;
-    }
-    
-    .faq-item {
-        padding: 14px;
-    }
-    
-    .faq-question {
-        font-size: 1rem;
-    }
-    
-    .faq-answer {
-        font-size: 0.95rem;
-    }
-}
-        .creators-section {
-    padding: 40px;
-    margin: 40px 0;
-    background: #f8f9fa;
-    border-radius: 15px;
-}
-        .step-card {
-    background: white;
-    padding: 25px 25px 25px 35px;  /* 左側にステップ番号用のスペース */
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: relative;
-    margin-left: 20px;  /* ステップ番号のスペース */
-    margin-bottom: 20px;
-    transition: transform 0.3s ease;
+.faq-item {
+    padding: 16px;
+    margin-bottom: 16px;
 }
 
-.step-number {
-    position: absolute;
-    left: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background: #2196F3;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2em;
+.faq-question {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
 }
 
-.step-card h3 {
-    color: #1a237e;
-    margin: 0 0 10px 0;
-    font-size: 1.2em;
-}
-
-.step-card p {
-    margin: 0;
-    color: #666;
+.faq-answer {
+    font-size: 1rem;
     line-height: 1.5;
 }
 
-.steps-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    padding: 40px 0;
+.faq-answer br {
+    display: none;
 }
-        /* ヘッダーロゴとスタイリングの追加 */
+
+.faq-answer strong {
+    display: block;
+    margin: 12px 0 8px;
+}
+}
+
+@media (max-width: 480px) {
+.faq-section {
+padding: 0 12px;
+}
+  .faq-item {
+    padding: 14px;
+}
+
+.faq-question {
+    font-size: 1rem;
+}
+
+.faq-answer {
+    font-size: 0.95rem;
+}
+}
+.creators-section {
+padding: 40px;
+margin: 40px 0;
+background: #f8f9fa;
+border-radius: 15px;
+}
+.step-card {
+background: white;
+padding: 25px 25px 25px 35px;  /* 左側にステップ番号用のスペース */
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+position: relative;
+margin-left: 20px;  /* ステップ番号のスペース */
+margin-bottom: 20px;
+transition: transform 0.3s ease;
+}
+
+.step-number {
+position: absolute;
+left: -20px;
+top: 50%;
+transform: translateY(-50%);
+width: 40px;
+height: 40px;
+background: #2196F3;
+color: white;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: bold;
+font-size: 1.2em;
+}
+
+.step-card h3 {
+color: #1a237e;
+margin: 0 0 10px 0;
+font-size: 1.2em;
+}
+
+.step-card p {
+margin: 0;
+color: #666;
+line-height: 1.5;
+}
+
+.steps-section {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 30px;
+padding: 40px 0;
+}
+/* ヘッダーロゴとスタイリングの追加 */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem 0;
-    margin-bottom: 2rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1.2rem 0;
+margin-bottom: 2rem;
 }
 
 .logo {
-    height: 48px;
-    width: auto;
+height: 48px;
+width: auto;
 }
 
 @media (max-width: 768px) {
-    .header {
-        padding: 1rem 0;
-    }
-    
-    .logo {
-        height: 40px;
-    }
+.header {
+padding: 1rem 0;
 }
-      /* モバイル対応の追加スタイル */
+  .logo {
+    height: 40px;
+}
+}
+/* モバイル対応の追加スタイル /
 @media (max-width: 768px) {
-    /* 入力フィールドとボタンの調整 */
-    .input-group {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .input-wrapper {
-        width: 100%;
-    }
-    
-    .button {
-        width: 100%;
-        padding: 15px;
-        margin: 5px 0;
-        min-height: 48px; /* タップターゲットサイズの確保 */
-    }
-    
-    /* プラットフォーム情報カードの調整 */
-    .platform-info-card {
-        padding: 15px;
-    }
-    
-    .info-item {
-        width: 100%;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-    }
-    
-    /* カード内の余白調整 */
-    .card {
-        padding: 15px;
-        margin: 10px 0;
-    }
-    
-    /* フォントサイズの調整 */
-    .hero-title {
-        font-size: 1.8em;
-    }
-    
-    .hero-subtitle {
-        font-size: 1em;
-    }
-    
-    /* ステップカードの調整 */
-    .step-card {
-        margin-left: 10px;
-        padding: 20px 15px 20px 25px;
-    }
-    
-    .step-number {
-        left: -15px;
-        width: 30px;
-        height: 30px;
-        font-size: 1em;
-    }
+/ 入力フィールドとボタンの調整 */
+.input-group {
+flex-direction: column;
+gap: 15px;
+}
+  .input-wrapper {
+    width: 100%;
+}
+
+.button {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0;
+    min-height: 48px; /* タップターゲットサイズの確保 */
+}
+
+/* プラットフォーム情報カードの調整 */
+.platform-info-card {
+    padding: 15px;
+}
+
+.info-item {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* カード内の余白調整 */
+.card {
+    padding: 15px;
+    margin: 10px 0;
+}
+
+/* フォントサイズの調整 */
+.hero-title {
+    font-size: 1.8em;
+}
+
+.hero-subtitle {
+    font-size: 1em;
+}
+
+/* ステップカードの調整 */
+.step-card {
+    margin-left: 10px;
+    padding: 20px 15px 20px 25px;
+}
+
+.step-number {
+    left: -15px;
+    width: 30px;
+    height: 30px;
+    font-size: 1em;
+}
 }
 
 /* タッチデバイス向けのインタラクション改善 */
 @media (hover: none) {
-    .button:hover {
-        transform: none;
-    }
-    
-    .card:hover {
-        transform: none;
-    }
+.button:hover {
+transform: none;
 }
-      /* モバイル対応の改善 */
+  .card:hover {
+    transform: none;
+}
+}
+/* モバイル対応の改善 /
 @media (max-width: 768px) {
-    /* 入力フィールドの調整 */
-    .input-wrapper {
-        width: 100%;
-        min-width: unset;
-    }
-    
-    /* ボタンの視認性向上 */
-    .button {
-        width: 100%;
-        padding: 15px;
-        margin: 8px 0;
-        min-height: 48px;
-        font-size: 16px;
-        font-weight: 500;
-    }
-    
-    /* カードの余白調整 */
-    .card {
-        padding: 20px;
-        margin: 12px 0;
-    }
-    
-    /* 情報アイテムの間隔調整 */
-    .info-item {
-        width: 100%;
-        padding: 16px 0;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .info-item:last-child {
-        border-bottom: none;
-    }
-    
-    /* 入力グループの調整 */
-    .input-group {
-        flex-direction: column;
-        gap: 15px;
-    }
-}
-      /* モバイル対応の強化用スタイル */
+/ 入力フィールドの調整 */
 .input-wrapper {
+width: 100%;
+min-width: unset;
+}
+  /* ボタンの視認性向上 */
+.button {
     width: 100%;
-    margin-bottom: 15px;
+    padding: 15px;
+    margin: 8px 0;
+    min-height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* カードの余白調整 */
+.card {
+    padding: 20px;
+    margin: 12px 0;
+}
+
+/* 情報アイテムの間隔調整 */
+.info-item {
+    width: 100%;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+/* 入力グループの調整 */
+.input-group {
+    flex-direction: column;
+    gap: 15px;
+}
+  }
+/* モバイル対応の強化用スタイル */
+.input-wrapper {
+width: 100%;
+margin-bottom: 15px;
 }
 
 .input-wrapper input {
-    min-height: 48px;
-    font-size: 16px;
-    padding: 12px;
-    width: 100%;
+min-height: 48px;
+font-size: 16px;
+padding: 12px;
+width: 100%;
 }
 
 /* モバイルデバイス向けの調整 */
 @media (max-width: 768px) {
-    /* 入力フォームのレイアウト調整 */
-    .input-group {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    /* カード要素の調整 */
-    .card {
-        padding: 20px 15px;
-        margin: 15px 0;
-    }
-    
-    /* 統計情報の間隔調整 */
-    .stats {
-        gap: 15px;
-    }
-    
-    /* プラットフォーム情報カードの調整 */
-    .platform-info-card {
-        padding: 15px;
-    }
-    
-    /* 情報アイテムの表示調整 */
-    .info-item {
-        padding: 15px 0;
-        width: 100%;
-        text-align: center;
-        border-bottom: 1px solid #eee;
-    }
-    
-    /* 数値表示の調整 */
-    .info-value {
-        font-size: 1.4rem;
-    }
-
-    /* ヒーローセクションの調整 */
-    .hero-section {
-        padding: 30px 15px;
-    }
-
-    .hero-title {
-        font-size: 1.8em;
-    }
-
-    .hero-subtitle {
-        font-size: 1em;
-        margin-bottom: 20px;
-    }
+/* 入力フォームのレイアウト調整 */
+.input-group {
+flex-direction: column;
+gap: 15px;
 }
-      .brand-section {
-    margin: 40px 0;
+  /* カード要素の調整 */
+.card {
+    padding: 20px 15px;
+    margin: 15px 0;
+}
+
+/* 統計情報の間隔調整 */
+.stats {
+    gap: 15px;
+}
+
+/* プラットフォーム情報カードの調整 */
+.platform-info-card {
+    padding: 15px;
+}
+
+/* 情報アイテムの表示調整 */
+.info-item {
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+/* 数値表示の調整 */
+.info-value {
+    font-size: 1.4rem;
+}
+
+/* ヒーローセクションの調整 */
+.hero-section {
+    padding: 30px 15px;
+}
+
+.hero-title {
+    font-size: 1.8em;
+}
+
+.hero-subtitle {
+    font-size: 1em;
+    margin-bottom: 20px;
+}
+  }
+.brand-section {
+margin: 40px 0;
 }
 
 .brand-card {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+background: white;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+margin-bottom: 20px;
 }
 
 .brand-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 20px;
+margin-top: 20px;
 }
 
 .brand-feature {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
+background: #f8f9fa;
+padding: 20px;
+border-radius: 8px;
 }
 
 .brand-dark {
-    background: #1a237e;
-    color: white;
+background: #1a237e;
+color: white;
 }
 
 @media (max-width: 768px) {
-    .brand-card {
-        padding: 20px;
-        margin-bottom: 15px;
-    }
-    
-    .brand-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
+.brand-card {
+padding: 20px;
+margin-bottom: 15px;
 }
-    </style>
+  .brand-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-  <div class="header">
-    <div class="logo-container">
-        <img src="/logo.png" alt="BASEUSDC.COM" class="logo">
-    </div>
-    <div style="display: flex; align-items: center;">
-        <span id="networkStatus" class="network-status"></span>
-        <button id="connectWallet" class="button">Connect Wallet</button>
-    </div>
+<div class="container">
+<div class="header">
+<div class="logo-container">
+<img src="/logo.png" alt="[BASEUSDC.COM](http://baseusdc.com/)" class="logo">
 </div>
-
-        <div class="platform-info-card">
-            <div class="info-item">
-                <span class="info-label">Current APR</span>
-                <span class="info-value"><span id="currentAPR">0</span>%</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Referrer Reward</span>
-                <span class="info-value"><span id="referrerReward">0</span>%</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Referred Reward</span>
-                <span class="info-value"><span id="referredReward">0</span>%</span>
-            </div>
-        </div>
-
-        <div id="alert" class="alert"></div>
-        <div id="loading" class="loading">Processing transaction...</div>
-        <div id="debugInfo" class="debug-info"></div>
-    <!-- 新規追加のランディングコンテンツ -->
-    <div id="landingContent">
-    
-            <!-- ヒーローセクション -->
-       <div class="hero-section">
-    <h2 class="hero-title">The Future of Finance on Coinbase's BASE Network</h2>
-    <p class="hero-subtitle">Join the Next Evolution in Digital Asset Infrastructure</p>
-    <p class="hero-subtitle">Institutional-Grade Security • Breakthrough Technology • Community Governance</p>
+<div style="display: flex; align-items: center;">
+<span id="networkStatus" class="network-status"></span>
+<button id="connectWallet" class="button">Connect Wallet</button>
 </div>
+</div>
+  <div class="platform-info-card">
+        <div class="info-item">
+            <span class="info-label">Current APR</span>
+            <span class="info-value"><span id="currentAPR">0</span>%</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Referrer Reward</span>
+            <span class="info-value"><span id="referrerReward">0</span>%</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Referred Reward</span>
+            <span class="info-value"><span id="referredReward">0</span>%</span>
+        </div>
+    </div>
 
-       <!-- ここに新しいブランドセクションを追加 -->
-    <div class="brand-section">
-        <div class="brand-card">
-            <h2 class="text-2xl font-bold text-blue-900 mb-4">The Evolution of Digital Finance</h2>
-            <p class="mb-4">
-                Bitcoin revolutionized finance by solving the digital record-keeping challenge. USDC, backed by 
-                Coinbase's institutional framework and regular audits, then achieved something remarkable: 
-                bringing the stability of US dollars into the digital age with perfect one-to-one value maintenance.
-            </p>
-            <div class="brand-grid">
-                <div class="brand-feature">
-                    <h3 class="text-xl font-semibold mb-3">The BASE Network Breakthrough</h3>
-                    <p>
-                        While maintaining Ethereum's proven security model, BASE Network achieved a revolutionary 
-                        breakthrough: reducing transaction costs to just 0.1% of traditional fees. This 
-                        advancement, developed by Coinbase's engineering team, makes large-scale adoption 
-                        practical for the first time.
-                    </p>
-                </div>
-                <div class="brand-feature">
-                    <h3 class="text-xl font-semibold mb-3">Pure DeFi Architecture</h3>
-                    <p>
-                        BASEUSDC.COM represents the culmination of blockchain evolution - a serverless 
-                        architecture built on Coinbase's institutional-grade infrastructure, managing digital 
-                        assets with unprecedented efficiency and security.
-                    </p>
-                </div>
+    <div id="alert" class="alert"></div>
+    <div id="loading" class="loading">Processing transaction...</div>
+    <div id="debugInfo" class="debug-info"></div>
+<!-- 新規追加のランディングコンテンツ -->
+<div id="landingContent">
+
+        <!-- ヒーローセクション -->
+   <div class="hero-section">
+<h2 class="hero-title">The Future of Finance on Coinbase's BASE Network</h2>
+<p class="hero-subtitle">Join the Next Evolution in Digital Asset Infrastructure</p>
+<p class="hero-subtitle">Institutional-Grade Security • Breakthrough Technology • Community Governance</p>
+</div>
+ <!-- ここに新しいブランドセクションを追加 -->
+<div class="brand-section">
+    <div class="brand-card">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">The Evolution of Digital Finance</h2>
+        <p class="mb-4">
+            Bitcoin revolutionized finance by solving the digital record-keeping challenge. USDC, backed by
+            Coinbase's institutional framework and regular audits, then achieved something remarkable:
+            bringing the stability of US dollars into the digital age with perfect one-to-one value maintenance.
+        </p>
+        <div class="brand-grid">
+            <div class="brand-feature">
+                <h3 class="text-xl font-semibold mb-3">The BASE Network Breakthrough</h3>
+                <p>
+                    While maintaining Ethereum's proven security model, BASE Network achieved a revolutionary
+                    breakthrough: reducing transaction costs to just 0.1% of traditional fees. This
+                    advancement, developed by Coinbase's engineering team, makes large-scale adoption
+                    practical for the first time.
+                </p>
             </div>
-        </div>
-
-        <div class="brand-card">
-            <h2 class="text-2xl font-bold mb-4">Next-Generation Financial Infrastructure</h2>
-            <p class="mb-4">
-                BASEUSDC.COM integrates these breakthrough technologies into a comprehensive platform. 
-                Built on Coinbase's trusted infrastructure, it enables fully automated processing 
-                through smart contracts, eliminating traditional banking delays while maintaining 
-                unprecedented security standards.
-            </p>
-            <p class="text-lg text-blue-900 font-medium">
-                This fusion of USDC stability and BASE Network efficiency creates a platform that 
-                fundamentally transforms digital finance, setting new standards for what's possible 
-                in financial infrastructure.
-            </p>
-        </div>
-
-        <div class="brand-card brand-dark">
-            <h2 class="text-2xl font-bold mb-4">Early Participation Benefits</h2>
-            <p class="mb-4">
-                As the platform grows towards significant scale, governance tokens will be distributed 
-                to give participants direct influence over the platform's development. The distribution 
-                model is designed to recognize and reward early adoption.
-            </p>
-            <div class="brand-feature" style="background: rgba(255,255,255,0.1);">
-                <p class="text-lg font-medium">
-                    The earlier and more actively you participate in BASEUSDC.COM, the larger your 
-                    future allocation of governance tokens will be. This isn't just early access - 
-                    it's an opportunity to become a key stakeholder in the next evolution of 
-                    financial infrastructure.
+            <div class="brand-feature">
+                <h3 class="text-xl font-semibold mb-3">Pure DeFi Architecture</h3>
+                <p>
+                    BASEUSDC.COM represents the culmination of blockchain evolution - a serverless
+                    architecture built on Coinbase's institutional-grade infrastructure, managing digital
+                    assets with unprecedented efficiency and security.
                 </p>
             </div>
         </div>
     </div>
-            <!-- ステップセクション -->
-            <div class="steps-section">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>Create Coinbase Account</h3>
-                    <p>Start by creating a Coinbase account to purchase USDC. This is your gateway to cryptocurrency.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>Setup Wallet</h3>
-                    <p>Install MetaMask and purchase USDC from Coinbase. Transfer USDC to your MetaMask wallet.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>Connect to BASE</h3>
-                    <p>Switch to BASE Network using MetaMask. BASE is Coinbase's secure and efficient network.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h3>Start Staking</h3>
-                    <p>Connect wallet and start earning rewards. You can start with as little as $1 USDC.</p>
-                </div>
-            </div>
 
-            <!-- 特徴セクション -->
-            <div class="features-section">
-                <div class="feature-card">
-                    <h3>Security First</h3>
-                    <p>Built on Coinbase's BASE Network, ensuring maximum security for your assets.</p>
-                    <p>Transparent smart contracts that anyone can verify.</p>
-                    <p>Free withdrawals available anytime without restrictions.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>High Yields</h3>
-                    <p>Competitive APR rates that maximize your USDC earnings.</p>
-                    <p>Additional referral rewards for community growth.</p>
-                    <p>Future platform token rewards for early adopters.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Easy to Start</h3>
-                    <p>Begin with just $1 USDC to test the platform.</p>
-                    <p>User-friendly interface for seamless staking.</p>
-                    <p>Instant reward tracking and calculations.</p>
-                </div>
-            </div>
-
-            <!-- FAQ セクション -->
-            <div class="faq-section">
-                <h2>Frequently Asked Questions</h2>
-                <div class="faq-item">
-                    <div class="faq-question">How safe is my investment?</div>
-                    <div class="faq-answer">
-                        Your funds are secured by smart contracts on the BASE Network, operated by Coinbase. All contracts are public and verifiable, ensuring complete transparency. We utilize only proven yield strategies to maintain security.
-                    </div>
-                </div>
-              <div class="faq-item">
-    <div class="faq-question">How can I access BASEUSDC.COM more quickly?</div>
-    <div class="faq-answer">
-        For the best experience, we recommend adding BASEUSDC.COM to your home screen or bookmarks. On mobile devices, use your browser's "Add to Home Screen" option. On desktop, bookmark the site for quick access. This ensures you can always reach the platform with just one tap or click.
-    </div>
-</div>
-                <div class="faq-item">
-                    <div class="faq-question">What are the platform tokens?</div>
-                    <div class="faq-answer">
-                        Early users of BASEUSDC.COM will receive platform tokens as a reward for their early support. These tokens will provide governance rights and additional benefits in the ecosystem. The earlier you join, the more tokens you can earn.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">Can I withdraw anytime?</div>
-                    <div class="faq-answer">
-                        Yes, you can withdraw your funds at any time without any restrictions or fees. Your funds remain under your control, and withdrawals are processed immediately through our smart contracts.
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">How does the referral program work?</div>
-                    <div class="faq-answer">
-                        Share your referral code with others, and both you and your referrals earn extra rewards. You'll earn additional APR on referral's stakes, while they get a bonus APR too. It's a win-win situation that rewards community growth.
-                    </div>
-                </div>
-              <div class="faq-item">
-    <div class="faq-question">What browsers and wallets are supported?</div>
-    <div class="faq-answer">
-        As a blockchain-based platform, BASEUSDC.COM works with most modern browsers and cryptocurrency wallets through WalletConnect integration. For the best experience and full support, we recommend using:
-        <br><br>
-        <strong>Browsers:</strong> Chrome, Safari, Firefox, or Opera
-        <br>
-        <strong>Wallets:</strong> MetaMask, Coinbase Wallet, Ledger, Trust Wallet, or Rainbow
-        <br><br>
-        While other WalletConnect-compatible browsers and wallets will work with our platform, these recommended environments ensure the smoothest experience and access to our complete support resources.
-    </div>
-</div>
-            </div>
-      
-
-            <!-- コンテンツクリエイターセクション -->
-            <div class="creators-section">
-                <h2>Featured Content Creators</h2>
-                <div class="creators-empty-state">
-                    <p>Are you a content creator? Create a video or article about BASEUSDC.COM and get featured here!</p>
-                    <p>Benefits of being featured:</p>
-                    <ul>
-                        <li>Direct exposure to our growing user base</li>
-                        <li>Permanent backlink to your content</li>
-                        <li>Special referral tracking</li>
-                        <li>Priority support and early access to new features</li>
-                        <li>Opportunity to be highlighted as a trusted community voice</li>
-                    </ul>
-                    <p>Contact us through our form to get your content featured. Quality content that helps users understand our platform will be prioritized for featuring.</p>
-                </div>
-            </div>
-
-            <!-- フッター -->
-           <div class="footer-links">
-    <a href="mailto:support@baseusdc.com" class="footer-link">Need Support? Email us: support@baseusdc.com</a>
-</div>
-        </div>
-           </div>
-        <div id="mainContent">
-            <div class="stats">
-                <div class="card">
-                    <h3>Your Statistics</h3>
-                    <p>Available: <span id="userBalance">0</span> USDC</p>
-                    <p>Staked: <span id="stakedAmount">0</span> USDC</p>
-                    <p>Pending Rewards: <span id="pendingRewards">0</span> USDC</p>
-                </div>
-                <div class="card">
-                    <h3>Referral Statistics</h3>
-                    <p>Total Referrals: <span id="totalReferrals">0</span></p>
-                    <p>Referral Rewards: <span id="referralRewards">0</span> USDC</p>
-                </div>
-            </div>
-            <div class="card">
-    <h3>Apply Referral Code</h3>
-    <div class="input-group">
-        <div class="input-wrapper">
-            <input type="number" id="applyReferralCode" placeholder="Enter Referral Code">
-        </div>
-        <button id="applyReferralButton" class="button">Apply Referral</button>
-    </div>
-</div>
-
- <div class="card">
-    <h3>Stake USDC</h3>
-    <div class="input-group">
-        <div class="input-wrapper">
-            <input type="number" id="stakeAmount" class="with-max" placeholder="Amount" step="0.01" min="0.01">
-            <button class="max-button" id="maxStakeButton">MAX</button>
-        </div>
-        <button id="stakeButton" class="button">Stake USDC</button>
-    </div>
-</div>
-
-            <div class="card">
-                <h3>Manage Stake</h3>
-                <div class="input-group">
-                    <input type="number" id="withdrawAmount" placeholder="Amount" step="0.01" min="0.01">
-                    <button id="withdrawButton" class="button secondary">Withdraw</button>
-                    <button id="claimRewardsButton" class="button secondary">Claim Rewards</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Referral Program</h3>
-                <button id="generateReferralCode" class="button">Generate Referral Code</button>
-                <p>Your Referral Code: <span id="yourReferralCode">-</span></p>
-                <p>Referral Rewards: <span id="referralRewards">0</span> USDC</p>
-                <button id="claimReferralRewards" class="button secondary">Claim Referral Rewards</button>
-            </div>
-          <!-- Add this code just before the closing div of id="mainContent" -->
-<div class="card">
-    <h3>Support & Information</h3>
-    <div class="support-content" style="margin-top: 15px;">
-        <p style="margin-bottom: 15px;">
-            <strong>Common Issues Troubleshooting:</strong><br>
-            Most connection issues can be resolved by checking these common points:
+    <div class="brand-card">
+        <h2 class="text-2xl font-bold mb-4">Next-Generation Financial Infrastructure</h2>
+        <p class="mb-4">
+            BASEUSDC.COM integrates these breakthrough technologies into a comprehensive platform.
+            Built on Coinbase's trusted infrastructure, it enables fully automated processing
+            through smart contracts, eliminating traditional banking delays while maintaining
+            unprecedented security standards.
         </p>
-        <ul style="margin-bottom: 20px; padding-left: 20px;">
-            <li style="margin-bottom: 8px;">✓ Ensure you've completed the wallet signature request</li>
-            <li style="margin-bottom: 8px;">✓ Verify you're connected to the BASE Network</li>
-            <li style="margin-bottom: 8px;">✓ Check your internet connection</li>
-            <li style="margin-bottom: 8px;">✓ Wait 5 minutes and refresh your wallet if transactions seem stuck</li>
-        </ul>
-   <p style="margin-bottom: 15px;">
-    <strong>Browser & Wallet Compatibility:</strong><br>
-    While our platform works with most modern browsers and wallets due to its blockchain-based nature, we provide dedicated support and optimal experience for:
+        <p class="text-lg text-blue-900 font-medium">
+            This fusion of USDC stability and BASE Network efficiency creates a platform that
+            fundamentally transforms digital finance, setting new standards for what's possible
+            in financial infrastructure.
+        </p>
+    </div>
+
+    <div class="brand-card brand-dark">
+        <h2 class="text-2xl font-bold mb-4">Early Participation Benefits</h2>
+        <p class="mb-4">
+            As the platform grows towards significant scale, governance tokens will be distributed
+            to give participants direct influence over the platform's development. The distribution
+            model is designed to recognize and reward early adoption.
+        </p>
+        <div class="brand-feature" style="background: rgba(255,255,255,0.1);">
+            <p class="text-lg font-medium">
+                The earlier and more actively you participate in BASEUSDC.COM, the larger your
+                future allocation of governance tokens will be. This isn't just early access -
+                it's an opportunity to become a key stakeholder in the next evolution of
+                financial infrastructure.
+            </p>
+        </div>
+    </div>
+</div>
+        <!-- ステップセクション -->
+        <div class="steps-section">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Create Coinbase Account</h3>
+                <p>Start by creating a Coinbase account to purchase USDC. This is your gateway to cryptocurrency.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Setup Wallet</h3>
+                <p>Install MetaMask and purchase USDC from Coinbase. Transfer USDC to your MetaMask wallet.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Connect to BASE</h3>
+                <p>Switch to BASE Network using MetaMask. BASE is Coinbase's secure and efficient network.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Start Staking</h3>
+                <p>Connect wallet and start earning rewards. You can start with as little as $1 USDC.</p>
+            </div>
+        </div>
+
+        <!-- 特徴セクション -->
+        <div class="features-section">
+            <div class="feature-card">
+                <h3>Security First</h3>
+                <p>Built on Coinbase's BASE Network, ensuring maximum security for your assets.</p>
+                <p>Transparent smart contracts that anyone can verify.</p>
+                <p>Free withdrawals available anytime without restrictions.</p>
+            </div>
+            <div class="feature-card">
+                <h3>High Yields</h3>
+                <p>Competitive APR rates that maximize your USDC earnings.</p>
+                <p>Additional referral rewards for community growth.</p>
+                <p>Future platform token rewards for early adopters.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Easy to Start</h3>
+                <p>Begin with just $1 USDC to test the platform.</p>
+                <p>User-friendly interface for seamless staking.</p>
+                <p>Instant reward tracking and calculations.</p>
+            </div>
+        </div>
+
+        <!-- FAQ セクション -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-question">How safe is my investment?</div>
+                <div class="faq-answer">
+                    Your funds are secured by smart contracts on the BASE Network, operated by Coinbase. All contracts are public and verifiable, ensuring complete transparency. We utilize only proven yield strategies to maintain security.
+                </div>
+            </div>
+          <div class="faq-item">
+<div class="faq-question">How can I access BASEUSDC.COM more quickly?</div>
+<div class="faq-answer">
+    For the best experience, we recommend adding BASEUSDC.COM to your home screen or bookmarks. On mobile devices, use your browser's "Add to Home Screen" option. On desktop, bookmark the site for quick access. This ensures you can always reach the platform with just one tap or click.
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question">What are the platform tokens?</div>
+<div class="faq-answer">
+Early users of BASEUSDC.COM will receive platform tokens as a reward for their early support. These tokens will provide governance rights and additional benefits in the ecosystem. The earlier you join, the more tokens you can earn.
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question">Can I withdraw anytime?</div>
+<div class="faq-answer">
+Yes, you can withdraw your funds at any time without any restrictions or fees. Your funds remain under your control, and withdrawals are processed immediately through our smart contracts.
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question">How does the referral program work?</div>
+<div class="faq-answer">
+Share your referral code with others, and both you and your referrals earn extra rewards. You'll earn additional APR on referral's stakes, while they get a bonus APR too. It's a win-win situation that rewards community growth.
+</div>
+</div>
+<div class="faq-item">
+<div class="faq-question">What browsers and wallets are supported?</div>
+<div class="faq-answer">
+As a blockchain-based platform, BASEUSDC.COM works with most modern browsers and cryptocurrency wallets through WalletConnect integration. For the best experience and full support, we recommend using:
+<br><br>
+<strong>Browsers:</strong> Chrome, Safari, Firefox, or Opera
+<br>
+<strong>Wallets:</strong> MetaMask, Coinbase Wallet, Ledger, Trust Wallet, or Rainbow
+<br><br>
+While other WalletConnect-compatible browsers and wallets will work with our platform, these recommended environments ensure the smoothest experience and access to our complete support resources.
+</div>
+</div>
+</div>
+ <!-- コンテンツクリエイターセクション -->
+        <div class="creators-section">
+            <h2>Featured Content Creators</h2>
+            <div class="creators-empty-state">
+                <p>Are you a content creator? Create a video or article about BASEUSDC.COM and get featured here!</p>
+                <p>Benefits of being featured:</p>
+                <ul>
+                    <li>Direct exposure to our growing user base</li>
+                    <li>Permanent backlink to your content</li>
+                    <li>Special referral tracking</li>
+                    <li>Priority support and early access to new features</li>
+                    <li>Opportunity to be highlighted as a trusted community voice</li>
+                </ul>
+                <p>Contact us through our form to get your content featured. Quality content that helps users understand our platform will be prioritized for featuring.</p>
+            </div>
+        </div>
+
+        <!-- フッター -->
+       <div class="footer-links">
+<a href="mailto:support@baseusdc.com" class="footer-link">Need Support? Email us: support@baseusdc.com</a>
+</div>
+</div>
+</div>
+<div id="mainContent">
+<div class="stats">
+<div class="card">
+<h3>Your Statistics</h3>
+<p>Available: <span id="userBalance">0</span> USDC</p>
+<p>Staked: <span id="stakedAmount">0</span> USDC</p>
+<p>Pending Rewards: <span id="pendingRewards">0</span> USDC</p>
+</div>
+<div class="card">
+<h3>Referral Statistics</h3>
+<p>Total Referrals: <span id="totalReferrals">0</span></p>
+<p>Referral Rewards: <span id="referralRewards">0</span> USDC</p>
+</div>
+</div>
+<div class="card">
+<h3>Apply Referral Code</h3>
+<div class="input-group">
+<div class="input-wrapper">
+<input type="number" id="applyReferralCode" placeholder="Enter Referral Code">
+</div>
+<button id="applyReferralButton" class="button">Apply Referral</button>
+</div>
+</div>
+
+<div class="card">
+<h3>Stake USDC</h3>
+<div class="input-group">
+<div class="input-wrapper">
+<input type="number" id="stakeAmount" class="with-max" placeholder="Amount" step="0.01" min="0.01">
+<button class="max-button" id="maxStakeButton">MAX</button>
+</div>
+<button id="stakeButton" class="button">Stake USDC</button>
+</div>
+</div>
+ <div class="card">
+            <h3>Manage Stake</h3>
+            <div class="input-group">
+                <input type="number" id="withdrawAmount" placeholder="Amount" step="0.01" min="0.01">
+                <button id="withdrawButton" class="button secondary">Withdraw</button>
+                <button id="claimRewardsButton" class="button secondary">Claim Rewards</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Referral Program</h3>
+            <button id="generateReferralCode" class="button">Generate Referral Code</button>
+            <p>Your Referral Code: <span id="yourReferralCode">-</span></p>
+            <p>Referral Rewards: <span id="referralRewards">0</span> USDC</p>
+            <button id="claimReferralRewards" class="button secondary">Claim Referral Rewards</button>
+        </div>
+      <!-- Add this code just before the closing div of id="mainContent" -->
+  <div class="card">
+<h3>Support & Information</h3>
+<div class="support-content" style="margin-top: 15px;">
+<p style="margin-bottom: 15px;">
+<strong>Common Issues Troubleshooting:</strong><br>
+Most connection issues can be resolved by checking these common points:
+</p>
+<ul style="margin-bottom: 20px; padding-left: 20px;">
+<li style="margin-bottom: 8px;">✓ Ensure you've completed the wallet signature request</li>
+<li style="margin-bottom: 8px;">✓ Verify you're connected to the BASE Network</li>
+<li style="margin-bottom: 8px;">✓ Check your internet connection</li>
+<li style="margin-bottom: 8px;">✓ Wait 5 minutes and refresh your wallet if transactions seem stuck</li>
+</ul>
+<p style="margin-bottom: 15px;">
+<strong>Browser & Wallet Compatibility:</strong><br>
+While our platform works with most modern browsers and wallets due to its blockchain-based nature, we provide dedicated support and optimal experience for:
 </p>
 <ul style="margin-bottom: 15px; padding-left: 20px;">
-    <li style="margin-bottom: 4px;">Browsers: Chrome, Safari, Firefox, Opera</li>
-    <li style="margin-bottom: 4px;">Wallets: MetaMask, Coinbase Wallet, Ledger, Trust Wallet, Rainbow</li>
+<li style="margin-bottom: 4px;">Browsers: Chrome, Safari, Firefox, Opera</li>
+<li style="margin-bottom: 4px;">Wallets: MetaMask, Coinbase Wallet, Ledger, Trust Wallet, Rainbow</li>
 </ul>
 <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
-    Other WalletConnect-compatible wallets are also supported with standard functionality.
+Other WalletConnect-compatible wallets are also supported with standard functionality.
 </p>
-        <p style="margin-bottom: 15px;">
-            <strong>Still Having Issues?</strong><br>
-            If you're still experiencing problems after checking these points, our support team is ready to assist you.
-        </p>
-        <div class="support-button" style="margin-top: 20px;">
-            <a href="mailto:support@baseusdc.com" class="button secondary" style="text-decoration: none; text-align: center;">
-                Contact Support: support@baseusdc.com
-            </a>
-        </div>
-    </div>
+<p style="margin-bottom: 15px;">
+<strong>Still Having Issues?</strong><br>
+If you're still experiencing problems after checking these points, our support team is ready to assist you.
+</p>
+<div class="support-button" style="margin-top: 20px;">
+<a href="mailto:support@baseusdc.com" class="button secondary" style="text-decoration: none; text-align: center;">
+Contact Support: support@baseusdc.com
+</a>
 </div>
-        </div>
-    </div>
-
-    <script>
-    // Global Constants
-const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
-    const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-    const BASE_CHAIN_ID = '0x2105';
-    const DEBUG_MODE = false;
-
-        async function getOptimalGasPrice() {
-    const currentGasPrice = await web3.eth.getGasPrice();
-    return Math.floor(currentGasPrice * 1.85).toString(); // 85%バッファー
+</div>
+</div>
+</div>
+</div>
+  <script>
+// Global Constants
+    const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
+const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const BASE_CHAIN_ID = '0x2105';
+const DEBUG_MODE = false;
+     async function getOptimalGasPrice() {
+const currentGasPrice = await web3.eth.getGasPrice();
+return Math.floor(currentGasPrice * 1.85).toString(); // 85%バッファー
 }
-        
     // Global Variables
-    let web3;
-    let contract;
-    let usdcContract;
-    let userAddress;
-      let web3Modal;    // 新しく追加
-let wcProvider;   // 新しく追加
+let web3;
+let contract;
+let usdcContract;
+let userAddress;
 
-    // USDC Token ABI Definition
-    const USDC_ABI = [
-        {
-            "inputs": [
-                {"name": "spender","type": "address"},
-                {"name": "amount","type": "uint256"}
-            ],
-            "name": "approve",
-            "outputs": [{"name": "","type": "bool"}],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {"name": "owner","type": "address"},
-                {"name": "spender","type": "address"}
-            ],
-            "name": "allowance",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {"name": "account","type": "address"}
-            ],
-            "name": "balanceOf",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
-
-    // Main Contract ABI Definition
-    const CONTRACT_ABI = [
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "deposits",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "calculateReward",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {"name": "amount","type": "uint256"},
-                {"name": "referralCode","type": "uint256"}
-            ],
-            "name": "depositFunds",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "amount","type": "uint256"}],"name": "withdraw",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "claimDepositReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "claimReferralReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "user","type": "address"}],
-            "name": "getUserInfo",
-            "outputs": [
-                {"name": "depositAmount","type": "uint256"},
-                {"name": "pendingRewards","type": "uint256"},
-                {"name": "userReferralRewards","type": "uint256"},
-                {"name": "totalReferrals","type": "uint256"},
-                {"name": "isFrozen","type": "bool"}
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "referralRewards",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
+// USDC Token ABI Definition
+const USDC_ABI = [
+    {
         "inputs": [
-            {"name": "referralCode", "type": "uint256"}
+            {"name": "spender","type": "address"},
+            {"name": "amount","type": "uint256"}
         ],
-        "name": "processReferral",
+        "name": "approve",
+        "outputs": [{"name": "","type": "bool"}],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {"name": "owner","type": "address"},
+            {"name": "spender","type": "address"}
+        ],
+        "name": "allowance",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {"name": "account","type": "address"}
+        ],
+        "name": "balanceOf",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];
+
+// Main Contract ABI Definition
+const CONTRACT_ABI = [
+    {
+        "inputs": [{"name": "","type": "address"}],
+        "name": "deposits",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{"name": "","type": "address"}],
+        "name": "calculateReward",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {"name": "amount","type": "uint256"},
+            {"name": "referralCode","type": "uint256"}
+        ],
+        "name": "depositFunds",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
-        {
-            "inputs": [],
-            "name": "generateReferralCode",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "userToReferralCode",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "userToReferrer",
-            "outputs": [{"name": "","type": "address"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "name": "user",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "name": "referralCode",
-                    "type": "uint256"
-                }
-            ],
-            "name": "ReferralCodeCreated",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "currentAPR",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "referrerRewardRate",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "referredRewardRate",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
-
-    // Utility Functions
-    function showDebugInfo(info) {
-        if (!DEBUG_MODE) return;
-        const debugDiv = document.getElementById('debugInfo');
-        debugDiv.style.display = 'block';
-        debugDiv.innerHTML += `<div>[${new Date().toISOString()}] ${info}</div>`;
-        debugDiv.scrollTop = debugDiv.scrollHeight;
-    }
-
-function showAlert(message, type) {
-    const alert = document.getElementById('alert');
-    alert.textContent = message;
-    alert.className = `alert ${type}`;
-    alert.style.display = 'block';
-    
-    // トランザクション関連のメッセージは表示時間を延長
-    const duration = message.includes('successful') || message.includes('Failed to') ? 8000 : 5000;
-    
-    setTimeout(() => {
-        alert.style.display = 'none';
-    }, duration);
-}
-
-    function showLoading(show) {
-        document.getElementById('loading').style.display = show ? 'block' : 'none';
-    }
-
-function formatNumber(number, decimals = 6) {
-    const num = typeof number === 'string' ? number : number.toString();
-    if (num === '0') {
-        return '0.' + '0'.repeat(decimals);
-    }
-    const parts = num.split('.');
-    if (parts.length === 1) {
-        return parts[0] + '.' + '0'.repeat(decimals);
-    }
-    const decimal = parts[1].padEnd(decimals, '0').slice(0, decimals);
-    return parts[0] + '.' + decimal;
-}
-   async function updatePlatformInfo() {
-    try {
-        if (!contract) {
-            showDebugInfo('Contract not initialized for platform info update');
-            return;
-        }
-
-        // APRの取得を試行
-        const getAPR = async (retryCount = 0) => {
-            try {
-                const apr = await contract.methods.currentAPR().call();
-                const referrerRate = await contract.methods.referrerRewardRate().call();
-                const referredRate = await contract.methods.referredRewardRate().call();
-                
-                // 値が取得できた場合のみUIを更新
-                if (apr !== undefined) {
-                    document.getElementById('currentAPR').textContent = (apr / 100).toFixed(2);
-                    document.getElementById('referrerReward').textContent = (referrerRate / 100).toFixed(2);
-                    document.getElementById('referredReward').textContent = (referredRate / 100).toFixed(2);
-                } else if (retryCount < 2) {  // 最大2回まで再試行
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    return getAPR(retryCount + 1);
-                }
-            } catch (error) {
-                if (retryCount < 2) {  // エラー時も最大2回まで再試行
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    return getAPR(retryCount + 1);
-                }
-                throw error;
-            }
-        };
-
-        await getAPR();
-        showDebugInfo('Platform info updated successfully');
-    } catch (error) {
-        console.error('Error updating platform info:', error);
-        showDebugInfo('Platform info update error: ' + error.message);
-    }
-}
-
-async function initWeb3() {
-    try {
-             // 読み取り専用プロバイダーを先に初期化
-        const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
-        web3 = new Web3(readOnlyProvider);
-        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-      
-        const providerOptions = {
-            walletconnect: {
-                package: WalletConnectProvider,
-                options: {
-                    rpc: {
-                        8453: 'https://mainnet.base.org'
-                    },
-                    chainId: 8453
-                }
+    {
+        "inputs": [{"name": "amount","type": "uint256"}],"name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "claimDepositReward",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "claimReferralReward",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{"name": "user","type": "address"}],
+        "name": "getUserInfo",
+        "outputs": [
+            {"name": "depositAmount","type": "uint256"},
+            {"name": "pendingRewards","type": "uint256"},
+            {"name": "userReferralRewards","type": "uint256"},
+            {"name": "totalReferrals","type": "uint256"},
+            {"name": "isFrozen","type": "bool"}
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{"name": "","type": "address"}],
+        "name": "referralRewards",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+    "inputs": [
+        {"name": "referralCode", "type": "uint256"}
+    ],
+    "name": "processReferral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+},
+    {
+        "inputs": [],
+        "name": "generateReferralCode",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{"name": "","type": "address"}],
+        "name": "userToReferralCode",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [{"name": "","type": "address"}],
+        "name": "userToReferrer",
+        "outputs": [{"name": "","type": "address"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "user",
+                "type": "address"
             },
-            coinbasewallet: {
-                package: CoinbaseWalletSDK,
-                options: {
-                    appName: "BASEUSDC.COM",
-                    rpc: "https://mainnet.base.org",
-                    chainId: 8453
-                }
+            {
+                "indexed": false,
+                "name": "referralCode",
+                "type": "uint256"
             }
-        };
+        ],
+        "name": "ReferralCodeCreated",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "currentAPR",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "referrerRewardRate",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "referredRewardRate",
+        "outputs": [{"name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];
 
-        web3Modal = new Web3Modal({
-            cacheProvider: false,
-            providerOptions,
-            theme: "light"
-        });
+// Utility Functions
+function showDebugInfo(info) {
+    if (!DEBUG_MODE) return;
+    const debugDiv = document.getElementById('debugInfo');
+    debugDiv.style.display = 'block';
+    debugDiv.innerHTML += `<div>[${new Date().toISOString()}] ${info}</div>`;
+    debugDiv.scrollTop = debugDiv.scrollHeight;
+}
+function showAlert(message, type) {
+const alert = document.getElementById('alert');
+alert.textContent = message;
+alert.className = alert ${type};
+alert.style.display = 'block';
+  // トランザクション関連のメッセージは表示時間を延長
+const duration = message.includes('successful') || message.includes('Failed to') ? 8000 : 5000;
 
-        if (window.ethereum) {
-            web3 = new Web3(window.ethereum);
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-            
-            const accounts = await web3.eth.getAccounts();
-            if (accounts.length > 0) {
-                userAddress = accounts[0];
-                onConnect();
+setTimeout(() => {
+    alert.style.display = 'none';
+}, duration);
+}
+    function showLoading(show) {
+    document.getElementById('loading').style.display = show ? 'block' : 'none';
+}
+function formatNumber(number, decimals = 6) {
+const num = typeof number === 'string' ? number : number.toString();
+if (num === '0') {
+return '0.' + '0'.repeat(decimals);
+}
+const parts = num.split('.');
+if (parts.length === 1) {
+return parts[0] + '.' + '0'.repeat(decimals);
+}
+const decimal = parts[1].padEnd(decimals, '0').slice(0, decimals);
+return parts[0] + '.' + decimal;
+}
+async function updatePlatformInfo() {
+try {
+if (!contract) {
+showDebugInfo('Contract not initialized for platform info update');
+return;
+}
+  // APRの取得を試行
+    const getAPR = async (retryCount = 0) => {
+        try {
+            const apr = await contract.methods.currentAPR().call();
+            const referrerRate = await contract.methods.referrerRewardRate().call();
+            const referredRate = await contract.methods.referredRewardRate().call();
+
+            // 値が取得できた場合のみUIを更新
+            if (apr !== undefined) {
+                document.getElementById('currentAPR').textContent = (apr / 100).toFixed(2);
+                document.getElementById('referrerReward').textContent = (referrerRate / 100).toFixed(2);
+                document.getElementById('referredReward').textContent = (referredRate / 100).toFixed(2);
+            } else if (retryCount < 2) {  // 最大2回まで再試行
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return getAPR(retryCount + 1);
             }
-
-            window.ethereum.on('accountsChanged', handleAccountsChanged);
-            window.ethereum.on('chainChanged', handleChainChanged);
+        } catch (error) {
+            if (retryCount < 2) {  // エラー時も最大2回まで再試行
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return getAPR(retryCount + 1);
+            }
+            throw error;
         }
+    };
 
-        await updatePlatformInfo();
-        document.getElementById('connectWallet').addEventListener('click', connectWallet);
-        
-    } catch (error) {
-        console.error("Failed to initialize Web3:", error);
-        showAlert('Failed to initialize Web3. Please refresh the page.', 'error');
-    }
+    await getAPR();
+    showDebugInfo('Platform info updated successfully');
+} catch (error) {
+    console.error('Error updating platform info:', error);
+    showDebugInfo('Platform info update error: ' + error.message);
 }
-      
-function detectEthereumProvider() {
-    if (window.ethereum) {
-        return window.ethereum;
-    }
-    if (window.coinbaseWalletExtension) {
-        return window.coinbaseWalletExtension;
-    }
-    return null;
 }
+    // Web3 Initialization
+async function initWeb3() {
+try {
+    // イベントリスナーの設定（この部分は常に実行）
+    document.getElementById('connectWallet').addEventListener('click', connectWallet);
+    document.getElementById('stakeButton').addEventListener('click', stake);
+    document.getElementById('withdrawButton').addEventListener('click', withdraw);
+    document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
+    document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
+    document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
+    document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
+    document.getElementById('applyReferralButton').addEventListener('click', applyReferral);
 
-
-async function connectWallet() {
-    try {
-        showLoading(true);
-        document.getElementById('networkStatus').textContent = 'Connecting...';
-
-        const provider = await web3Modal.connect();
+    const provider = detectEthereumProvider();
+    if (provider) {
         web3 = new Web3(provider);
-        
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
 
         const accounts = await web3.eth.getAccounts();
         if (accounts.length > 0) {
             userAddress = accounts[0];
-            await checkAndSwitchNetwork();
             onConnect();
-            showAlert('Wallet connected successfully!', 'success');
         }
+    } else {
+        // 読み取り専用の初期化
+        const readOnlyProvider = new Web3.providers.HttpProvider('<https://mainnet.base.org>');
+        web3 = new Web3(readOnlyProvider);
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+    }
 
-    } catch (error) {
-        console.error("Connection error:", error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
-    } finally {
-        showLoading(false);
+    await updatePlatformInfo();
+    setInterval(updatePlatformInfo, 15 * 60 * 1000);
+
+    showDebugInfo('Web3 initialized successfully');
+} catch (error) {
+    console.error("Error initializing Web3:", error);
+    showAlert('Failed to initialize Web3: ' + error.message, 'error');
+    showDebugInfo('Web3 initialization error: ' + error.message);
+}
+  }
+
+function detectEthereumProvider() {
+if (window.ethereum) {
+return window.ethereum;
+}
+if (window.coinbaseWalletExtension) {
+return window.coinbaseWalletExtension;
+}
+return null;
+}
+
+async function connectWallet() {
+try {
+showLoading(true);
+  if (window.ethereum) {
+        // MetaMaskが存在する場合の処理
+        try {
+            web3 = new Web3(window.ethereum);
+            const accounts = await window.ethereum.request({
+                method: 'eth_requestAccounts'
+            });
+            userAddress = accounts[0];
+
+            // コントラクトインスタンスの再初期化
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
+            // イベントリスナーの設定
+            window.ethereum.on("accountsChanged", handleAccountsChanged);
+            window.ethereum.on("chainChanged", handleChainChanged);
+            window.ethereum.on("disconnect", () => {
+                handleAccountsChanged([]);
+            });
+        } catch (err) {
+            throw new Error('Failed to connect to MetaMask: ' + err.message);
+        }
+    } else {
+        // MetaMaskが存在しない場合のWalletConnect処理
+        const WalletConnectProvider = window.WalletConnectProvider.default;
+        const wcProvider = new WalletConnectProvider({
+            rpc: {
+                8453: "<https://mainnet.base.org>"
+            }
+        });
+
+        await wcProvider.enable();
+        web3 = new Web3(wcProvider);
+        const accounts = await web3.eth.getAccounts();
+        userAddress = accounts[0];
+
+        // WalletConnectのイベントリスナー設定
+        wcProvider.on("accountsChanged", handleAccountsChanged);
+        wcProvider.on("chainChanged", handleChainChanged);
+        wcProvider.on("disconnect", () => {
+            handleAccountsChanged([]);
+        });
+
+        // コントラクトインスタンスの再初期化
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+    }
+
+    showDebugInfo('Wallet connected: ' + userAddress);
+    await checkAndSwitchNetwork();
+    onConnect();
+    showAlert('Wallet connected successfully!', 'success');
+
+} catch (error) {
+    console.error("Connection error:", error);
+    showAlert('Failed to connect wallet: ' + error.message, 'error');
+    showDebugInfo('Wallet connection error: ' + error.message);
+} finally {
+    showLoading(false);
+}
+  }
+    function handleAccountsChanged(accounts) {
+    if (accounts.length === 0) {
+        userAddress = null;
+        document.getElementById('connectWallet').textContent = 'Connect Wallet';
+        document.getElementById('mainContent').style.display = 'none';
+          document.getElementById('landingContent').style.display = 'block'; // 追加
+        updateNetworkStatus(false);
+        showDebugInfo('Wallet disconnected');
+    } else if (accounts[0] !== userAddress) {
+        userAddress = accounts[0];
+        onConnect();
+        showDebugInfo('Account changed to: ' + userAddress);
     }
 }
 
-    function handleAccountsChanged(accounts) {
-        if (accounts.length === 0) {
-            userAddress = null;
-            document.getElementById('connectWallet').textContent = 'Connect Wallet';
-            document.getElementById('mainContent').style.display = 'none';
-              document.getElementById('landingContent').style.display = 'block'; // 追加
-            updateNetworkStatus(false);
-            showDebugInfo('Wallet disconnected');
-        } else if (accounts[0] !== userAddress) {
-            userAddress = accounts[0];
-            onConnect();
-            showDebugInfo('Account changed to: ' + userAddress);
-        }
+function handleChainChanged(chainId) {
+    showDebugInfo('Chain changed to: ' + chainId);
+    if (chainId !== BASE_CHAIN_ID) {
+        showAlert('Please switch to BASE Network', 'error');
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('landingContent').style.display = 'block'; // 追加
+        updateNetworkStatus(false);
+    } else {
+        document.getElementById('mainContent').style.display = 'block';
+          document.getElementById('landingContent').style.display = 'none'; // 追加
+        updateNetworkStatus(true);
+        updateUI();
     }
+}
 
-    function handleChainChanged(chainId) {
-        showDebugInfo('Chain changed to: ' + chainId);
-        if (chainId !== BASE_CHAIN_ID) {
-            showAlert('Please switch to BASE Network', 'error');
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('landingContent').style.display = 'block'; // 追加
-            updateNetworkStatus(false);
-        } else {
-            document.getElementById('mainContent').style.display = 'block';
-              document.getElementById('landingContent').style.display = 'none'; // 追加
-            updateNetworkStatus(true);
-            updateUI();
-        }
+async function checkNetwork() {
+    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+    showDebugInfo('Current chain ID: ' + chainId);
+    updateNetworkStatus(chainId === BASE_CHAIN_ID);
+    return chainId === BASE_CHAIN_ID;
+}
+
+function updateNetworkStatus(isCorrect) {
+    const status = document.getElementById('networkStatus');
+    if (isCorrect) {
+        status.textContent = 'BASE Network';
+        status.className = 'network-status correct';
+    } else {
+        status.textContent = 'Wrong Network';
+        status.className = 'network-status wrong';
     }
+}
 
-    async function checkNetwork() {
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        showDebugInfo('Current chain ID: ' + chainId);
-        updateNetworkStatus(chainId === BASE_CHAIN_ID);
-        return chainId === BASE_CHAIN_ID;
-    }
+async function checkAndSwitchNetwork() {
+// web3.eth.getChainId()を使用して現在のチェーンIDを取得
+// これはMetaMaskでもWalletConnectでも共通して動作
+const chainId = await web3.eth.getChainId();
 
-    function updateNetworkStatus(isCorrect) {
-        const status = document.getElementById('networkStatus');
-        if (isCorrect) {
-            status.textContent = 'BASE Network';
-            status.className = 'network-status correct';
-        } else {
-            status.textContent = 'Wrong Network';
-            status.className = 'network-status wrong';
-        }
-    }
+// BASE_CHAIN_IDは16進数文字列なので、数値に変換して比較
+const targetChainId = parseInt(BASE_CHAIN_ID, 16);
 
-    async function checkAndSwitchNetwork() {
-    // web3.eth.getChainId()を使用して現在のチェーンIDを取得
-    // これはMetaMaskでもWalletConnectでも共通して動作
-    const chainId = await web3.eth.getChainId();
-    
-    // BASE_CHAIN_IDは16進数文字列なので、数値に変換して比較
-    const targetChainId = parseInt(BASE_CHAIN_ID, 16);
-    
-    if (chainId !== targetChainId) {
-        // MetaMaskの場合
-        if (window.ethereum) {
-            try {
-                // チェーンの切り替えを試みる
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: BASE_CHAIN_ID }],
-                });
-            } catch (error) {
-                // エラーコード4902は「ネットワークが未追加」を意味する
-                if (error.code === 4902) {
-                    // 別関数としてネットワーク追加処理を分離
-                    await addBaseNetwork();
-                } else {
-                    throw error;
-                }
+if (chainId !== targetChainId) {
+    // MetaMaskの場合
+    if (window.ethereum) {
+        try {
+            // チェーンの切り替えを試みる
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: BASE_CHAIN_ID }],
+            });
+        } catch (error) {
+            // エラーコード4902は「ネットワークが未追加」を意味する
+            if (error.code === 4902) {
+                // 別関数としてネットワーク追加処理を分離
+                await addBaseNetwork();
+            } else {
+                throw error;
             }
-        } else {
-            // WalletConnectなど、MetaMask以外の場合
-            // 自動切り替えができないため、ユーザーに手動での切り替えを促す
-            showAlert('Please switch to BASE Network in your wallet', 'error');
-            throw new Error('Please switch to BASE Network');
         }
+    } else {
+        // WalletConnectなど、MetaMask以外の場合
+        // 自動切り替えができないため、ユーザーに手動での切り替えを促す
+        showAlert('Please switch to BASE Network in your wallet', 'error');
+        throw new Error('Please switch to BASE Network');
     }
-    
-    // ネットワークステータスの表示を更新
-    updateNetworkStatus(true);
+}
+
+// ネットワークステータスの表示を更新
+updateNetworkStatus(true);
 }
 
 // ネットワーク追加用の補助関数として分離
 async function addBaseNetwork() {
-    await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [{
-            chainId: BASE_CHAIN_ID,
-            chainName: 'Base',
-            nativeCurrency: {
-                name: 'ETH',
-                symbol: 'ETH',
-                decimals: 18
-            },
-            rpcUrls: ['https://mainnet.base.org'],
-            blockExplorerUrls: ['https://basescan.org']
-        }]
-    });
+await window.ethereum.request({
+method: 'wallet_addEthereumChain',
+params: [{
+chainId: BASE_CHAIN_ID,
+chainName: 'Base',
+nativeCurrency: {
+name: 'ETH',
+symbol: 'ETH',
+decimals: 18
+},
+rpcUrls: ['[https://mainnet.base.org](https://mainnet.base.org/)'],
+blockExplorerUrls: ['[https://basescan.org](https://basescan.org/)']
+}]
+});
 }
 
 function onConnect() {
-    const connectWalletButton = document.getElementById('connectWallet');
-    if (userAddress && connectWalletButton) {
-        connectWalletButton.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-    }
-    document.getElementById('mainContent').style.display = 'block';
-    document.getElementById('landingContent').style.display = 'none';
-    updateUI();
+const connectWalletButton = document.getElementById('connectWallet');
+if (userAddress && connectWalletButton) {
+connectWalletButton.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
+}
+document.getElementById('mainContent').style.display = 'block';
+document.getElementById('landingContent').style.display = 'none';
+updateUI();
 }
 
 async function updateUI() {
-    if (!userAddress) return;
-    
-    try {
-        showLoading(true);
-        
-        // ブロック情報の取得
-        const currentBlock = await web3.eth.getBlock('latest');
-        showDebugInfo('=== Contract State ===');
-        showDebugInfo(`Current Block Number: ${currentBlock.number}`);
-        showDebugInfo(`Block Timestamp: ${currentBlock.timestamp}`);
-        
-        // ユーザー情報の取得
-        const userInfo = await contract.methods.getUserInfo(userAddress).call();
-        const balance = await usdcContract.methods.balanceOf(userAddress).call();
-        
-        showDebugInfo('\n=== User Info ===');
-        showDebugInfo(`Deposit Amount: ${userInfo[0]}`); // depositAmount
-        showDebugInfo(`Pending Rewards: ${userInfo[1]}`); // pendingRewards
-        
-        if (userInfo[0] > 0) {  // depositAmount > 0
-            const apr = await contract.methods.currentAPR().call();
-            
-            showDebugInfo('\n=== Contract Parameters ===');
-            showDebugInfo(`APR: ${apr/100}%`);
-            showDebugInfo(`APR (raw): ${apr}`);
-            showDebugInfo(`USDC_PRECISION: ${1000000}`);
-            
-            // BigNumber計算を使用して理論上の報酬を計算
-            const yearInSeconds = web3.utils.toBN(365 * 24 * 60 * 60);
-            const depositAmount = web3.utils.toBN(userInfo[0]);
-            const aprBN = web3.utils.toBN(apr);
-            
-            const expectedDailyReward = depositAmount
-                .mul(aprBN)
-                .div(web3.utils.toBN(10000))
-                .div(web3.utils.toBN(365));
-                
-            showDebugInfo('\n=== Reward Calculation ===');
-            showDebugInfo(`Daily Rate: ${apr/10000/365}%`);
-            showDebugInfo(`Expected Daily Reward: ${web3.utils.fromWei(expectedDailyReward, 'mwei')} USDC`);
-            showDebugInfo(`Expected Daily Reward (raw): ${expectedDailyReward.toString()}`);
-            
-            const reward = await contract.methods.calculateReward(userAddress).call();
-            showDebugInfo(`Actual Reward: ${web3.utils.fromWei(reward, 'mwei')} USDC`);
-            showDebugInfo(`Actual Reward (raw): ${reward}`);
-        }
+if (!userAddress) return;
+  try {
+    showLoading(true);
 
-        // Update all dashboard elements
-        document.getElementById('userBalance').textContent = 
-            formatNumber(web3.utils.fromWei(balance, 'mwei'));
-        document.getElementById('stakedAmount').textContent = 
-            formatNumber(web3.utils.fromWei(userInfo[0], 'mwei'));
-        document.getElementById('pendingRewards').textContent = 
-            formatNumber(web3.utils.fromWei(userInfo[1], 'mwei'));
-        document.getElementById('totalReferrals').textContent = userInfo[3];
-        document.getElementById('referralRewards').textContent = 
-            formatNumber(web3.utils.fromWei(userInfo[2], 'mwei'));
-            
-        // Update referral code section visibility
-        const referralCard = document.getElementById('applyReferralCode').closest('.card');
-        if (await contract.methods.userToReferrer(userAddress).call() !== '0x0000000000000000000000000000000000000000') {
-            referralCard.style.display = 'none';
-            showDebugInfo('User already has a referrer - hiding referral input section');
-        } else {
-            referralCard.style.display = 'block';
-            showDebugInfo('User has no referrer - showing referral input section');
-        }
+    // ブロック情報の取得
+    const currentBlock = await web3.eth.getBlock('latest');
+    showDebugInfo('=== Contract State ===');
+    showDebugInfo(`Current Block Number: ${currentBlock.number}`);
+    showDebugInfo(`Block Timestamp: ${currentBlock.timestamp}`);
 
-    } catch (error) {
-        console.error('Error updating UI:', error);
-        showAlert('Failed to update information', 'error');
-        showDebugInfo('Error: ' + error.message);
-    } finally {
-        showLoading(false);
+    // ユーザー情報の取得
+    const userInfo = await contract.methods.getUserInfo(userAddress).call();
+    const balance = await usdcContract.methods.balanceOf(userAddress).call();
+
+    showDebugInfo('\\n=== User Info ===');
+    showDebugInfo(`Deposit Amount: ${userInfo[0]}`); // depositAmount
+    showDebugInfo(`Pending Rewards: ${userInfo[1]}`); // pendingRewards
+
+    if (userInfo[0] > 0) {  // depositAmount > 0
+        const apr = await contract.methods.currentAPR().call();
+
+        showDebugInfo('\\n=== Contract Parameters ===');
+        showDebugInfo(`APR: ${apr/100}%`);
+        showDebugInfo(`APR (raw): ${apr}`);
+        showDebugInfo(`USDC_PRECISION: ${1000000}`);
+
+        // BigNumber計算を使用して理論上の報酬を計算
+        const yearInSeconds = web3.utils.toBN(365 * 24 * 60 * 60);
+        const depositAmount = web3.utils.toBN(userInfo[0]);
+        const aprBN = web3.utils.toBN(apr);
+
+        const expectedDailyReward = depositAmount
+            .mul(aprBN)
+            .div(web3.utils.toBN(10000))
+            .div(web3.utils.toBN(365));
+
+        showDebugInfo('\\n=== Reward Calculation ===');
+        showDebugInfo(`Daily Rate: ${apr/10000/365}%`);
+        showDebugInfo(`Expected Daily Reward: ${web3.utils.fromWei(expectedDailyReward, 'mwei')} USDC`);
+        showDebugInfo(`Expected Daily Reward (raw): ${expectedDailyReward.toString()}`);
+
+        const reward = await contract.methods.calculateReward(userAddress).call();
+        showDebugInfo(`Actual Reward: ${web3.utils.fromWei(reward, 'mwei')} USDC`);
+        showDebugInfo(`Actual Reward (raw): ${reward}`);
     }
+
+    // Update all dashboard elements
+    document.getElementById('userBalance').textContent =
+        formatNumber(web3.utils.fromWei(balance, 'mwei'));
+    document.getElementById('stakedAmount').textContent =
+        formatNumber(web3.utils.fromWei(userInfo[0], 'mwei'));
+    document.getElementById('pendingRewards').textContent =
+        formatNumber(web3.utils.fromWei(userInfo[1], 'mwei'));
+    document.getElementById('totalReferrals').textContent = userInfo[3];
+    document.getElementById('referralRewards').textContent =
+        formatNumber(web3.utils.fromWei(userInfo[2], 'mwei'));
+
+    // Update referral code section visibility
+    const referralCard = document.getElementById('applyReferralCode').closest('.card');
+    if (await contract.methods.userToReferrer(userAddress).call() !== '0x0000000000000000000000000000000000000000') {
+        referralCard.style.display = 'none';
+        showDebugInfo('User already has a referrer - hiding referral input section');
+    } else {
+        referralCard.style.display = 'block';
+        showDebugInfo('User has no referrer - showing referral input section');
+    }
+
+} catch (error) {
+    console.error('Error updating UI:', error);
+    showAlert('Failed to update information', 'error');
+    showDebugInfo('Error: ' + error.message);
+} finally {
+    showLoading(false);
+}
 }
 
-
 async function stake() {
-    if (!userAddress) return;
-    
-    const amount = document.getElementById('stakeAmount').value;
+if (!userAddress) return;
+  const amount = document.getElementById('stakeAmount').value;
+if (!amount || amount <= 0) {
+    showAlert('Please enter a valid amount', 'error');
+    return;
+}
+
+try {
+    showLoading(true);
+    const amountWei = web3.utils.toWei(amount, 'mwei');
+    showDebugInfo('Attempting to stake: ' + amount + ' USDC');
+
+    // 承認状態の確認と承認処理
+    const allowance = await usdcContract.methods.allowance(userAddress, CONTRACT_ADDRESS).call();
+    if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+        showDebugInfo('Approval required. Processing approval...');
+        showAlert('Approving USDC...', 'info');
+
+        try {
+            const approveTx = await usdcContract.methods.approve(CONTRACT_ADDRESS, amountWei)
+                .send({
+                    from: userAddress,
+                    gasPrice: await getOptimalGasPrice()
+                });
+            showDebugInfo('Approval successful: ' + approveTx.transactionHash);
+        } catch (approvalError) {
+            throw new Error('Failed to approve USDC: ' + approvalError.message);
+        }
+    }
+
+    // ステーク処理
+    const tx = await contract.methods.depositFunds(amountWei, '0')
+        .send({
+            from: userAddress,
+            gasPrice: await getOptimalGasPrice()
+        });
+    showAlert('Staking successful', 'success');
+    showDebugInfo('Stake transaction: ' + tx.transactionHash);
+    updateUI();
+} catch (error) {
+    console.error('Transaction error:', error);
+    let errorMessage = error.message;
+  if (error.message.includes('paused')) {
+errorMessage = 'Staking is temporarily unavailable. Please try again later.';
+} else if (error.message.includes('amount too low')) {
+errorMessage = 'Please enter a larger amount to stake. The minimum required amount is 0.01 USDC.';
+}
+showAlert('Failed to stake: ' + errorMessage, 'error');
+showDebugInfo('Stake error: ' + errorMessage);
+} finally {
+showLoading(false);
+}
+}
+async function withdraw() {
+if (!userAddress) return;
+  const amount = document.getElementById('withdrawAmount').value;
     if (!amount || amount <= 0) {
         showAlert('Please enter a valid amount', 'error');
         return;
     }
 
+    // Get current staked amount first
+        const userInfo = await contract.methods.getUserInfo(userAddress).call();
+        const stakedAmount = web3.utils.fromWei(userInfo[0], 'mwei');
+
+        // Validate withdrawal amount against staked balance
+        if (parseFloat(amount) > parseFloat(stakedAmount)) {
+            showAlert(`Cannot withdraw more than your staked balance of ${stakedAmount} USDC`, 'error');
+            return;
+        }
+
     try {
         showLoading(true);
         const amountWei = web3.utils.toWei(amount, 'mwei');
-        showDebugInfo('Attempting to stake: ' + amount + ' USDC');
+        showDebugInfo('Attempting to withdraw: ' + amount + ' USDC');
 
-        // 承認状態の確認と承認処理
-        const allowance = await usdcContract.methods.allowance(userAddress, CONTRACT_ADDRESS).call();
-        if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
-            showDebugInfo('Approval required. Processing approval...');
-            showAlert('Approving USDC...', 'info');
-            
-            try {
-                const approveTx = await usdcContract.methods.approve(CONTRACT_ADDRESS, amountWei)
-                    .send({ 
-                        from: userAddress,
-                        gasPrice: await getOptimalGasPrice()
-                    });
-                showDebugInfo('Approval successful: ' + approveTx.transactionHash);
-            } catch (approvalError) {
-                throw new Error('Failed to approve USDC: ' + approvalError.message);
-            }
-        }
-
-        // ステーク処理
-        const tx = await contract.methods.depositFunds(amountWei, '0')
-            .send({ 
+        const tx = await contract.methods.withdraw(amountWei)
+            .send({
                 from: userAddress,
                 gasPrice: await getOptimalGasPrice()
             });
-        showAlert('Staking successful', 'success');
-        showDebugInfo('Stake transaction: ' + tx.transactionHash);
+        showAlert('Withdrawal successful', 'success');
+        showDebugInfo('Withdrawal transaction: ' + tx.transactionHash);
         updateUI();
     } catch (error) {
-        console.error('Transaction error:', error);
-        let errorMessage = error.message;
-      if (error.message.includes('paused')) {
-    errorMessage = 'Staking is temporarily unavailable. Please try again later.';
-} else if (error.message.includes('amount too low')) {
-    errorMessage = 'Please enter a larger amount to stake. The minimum required amount is 0.01 USDC.';
-}
-        showAlert('Failed to stake: ' + errorMessage, 'error');
-        showDebugInfo('Stake error: ' + errorMessage);
+        console.error('Withdrawal error:', error);
+        showAlert('Failed to withdraw: ' + error.message, 'error');
+        showDebugInfo('Withdrawal error: ' + error.message);
     } finally {
         showLoading(false);
     }
 }
-    async function withdraw() {
-        if (!userAddress) return;
-        
-        const amount = document.getElementById('withdrawAmount').value;
-        if (!amount || amount <= 0) {
-            showAlert('Please enter a valid amount', 'error');
-            return;
-        }
 
-        // Get current staked amount first
-            const userInfo = await contract.methods.getUserInfo(userAddress).call();
-            const stakedAmount = web3.utils.fromWei(userInfo[0], 'mwei');
-            
-            // Validate withdrawal amount against staked balance
-            if (parseFloat(amount) > parseFloat(stakedAmount)) {
-                showAlert(`Cannot withdraw more than your staked balance of ${stakedAmount} USDC`, 'error');
-                return;
-            }
+async function claimRewards() {
+if (!userAddress) return;
 
-        try {
-            showLoading(true);
-            const amountWei = web3.utils.toWei(amount, 'mwei');
-            showDebugInfo('Attempting to withdraw: ' + amount + ' USDC');
-            
-            const tx = await contract.methods.withdraw(amountWei)
-                .send({ 
-                    from: userAddress,
-                    gasPrice: await getOptimalGasPrice()
-                });
-            showAlert('Withdrawal successful', 'success');
-            showDebugInfo('Withdrawal transaction: ' + tx.transactionHash);
-            updateUI();
-        } catch (error) {
-            console.error('Withdrawal error:', error);
-            showAlert('Failed to withdraw: ' + error.message, 'error');
-            showDebugInfo('Withdrawal error: ' + error.message);
-        } finally {
-            showLoading(false);
-        }
-    }
+try {
+    showLoading(true);
 
-    async function claimRewards() {
-    if (!userAddress) return;
-    
-    try {
-        showLoading(true);
-        
-        // 事前に報酬額を確認
-        const pendingRewards = await contract.methods.calculateReward(userAddress).call();
-        showDebugInfo('Pending rewards amount: ' + web3.utils.fromWei(pendingRewards, 'mwei') + ' USDC');
-        
-        // ガス見積もり試行
-        const gasEstimate = await contract.methods.claimDepositReward().estimateGas({
-            from: userAddress
-        }).catch(error => {
-            showDebugInfo('Gas estimation failed: ' + error.message);
-            throw error;
+    // 事前に報酬額を確認
+    const pendingRewards = await contract.methods.calculateReward(userAddress).call();
+    showDebugInfo('Pending rewards amount: ' + web3.utils.fromWei(pendingRewards, 'mwei') + ' USDC');
+
+    // ガス見積もり試行
+    const gasEstimate = await contract.methods.claimDepositReward().estimateGas({
+        from: userAddress
+    }).catch(error => {
+        showDebugInfo('Gas estimation failed: ' + error.message);
+        throw error;
+    });
+
+    showDebugInfo('Estimated gas: ' + gasEstimate);
+
+    // トランザクション実行
+    const tx = await contract.methods.claimDepositReward()
+        .send({
+            from: userAddress,
+            gas: Math.floor(gasEstimate * 1.2), // 20%のバッファを追加
+            gasPrice: await getOptimalGasPrice()
         });
-        
-        showDebugInfo('Estimated gas: ' + gasEstimate);
-        
-        // トランザクション実行
-        const tx = await contract.methods.claimDepositReward()
-            .send({ 
+
+    showAlert('Rewards claimed successfully', 'success');
+    showDebugInfo('Claim rewards transaction: ' + tx.transactionHash);
+    updateUI();
+} catch (error) {
+    console.error('Claim error:', error);
+    let errorMessage = error.message;
+
+    // エラーメッセージの詳細化
+    if (error.message.includes('gas required exceeds allowance')) {
+        errorMessage = 'Insufficient gas: The transaction requires more gas than expected';
+    } else if (error.message.includes('execution reverted')) {
+        errorMessage = 'Transaction reverted: You may not have any rewards to claim';
+    }
+
+    showAlert('Failed to claim rewards: ' + errorMessage, 'error');
+    showDebugInfo('Claim rewards error: ' + errorMessage);
+} finally {
+    showLoading(false);
+}
+}
+
+async function generateReferralCode() {
+if (!userAddress) {
+showAlert('Please connect your wallet first', 'error');
+return;
+}
+  try {
+        showLoading(true);
+        showDebugInfo('Attempting to generate referral code');
+
+        const generateButton = document.getElementById('generateReferralCode');
+        const existingCode = await contract.methods.userToReferralCode(userAddress).call();
+        if (existingCode !== '0') {
+            document.getElementById('yourReferralCode').textContent = existingCode;
+            generateButton.style.display = 'none';
+            showAlert('You already have a referral code', 'success');
+            showDebugInfo('User already has referral code: ' + existingCode);
+            return;
+        }
+
+        const tx = await contract.methods.generateReferralCode()
+            .send({
                 from: userAddress,
-                gas: Math.floor(gasEstimate * 1.2), // 20%のバッファを追加
                 gasPrice: await getOptimalGasPrice()
             });
-            
-        showAlert('Rewards claimed successfully', 'success');
-        showDebugInfo('Claim rewards transaction: ' + tx.transactionHash);
+
+        const event = tx.events.ReferralCodeCreated;
+        if (event) {
+            const generatedCode = event.returnValues.referralCode;
+            document.getElementById('yourReferralCode').textContent = generatedCode;
+            generateButton.style.display = 'none';
+            showAlert('Referral code generated successfully', 'success');
+            showDebugInfo('Generated referral code: ' + generatedCode);
+        }
+
         updateUI();
     } catch (error) {
-        console.error('Claim error:', error);
-        let errorMessage = error.message;
-        
-        // エラーメッセージの詳細化
-        if (error.message.includes('gas required exceeds allowance')) {
-            errorMessage = 'Insufficient gas: The transaction requires more gas than expected';
-        } else if (error.message.includes('execution reverted')) {
-            errorMessage = 'Transaction reverted: You may not have any rewards to claim';
-        }
-        
-        showAlert('Failed to claim rewards: ' + errorMessage, 'error');
-        showDebugInfo('Claim rewards error: ' + errorMessage);
+        console.error('Generate referral code error:', error);
+        showAlert('Failed to generate referral code: ' + error.message, 'error');
+        showDebugInfo('Generate referral code error: ' + error.message);
     } finally {
         showLoading(false);
     }
 }
-
-  async function generateReferralCode() {
-        if (!userAddress) {
-            showAlert('Please connect your wallet first', 'error');
-            return;
-        }
-        
-        try {
-            showLoading(true);
-            showDebugInfo('Attempting to generate referral code');
-
-            const generateButton = document.getElementById('generateReferralCode');
-            const existingCode = await contract.methods.userToReferralCode(userAddress).call();
-            if (existingCode !== '0') {
-                document.getElementById('yourReferralCode').textContent = existingCode;
-                generateButton.style.display = 'none'; 
-                showAlert('You already have a referral code', 'success');
-                showDebugInfo('User already has referral code: ' + existingCode);
-                return;
-            }
-
-            const tx = await contract.methods.generateReferralCode()
-                .send({ 
-                    from: userAddress,
-                    gasPrice: await getOptimalGasPrice()
-                });
-
-            const event = tx.events.ReferralCodeCreated;
-            if (event) {
-                const generatedCode = event.returnValues.referralCode;
-                document.getElementById('yourReferralCode').textContent = generatedCode;
-                generateButton.style.display = 'none'; 
-                showAlert('Referral code generated successfully', 'success');
-                showDebugInfo('Generated referral code: ' + generatedCode);
-            }
-
-            updateUI();
-        } catch (error) {
-            console.error('Generate referral code error:', error);
-            showAlert('Failed to generate referral code: ' + error.message, 'error');
-            showDebugInfo('Generate referral code error: ' + error.message);
-        } finally {
-            showLoading(false);
-        }
-    }
-
 async function claimReferralRewards() {
-    try {
-        showLoading(true);
-        showDebugInfo('Starting referral rewards claim process');
-        
-        // まず残高を確認
-        const userInfo = await contract.methods.getUserInfo(userAddress).call();
-        const rewardsInUSDC = web3.utils.fromWei(userInfo[2], 'mwei');
-        showDebugInfo('Current rewards balance: ' + rewardsInUSDC + ' USDC');
-        
-        if (parseFloat(rewardsInUSDC) < 0.01) {
-            showAlert('Insufficient referral rewards. Rewards must be at least 0.01 USDC to claim. Current rewards: ' + rewardsInUSDC + ' USDC', 'error');
-            return;
-        }
+try {
+showLoading(true);
+showDebugInfo('Starting referral rewards claim process');
+   // まず残高を確認
+    const userInfo = await contract.methods.getUserInfo(userAddress).call();
+    const rewardsInUSDC = web3.utils.fromWei(userInfo[2], 'mwei');
+    showDebugInfo('Current rewards balance: ' + rewardsInUSDC + ' USDC');
 
-        // ガス見積もりを試みる
-        let gasEstimate;
-        try {
-            gasEstimate = await contract.methods.claimReferralReward().estimateGas({
-                from: userAddress
-            });
-            showDebugInfo('Gas estimate successful: ' + gasEstimate);
-        } catch (gasError) {
-            showDebugInfo('Gas estimation failed: ' + gasError.message);
-            throw gasError;
-        }
-
-        // トランザクション実行
-        showDebugInfo('Sending transaction with gas: ' + gasEstimate);
-        const tx = await contract.methods.claimReferralReward()
-            .send({ 
-                from: userAddress,
-                gas: Math.floor(gasEstimate * 1.2)  // 20%バッファを追加
-            });
-            
-        showAlert('Successfully claimed referral rewards', 'success');
-        showDebugInfo('Transaction successful: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Referral claim error:', error);
-        let errorMsg = '';
-        
-        // エラーメッセージの具体的な分岐処理
-        if (error.message.includes('gas required exceeds')) {
-            errorMsg = 'Unable to process the claim at this time due to high network activity. Please try again later.';
-        } else if (error.message.includes('execution reverted')) {
-            errorMsg = 'Your referral rewards must be at least 0.01 USDC to claim. Please wait for more rewards to accumulate.';
-        } else if (error.message.includes('User denied')) {
-            errorMsg = 'Transaction was cancelled by user.';
-        } else {
-            errorMsg = 'Unable to process your claim at this moment. Please try again later.';
-        }
-        
-        showAlert(errorMsg, 'error');
-        showDebugInfo('Error details: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
-}
-
-        async function applyReferral() {
-    if (!userAddress) return;
-    
-    const referralCode = document.getElementById('applyReferralCode').value;
-    if (!referralCode) {
-        showAlert('Please enter a valid referral code', 'error');
+    if (parseFloat(rewardsInUSDC) < 0.01) {
+        showAlert('Insufficient referral rewards. Rewards must be at least 0.01 USDC to claim. Current rewards: ' + rewardsInUSDC + ' USDC', 'error');
         return;
     }
 
+    // ガス見積もりを試みる
+    let gasEstimate;
     try {
-        showLoading(true);
-        showDebugInfo('Attempting to apply referral code: ' + referralCode);
+        gasEstimate = await contract.methods.claimReferralReward().estimateGas({
+            from: userAddress
+        });
+        showDebugInfo('Gas estimate successful: ' + gasEstimate);
+    } catch (gasError) {
+        showDebugInfo('Gas estimation failed: ' + gasError.message);
+        throw gasError;
+    }
 
-        const tx = await contract.methods.processReferral(referralCode)
-            .send({ 
-                from: userAddress,
-                gasPrice: await getOptimalGasPrice()
-            });
-            
-        showAlert('Referral code applied successfully', 'success');
-        showDebugInfo('Referral transaction: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Referral error:', error);
-        let errorMessage = error.message;
-        if (error.message.includes('Already has referrer')) {
-    errorMessage = 'This wallet is already linked to a referral code. Each wallet can only use one referral code.';
+    // トランザクション実行
+    showDebugInfo('Sending transaction with gas: ' + gasEstimate);
+    const tx = await contract.methods.claimReferralReward()
+        .send({
+            from: userAddress,
+            gas: Math.floor(gasEstimate * 1.2)  // 20%バッファを追加
+        });
+
+    showAlert('Successfully claimed referral rewards', 'success');
+    showDebugInfo('Transaction successful: ' + tx.transactionHash);
+    updateUI();
+} catch (error) {
+    console.error('Referral claim error:', error);
+    let errorMsg = '';
+
+    // エラーメッセージの具体的な分岐処理
+    if (error.message.includes('gas required exceeds')) {
+        errorMsg = 'Unable to process the claim at this time due to high network activity. Please try again later.';
+    } else if (error.message.includes('execution reverted')) {
+        errorMsg = 'Your referral rewards must be at least 0.01 USDC to claim. Please wait for more rewards to accumulate.';
+    } else if (error.message.includes('User denied')) {
+        errorMsg = 'Transaction was cancelled by user.';
+    } else {
+        errorMsg = 'Unable to process your claim at this moment. Please try again later.';
+    }
+
+    showAlert(errorMsg, 'error');
+    showDebugInfo('Error details: ' + error.message);
+} finally {
+    showLoading(false);
+}
+}
+    async function applyReferral() {
+if (!userAddress) return;
+
+const referralCode = document.getElementById('applyReferralCode').value;
+if (!referralCode) {
+    showAlert('Please enter a valid referral code', 'error');
+    return;
+}
+
+try {
+    showLoading(true);
+    showDebugInfo('Attempting to apply referral code: ' + referralCode);
+
+    const tx = await contract.methods.processReferral(referralCode)
+        .send({
+            from: userAddress,
+            gasPrice: await getOptimalGasPrice()
+        });
+
+    showAlert('Referral code applied successfully', 'success');
+    showDebugInfo('Referral transaction: ' + tx.transactionHash);
+    updateUI();
+} catch (error) {
+    console.error('Referral error:', error);
+    let errorMessage = error.message;
+    if (error.message.includes('Already has referrer')) {
+errorMessage = 'This wallet is already linked to a referral code. Each wallet can only use one referral code.';
 } else if (error.message.includes('Must have active deposit')) {
-    errorMessage = 'Please make a deposit first before applying a referral code. This helps prevent referral abuse.';
+errorMessage = 'Please make a deposit first before applying a referral code. This helps prevent referral abuse.';
 }
-        showAlert('Failed to apply referral: ' + errorMessage, 'error');
-        showDebugInfo('Referral error: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
+showAlert('Failed to apply referral: ' + errorMessage, 'error');
+showDebugInfo('Referral error: ' + error.message);
+} finally {
+showLoading(false);
 }
-
-async function initWeb3Modal() {
-    web3Modal = new window.WalletConnectModal({
-        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-        standaloneChains: ["eip155:8453"],
-        metadata: {
-            name: "BASEUSDC.COM",
-            description: "The Future of Finance on BASE Network",
-            url: "https://baseusdc.com",
-            icons: ["/favicon.png"]
-        }
-    });
 }
-      
     async function setMaxStakeAmount() {
-        if (!userAddress) return;
-        
-        try {
-            const balance = await usdcContract.methods.balanceOf(userAddress).call();
-            const maxAmount = web3.utils.fromWei(balance, 'mwei');
-            document.getElementById('stakeAmount').value = maxAmount;
-            
-  
-        } catch (error) {
-            console.error('Error setting max amount:', error);
-            showDebugInfo('Error setting max amount: ' + error.message);
-        }
+    if (!userAddress) return;
+
+    try {
+        const balance = await usdcContract.methods.balanceOf(userAddress).call();
+        const maxAmount = web3.utils.fromWei(balance, 'mwei');
+        document.getElementById('stakeAmount').value = maxAmount;
+
+
+    } catch (error) {
+        console.error('Error setting max amount:', error);
+        showDebugInfo('Error setting max amount: ' + error.message);
     }
+}
 
-    window.addEventListener('load', initWeb3);
+window.addEventListener('load', initWeb3);
 
-    document.addEventListener('visibilitychange', function() {
-        if (!document.hidden && userAddress) {
-            updateUI();
-            showDebugInfo('UI updated due to page visibility change');
-        }
-    });
-    </script>
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && userAddress) {
+        updateUI();
+        showDebugInfo('UI updated due to page visibility change');
+    }
+});
+</script>
 </body>
 </html>
