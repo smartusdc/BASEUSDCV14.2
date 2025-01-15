@@ -1451,10 +1451,10 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
         } else {
-            const connector = new WalletConnect({
-                bridge: "https://bridge.walletconnect.org",
-                qrcode: true
-            });
+          const connector = new WalletConnect({
+    bridge: "https://bridge.walletconnect.org",
+    qrcodeModal: QRCodeModal
+});
 
             const provider = new WalletConnectProvider({
                 rpc: {
