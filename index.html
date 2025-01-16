@@ -1373,40 +1373,38 @@ function formatNumber(number, decimals = 6) {
     }
 }
 
-    // Web3 Initialization
-    async function initWeb3() {
+async function initWeb3(web3Modal) {
     try {
-        // イベントリスナーの設定（この部分は常に実行）
-        document.getElementById('connectWallet').addEventListener('click', connectWallet);
-        document.getElementById('stakeButton').addEventListener('click', stake);
-        document.getElementById('withdrawButton').addEventListener('click', withdraw);
-        document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
-        document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
-        document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
-        document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
-        document.getElementById('applyReferralButton').addEventListener('click', applyReferral);
-
-        const provider = detectEthereumProvider();
-        if (provider) {
-            web3 = new Web3(provider);
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-            
-            provider.on("accountsChanged", handleAccountsChanged);
-            provider.on("chainChanged", handleChainChanged);
-            
-            const accounts = await web3.eth.getAccounts();
-            if (accounts.length > 0) {
+        // イベントリスナーの設定
+        document.getElementById('connectWallet').addEventListener('click', async () => {
+            try {
+                const connection = await web3Modal.connect();
+                web3 = new Web3(connection);
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+                
+                const accounts = await web3.eth.getAccounts();
                 userAddress = accounts[0];
+                
+                connection.on("accountsChanged", handleAccountsChanged);
+                connection.on("chainChanged", handleChainChanged);
+                connection.on("disconnect", handleDisconnect);
+                
                 onConnect();
+                await checkAndSwitchNetwork();
+            } catch (error) {
+                handleWalletError(error);
             }
-        } else {
-            // 読み取り専用の初期化
-            const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
-            web3 = new Web3(readOnlyProvider);
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-        }
+        });
+
+        // 他のイベントリスナーはそのまま維持
+        // ...
+
+        // 読み取り専用の初期化
+        const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
+        web3 = new Web3(readOnlyProvider);
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
 
         await updatePlatformInfo();
         setInterval(updatePlatformInfo, 15 * 60 * 1000);
@@ -1418,6 +1416,7 @@ function formatNumber(number, decimals = 6) {
         showDebugInfo('Web3 initialization error: ' + error.message);
     }
 }
+
 
 function detectEthereumProvider() {
     if (window.ethereum) {
@@ -1966,7 +1965,16 @@ async function claimReferralRewards() {
         }
     }
 
-    window.addEventListener('load', initWeb3);
+    document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const web3Modal = await initializeWeb3Modal();
+        initWeb3(web3Modal);
+    } catch (error) {
+        console.error('初期化エラー:', error);
+        showAlert("ウォレット接続の初期化に失敗しました: " + error.message, 'error');
+    }
+});
+
 
     document.addEventListener('visibilitychange', function() {
         if (!document.hidden && userAddress) {
