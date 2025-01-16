@@ -38,8 +38,8 @@
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@depay/walletconnect-v2/dist/WalletConnect.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@walletconnect/qrcode-modal/dist/QRCodeModal.min.js"></script>
+<script src="https://unpkg.com/@web3modal/ethereum@2.7.1/dist/index.umd.js"></script>
+<script src="https://unpkg.com/@walletconnect/ethereum-provider@2.10.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1450,42 +1450,38 @@ async function connectWallet() {
             } catch (err) {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-        } else {
-          const connector = new WalletConnect({
-    bridge: "https://bridge.walletconnect.org",
-    qrcodeModal: QRCodeModal
-});
+ } else {
+    const web3Modal = new Web3Modal.ethereum.Web3Modal({
+        projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+        chains: [8453],
+        defaultChain: 8453,
+        metadata: {
+            name: "BASEUSDC.COM",
+            description: "BASEUSDC.COM - The Future of Finance on BASE Network"
+        }
+    });
 
-            const provider = new WalletConnectProvider({
-                rpc: {
-                    8453: "https://mainnet.base.org"
-                },
-                connector: connector,
-                chainConfig: {
-                    chainNamespace: "eip155",
-                    chainId: "8453"
-                }
-            });
-
-            try {
-                await provider.enable();
-                web3 = new Web3(provider);
-                
-                const accounts = await web3.eth.getAccounts();
-                if (!accounts || accounts.length === 0) {
-                    throw new Error('No accounts found');
-                }
-                userAddress = accounts[0];
-                
-                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-                
-                provider.on("accountsChanged", handleAccountsChanged);
-                provider.on("chainChanged", handleChainChanged);
-                provider.on("disconnect", () => {
-                    handleAccountsChanged([]);
-                    provider.disconnect();
-                });
+    try {
+        const provider = await web3Modal.connect();
+        web3 = new Web3(provider);
+        
+        const accounts = await web3.eth.getAccounts();
+        if (!accounts || accounts.length === 0) {
+            throw new Error('No accounts found');
+        }
+        userAddress = accounts[0];
+        
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+        
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
+            handleAccountsChanged([]);
+            if (provider.disconnect) {
+                provider.disconnect();
+            }
+        });
                 
                 const chainId = await web3.eth.getChainId();
                 if (chainId !== 8453) {
