@@ -1108,6 +1108,38 @@
     </div>
 
     <script>
+      const web3ModalConfig = {
+  projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
+  theme: "dark",
+  accentColor: "default",
+  ethereum: {
+    appName: "BASEUSDC.COM",
+    chains: [{
+      id: 8453,
+      name: 'Base',
+      rpcUrl: 'https://mainnet.base.org',
+      nativeCurrency: {
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
+      }
+    }]
+  }
+};
+
+let web3Modal;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    web3Modal = new window.Web3Modal.default(web3ModalConfig, window.viem);
+    initWeb3();
+  } catch (error) {
+    console.error('初期化エラー:', error);
+    showAlert("ウォレット接続の初期化に失敗しました: " + error.message, 'error');
+  }
+});
+
+      
     // Global Constants
 const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
     const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
@@ -1429,41 +1461,53 @@ function detectEthereumProvider() {
 }
 
 async function connectWallet() {
-    try {
-        showLoading(true);
-        
-        if (window.ethereum) {
-            try {
-                web3 = new Web3(window.ethereum);
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
-                });
-                userAddress = accounts[0];
-                
-                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-                
-                window.ethereum.on("accountsChanged", handleAccountsChanged);
-                window.ethereum.on("chainChanged", handleChainChanged);
-                window.ethereum.on("disconnect", () => {
-                    handleAccountsChanged([]);
-                });
-            } catch (err) {
-                throw new Error('Failed to connect to MetaMask: ' + err.message);
-            }
-} else {
-    const providerOptions = {
-        walletconnect: {
-            package: WalletConnectProvider.default,
-            options: {
-                rpc: {
-                    8453: "https://mainnet.base.org"
-                }
-            }
-        }
-    };
+  try {
+    showLoading(true);
+    const provider = await web3Modal.connect();
 
-   
+    web3 = new Web3(provider);
+    contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+    usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
+    const accounts = await web3.eth.requestAccounts();
+    userAddress = accounts[0];
+
+    provider.on("accountsChanged", handleAccountsChanged);
+    provider.on("chainChanged", handleChainChanged);
+    provider.on("disconnect", handleDisconnect);
+
+    onConnect();
+    await checkAndSwitchNetwork();
+  } catch (error) {
+    handleWalletError(error);
+  } finally {
+    showLoading(false);
+  }
+}
+
+   function handleWalletError(error) {
+  console.error("ウォレット接続エラー:", error);
+  let errorMessage = "ウォレット接続に失敗しました。";
+  
+  if (error.code === 4001) {
+    errorMessage = "接続がキャンセルされました。";
+  } else if (error.message.includes("Already processing")) {
+    errorMessage = "接続処理が既に進行中です。";
+  } else {
+    errorMessage = "再試行するか、別のウォレットをお試しください。";
+  }
+  
+  showAlert(errorMessage, 'error');
+}
+
+function handleDisconnect() {
+  userAddress = null;
+  document.getElementById('connectWallet').textContent = 'ウォレットを接続';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('landingContent').style.display = 'block';
+  updateNetworkStatus(false);
+}
+
 
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
