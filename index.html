@@ -1130,13 +1130,13 @@
 let web3Modal;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    web3Modal = new window.Web3Modal.default(web3ModalConfig, window.viem);
-    initWeb3();
-  } catch (error) {
-    console.error('初期化エラー:', error);
-    showAlert("ウォレット接続の初期化に失敗しました: " + error.message, 'error');
-  }
+    try {
+        const web3Modal = await initializeWeb3Modal();
+        initWeb3(web3Modal);
+    } catch (error) {
+        console.error('Initialization error:', error);
+        showAlert("Failed to initialize wallet connection", 'error');
+    }
 });
 
       
@@ -1485,28 +1485,29 @@ async function connectWallet() {
   }
 }
 
-   function handleWalletError(error) {
-  console.error("ウォレット接続エラー:", error);
-  let errorMessage = "ウォレット接続に失敗しました。";
-  
-  if (error.code === 4001) {
-    errorMessage = "接続がキャンセルされました。";
-  } else if (error.message.includes("Already processing")) {
-    errorMessage = "接続処理が既に進行中です。";
-  } else {
-    errorMessage = "再試行するか、別のウォレットをお試しください。";
-  }
-  
-  showAlert(errorMessage, 'error');
+function handleWalletError(error) {
+    console.error("Wallet connection error:", error);
+    let errorMessage = "Failed to connect wallet.";
+    
+    if (error.code === 4001) {
+        errorMessage = "Connection was rejected by user.";
+    } else if (error.message.includes("Already processing")) {
+        errorMessage = "Connection already in progress.";
+    } else {
+        errorMessage = "Please try again or use a different wallet.";
+    }
+    
+    showAlert(errorMessage, 'error');
 }
 
 function handleDisconnect() {
-  userAddress = null;
-  document.getElementById('connectWallet').textContent = 'ウォレットを接続';
-  document.getElementById('mainContent').style.display = 'none';
-  document.getElementById('landingContent').style.display = 'block';
-  updateNetworkStatus(false);
+    userAddress = null;
+    document.getElementById('connectWallet').textContent = 'Connect Wallet';
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('landingContent').style.display = 'block';
+    updateNetworkStatus(false);
 }
+
 
 
     function handleAccountsChanged(accounts) {
