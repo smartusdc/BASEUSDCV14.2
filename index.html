@@ -40,6 +40,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
 <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@web3modal/ethereum@2.7.1/dist/umd/index.min.js"></script>
+<script src="https://unpkg.com/@web3modal/html@2.7.1/dist/umd/index.min.js"></script>
+<script src="https://unpkg.com/viem@1.16.4/dist/umd/viem.min.js"></script>
+
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1462,57 +1466,7 @@ async function connectWallet() {
         }
     };
 
-    const web3Modal = new window.Web3Modal({
-        network: "mainnet", 
-        cacheProvider: false,
-        providerOptions
-    });
-
-    try {
-        const provider = await web3Modal.connect();
-        web3 = new Web3(provider);
-
-        const accounts = await web3.eth.getAccounts();
-        if (!accounts || accounts.length === 0) {
-            throw new Error('No accounts found');
-        }
-        userAddress = accounts[0];
-        
-        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-        
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", () => {
-            handleAccountsChanged([]);
-            if (provider.disconnect) {
-                provider.disconnect();
-            }
-        });
-                
-                const chainId = await web3.eth.getChainId();
-                if (chainId !== 8453) {
-                    showAlert('Please switch to BASE Network in your wallet', 'error');
-                    throw new Error('Incorrect network');
-                }
-            } catch (err) {
-                throw new Error('Failed to connect with WalletConnect: ' + err.message);
-            }
-        }
-
-        showDebugInfo('Wallet connected: ' + userAddress);
-        await checkAndSwitchNetwork();
-        onConnect();
-        showAlert('Wallet connected successfully!', 'success');
-        
-    } catch (error) {
-        console.error("Connection error:", error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
-        showDebugInfo('Wallet connection error: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
-}
+   
 
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
