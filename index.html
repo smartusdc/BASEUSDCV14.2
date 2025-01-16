@@ -1470,7 +1470,68 @@ async function connectWallet() {
         showLoading(false);
     }
 }
+  function setupEventListeners(provider) {
+    provider.on('accountsChanged', handleAccountsChanged);
+    provider.on('chainChanged', handleChainChanged);
+    provider.on('disconnect', handleDisconnect);
+}
 
+function handleDisconnect() {
+    userAddress = null;
+    localStorage.removeItem('walletConnected');
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('landingContent').style.display = 'block';
+    updateNetworkStatus(false);
+    showAlert('ウォレットが切断されました', 'info');
+}
+
+function handleConnectionError(error) {
+    const errorMessages = {
+        4001: 'ユーザーが接続を拒否しました',
+        '-32002': '接続リクエストが既に保留中です',
+        'User rejected': 'ユーザーが接続をキャンセルしました',
+        'Already processing': '処理中です。しばらくお待ちください'
+    };
+
+    for (const [key, message] of Object.entries(errorMessages)) {
+        if (error.message.includes(key)) return message;
+    }
+    return 'ウォレット接続エラー: ' + error.message;
+}
+async function switchToBaseNetwork() {
+    try {
+        await web3modal.setChain(8453);
+    } catch (error) {
+        if (error.code === 4902) {
+            await web3modal.addChain({
+                chainId: 8453,
+                chainName: 'Base',
+                nativeCurrency: {
+                    name: 'ETH',
+                    symbol: 'ETH',
+                    decimals: 18
+                },
+                rpcUrls: ['https://mainnet.base.org'],
+                blockExplorerUrls: ['https://basescan.org']
+            });
+        } else {
+            throw new Error('BASE Networkへの切り替えに失敗しました: ' + error.message);
+        }
+    }
+}
+
+function monitorNetwork() {
+    setInterval(async () => {
+        if (userAddress) {
+            try {
+                const chainId = await web3.eth.getChainId();
+                updateNetworkStatus(chainId === 8453);
+            } catch (error) {
+                console.error('ネットワーク監視エラー:', error);
+            }
+        }
+    }, 10000);
+}
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
             userAddress = null;
