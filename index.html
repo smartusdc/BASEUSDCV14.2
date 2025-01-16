@@ -38,8 +38,9 @@
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@web3modal/html@latest/dist/index.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@latest/dist/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@web3modal/cdn"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1467,7 +1468,24 @@ async function connectWallet() {
         }
     });
 
+   } else {
     try {
+        // Web3Modalの初期化をconnectWallet内で行う
+        const web3Modal = new Web3Modal({
+            network: "mainnet",
+            cacheProvider: false,
+            providerOptions: {
+                walletconnect: {
+                    package: WalletConnectProvider,
+                    options: {
+                        rpc: {
+                            8453: "https://mainnet.base.org"
+                        }
+                    }
+                }
+            }
+        });
+
         const provider = await web3Modal.connect();
         web3 = new Web3(provider);
         
