@@ -1451,43 +1451,28 @@ async function connectWallet() {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
     } else {
-    const web3Modal = new Web3Modal({
-        cacheProvider: false,
-        providerOptions: {
-            walletconnect: {
-                package: WalletConnectProvider,
-                options: {
-                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b",
-                    rpc: {
-                        8453: "https://mainnet.base.org"
-                    },
-                    chainId: 8453
-                }
+    const providerOptions = {
+        walletconnect: {
+            package: WalletConnectProvider.default,
+            options: {
+                rpc: {
+                    8453: "https://mainnet.base.org"
+                },
+                chainId: 8453
             }
         }
+    };
+
+    const web3Modal = new Web3Modal({
+        network: "mainnet",
+        cacheProvider: false,
+        providerOptions
     });
 
-   } else {
     try {
-        // Web3Modalの初期化をconnectWallet内で行う
-        const web3Modal = new Web3Modal({
-            network: "mainnet",
-            cacheProvider: false,
-            providerOptions: {
-                walletconnect: {
-                    package: WalletConnectProvider,
-                    options: {
-                        rpc: {
-                            8453: "https://mainnet.base.org"
-                        }
-                    }
-                }
-            }
-        });
-
         const provider = await web3Modal.connect();
         web3 = new Web3(provider);
-        
+
         const accounts = await web3.eth.getAccounts();
         if (!accounts || accounts.length === 0) {
             throw new Error('No accounts found');
