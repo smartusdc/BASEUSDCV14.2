@@ -1129,15 +1129,9 @@
 
 let web3Modal;
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const web3Modal = await initializeWeb3Modal();
-        initWeb3(web3Modal);
-    } catch (error) {
-        console.error('Initialization error:', error);
-        showAlert("Failed to initialize wallet connection", 'error');
-    }
-});
+// 元の初期化コードを復元
+window.addEventListener('load', initWeb3);
+
 
       
     // Global Constants
