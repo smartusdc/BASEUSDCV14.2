@@ -1450,21 +1450,20 @@ async function connectWallet() {
             } catch (err) {
                 throw new Error('Failed to connect to MetaMask: ' + err.message);
             }
-    } else {
+} else {
     const providerOptions = {
         walletconnect: {
             package: WalletConnectProvider.default,
             options: {
                 rpc: {
                     8453: "https://mainnet.base.org"
-                },
-                chainId: 8453
+                }
             }
         }
     };
 
-    const web3Modal = new Web3Modal({
-        network: "mainnet",
+    const web3Modal = new window.Web3Modal({
+        network: "mainnet", 
         cacheProvider: false,
         providerOptions
     });
