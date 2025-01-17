@@ -37,10 +37,9 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
+<!-- 重複しているCDNの削除 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-  <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1428,66 +1427,81 @@ function detectEthereumProvider() {
     return null;
 }
 
-<!-- WalletConnectのCDNを追加 -->
-<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-
-<!-- connectWallet関数の更新版 -->
 async function connectWallet() {
     try {
         showLoading(true);
-        
-        let provider;
-        
-        // モバイルでの接続かどうかを判定
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
+        let provider;
         if (isMobile) {
-            // WalletConnect プロバイダーの初期化
             const WalletConnectProvider = window.WalletConnectProvider.default;
             provider = new WalletConnectProvider({
                 rpc: {
-                    8453: 'https://mainnet.base.org'  // BASE NetworkのRPC URL
+                    8453: 'https://mainnet.base.org'
                 },
                 chainId: 8453,
-                bridge: 'https://bridge.walletconnect.org'
+                qrcode: true,
+                bridge: 'https://bridge.walletconnect.org',
+                qrcodeModalOptions: {
+                    desktopLinks: [
+                        'metamask',
+                        'ledger',
+                        'coinbase'
+                    ],
+                    mobileLinks: [
+                        'metamask',
+                        'trust',
+                        'rainbow',
+                        'ledger',
+                        'coinbase'
+                    ]
+                }
             });
-            
-            // WalletConnectセッションの開始
-            await provider.enable();
+
+            try {
+                await provider.enable();
+                
+                // イベントリスナーの設定
+                provider.on('accountsChanged', handleAccountsChanged);
+                provider.on('chainChanged', (chainId) => {
+                    const hexChainId = '0x' + Number(chainId).toString(16);
+                    handleChainChanged(hexChainId);
+                });
+                provider.on('disconnect', () => {
+                    handleAccountsChanged([]);
+                    provider.disconnect();
+                });
+            } catch (error) {
+                if (error.message.includes('User closed modal')) {
+                    throw new Error('Wallet connection cancelled. Please try again.');
+                }
+                throw error;
+            }
         } else {
-            // デスクトップの場合は既存の実装を使用
             provider = detectEthereumProvider();
             if (!provider) {
-                throw new Error('Please install MetaMask or Coinbase Wallet to connect');
+                throw new Error('Please install MetaMask or use a WalletConnect compatible wallet');
             }
+            
+            await provider.request({ method: 'eth_requestAccounts' });
+            provider.on('accountsChanged', handleAccountsChanged);
+            provider.on('chainChanged', handleChainChanged);
+            provider.on('disconnect', () => handleAccountsChanged([]));
         }
 
-        // Web3インスタンスの初期化
         web3 = new Web3(provider);
-        
-        // アカウントの取得
         const accounts = await web3.eth.getAccounts();
-        userAddress = accounts[0];
+        if (!accounts || accounts.length === 0) {
+            throw new Error('No accounts found. Please check your wallet connection.');
+        }
         
-        // コントラクトの初期化
+        userAddress = accounts[0];
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-        // イベントリスナーの設定
-        if (isMobile) {
-            provider.on('accountsChanged', handleAccountsChanged);
-            provider.on('chainChanged', handleChainChanged);
-            provider.on('disconnect', () => handleAccountsChanged([]));
-        } else {
-            provider.on('accountsChanged', handleAccountsChanged);
-            provider.on('chainChanged', handleChainChanged);
-            provider.on('disconnect', () => handleAccountsChanged([]));
-        }
-
+        
         await checkAndSwitchNetwork();
         onConnect();
         showAlert('Wallet connected successfully!', 'success');
-        
     } catch (error) {
         console.error("Connection error:", error);
         showAlert('Failed to connect wallet: ' + error.message, 'error');
@@ -1495,7 +1509,6 @@ async function connectWallet() {
         showLoading(false);
     }
 }
-
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
             userAddress = null;
