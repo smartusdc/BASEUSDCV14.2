@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L4WJMTX5P1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-L4WJMTX5P1');
-    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L4WJMTX5P1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L4WJMTX5P1');
+</script>
     <meta charset="UTF-8">
-    <meta name="description" content="BASEUSDC.COM - The next evolution in digital finance on Coinbase's BASE Network. Join a revolutionary platform combining institutional-grade security with breakthrough blockchain technology.">
-    <meta name="keywords" content="BASE Network, Coinbase, digital finance, institutional DeFi, blockchain innovation, USDC infrastructure, secure staking, community governance">
-    <meta property="og:title" content="BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network">
-    <meta property="og:description" content="Experience the next generation of digital asset infrastructure. Built on Coinbase's BASE Network with institutional-grade security and revolutionary efficiency.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://baseusdc.com">
-    <meta property="og:site_name" content="BASEUSDC.COM">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="BASEUSDC.COM - The Future of Finance on BASE Network">
-    <meta name="twitter:description" content="Join the next evolution in digital finance. Powered by Coinbase's revolutionary BASE Network with institutional-grade security.">
-    <meta name="robots" content="index, follow">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
-    <meta name="theme-color" content="#2196F3">
+<meta name="description" content="BASEUSDC.COM - The next evolution in digital finance on Coinbase's BASE Network. Join a revolutionary platform combining institutional-grade security with breakthrough blockchain technology.">
+
+<meta name="keywords" content="BASE Network, Coinbase, digital finance, institutional DeFi, blockchain innovation, USDC infrastructure, secure staking, community governance">
+
+<!-- OGPタイトルと説明文の更新 -->
+<meta property="og:title" content="BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network">
+<meta property="og:description" content="Experience the next generation of digital asset infrastructure. Built on Coinbase's BASE Network with institutional-grade security and revolutionary efficiency.">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baseusdc.com">
+<meta property="og:site_name" content="BASEUSDC.COM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BASEUSDC.COM - The Future of Finance on BASE Network">
+<meta name="twitter:description" content="Join the next evolution in digital finance. Powered by Coinbase's revolutionary BASE Network with institutional-grade security.">
+  
+<meta name="robots" content="index, follow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="theme-color" content="#2196F3">
     <meta name="twitter:image" content="https://baseusdc.com/twitter-card.png">
-    <meta name="twitter:image:alt" content="BASEUSDC.COM - Next Generation Digital Asset Infrastructure on BASE Network">
+<meta name="twitter:image:alt" content="BASEUSDC.COM - Next Generation Digital Asset Infrastructure on BASE Network">
     <meta property="og:image" content="https://baseusdc.com/twitter-card.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@2.0.0/dist/umd/index.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -790,7 +797,7 @@
     </style>
 </head>
 <body>
-     <div class="container">
+    <div class="container">
   <div class="header">
     <div class="logo-container">
         <img src="/logo.png" alt="BASEUSDC.COM" class="logo">
@@ -1098,102 +1105,445 @@
         </div>
     </div>
 
-
     <script>
-        // WalletConnect v2 を使用するための初期化
-        let walletConnectClient;
-        let web3;
-        let contract;
-        let usdcContract;
-        let userAddress;
+    // Global Constants
+const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
+    const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+    const BASE_CHAIN_ID = '0x2105';
+    const DEBUG_MODE = false;
 
-        const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
-        const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-        const BASE_CHAIN_ID = '0x2105';
-        const DEBUG_MODE = false;
+        async function getOptimalGasPrice() {
+    const currentGasPrice = await web3.eth.getGasPrice();
+    return Math.floor(currentGasPrice * 1.85).toString(); // 85%バッファー
+}
+        
+    // Global Variables
+    let web3;
+    let contract;
+    let usdcContract;
+    let userAddress;
 
-        async function initWeb3() {
+    // USDC Token ABI Definition
+    const USDC_ABI = [
+        {
+            "inputs": [
+                {"name": "spender","type": "address"},
+                {"name": "amount","type": "uint256"}
+            ],
+            "name": "approve",
+            "outputs": [{"name": "","type": "bool"}],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"name": "owner","type": "address"},
+                {"name": "spender","type": "address"}
+            ],
+            "name": "allowance",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"name": "account","type": "address"}
+            ],
+            "name": "balanceOf",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+
+    // Main Contract ABI Definition
+    const CONTRACT_ABI = [
+        {
+            "inputs": [{"name": "","type": "address"}],
+            "name": "deposits",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "","type": "address"}],
+            "name": "calculateReward",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"name": "amount","type": "uint256"},
+                {"name": "referralCode","type": "uint256"}
+            ],
+            "name": "depositFunds",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "amount","type": "uint256"}],"name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "claimDepositReward",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "claimReferralReward",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "user","type": "address"}],
+            "name": "getUserInfo",
+            "outputs": [
+                {"name": "depositAmount","type": "uint256"},
+                {"name": "pendingRewards","type": "uint256"},
+                {"name": "userReferralRewards","type": "uint256"},
+                {"name": "totalReferrals","type": "uint256"},
+                {"name": "isFrozen","type": "bool"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "","type": "address"}],
+            "name": "referralRewards",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+        "inputs": [
+            {"name": "referralCode", "type": "uint256"}
+        ],
+        "name": "processReferral",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+        {
+            "inputs": [],
+            "name": "generateReferralCode",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "","type": "address"}],
+            "name": "userToReferralCode",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [{"name": "","type": "address"}],
+            "name": "userToReferrer",
+            "outputs": [{"name": "","type": "address"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "user",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "name": "referralCode",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ReferralCodeCreated",
+            "type": "event"
+        },
+        {
+            "inputs": [],
+            "name": "currentAPR",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "referrerRewardRate",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "referredRewardRate",
+            "outputs": [{"name": "","type": "uint256"}],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+
+    // Utility Functions
+    function showDebugInfo(info) {
+        if (!DEBUG_MODE) return;
+        const debugDiv = document.getElementById('debugInfo');
+        debugDiv.style.display = 'block';
+        debugDiv.innerHTML += `<div>[${new Date().toISOString()}] ${info}</div>`;
+        debugDiv.scrollTop = debugDiv.scrollHeight;
+    }
+
+function showAlert(message, type) {
+    const alert = document.getElementById('alert');
+    alert.textContent = message;
+    alert.className = `alert ${type}`;
+    alert.style.display = 'block';
+    
+    // トランザクション関連のメッセージは表示時間を延長
+    const duration = message.includes('successful') || message.includes('Failed to') ? 8000 : 5000;
+    
+    setTimeout(() => {
+        alert.style.display = 'none';
+    }, duration);
+}
+
+    function showLoading(show) {
+        document.getElementById('loading').style.display = show ? 'block' : 'none';
+    }
+
+function formatNumber(number, decimals = 6) {
+    const num = typeof number === 'string' ? number : number.toString();
+    if (num === '0') {
+        return '0.' + '0'.repeat(decimals);
+    }
+    const parts = num.split('.');
+    if (parts.length === 1) {
+        return parts[0] + '.' + '0'.repeat(decimals);
+    }
+    const decimal = parts[1].padEnd(decimals, '0').slice(0, decimals);
+    return parts[0] + '.' + decimal;
+}
+   async function updatePlatformInfo() {
+    try {
+        if (!contract) {
+            showDebugInfo('Contract not initialized for platform info update');
+            return;
+        }
+
+        // APRの取得を試行
+        const getAPR = async (retryCount = 0) => {
             try {
-                // WalletConnect v2 の初期化
-                walletConnectClient = new WalletConnect.Client({
-                    projectId: '9b35dd5097e09b9acfe04c3d8dc60b7b',
-                    metadata: {
-                        name: 'BASEUSDC.COM',
-                        description: 'The Future of Finance on Coinbase\'s BASE Network',
-                        url: window.location.origin,
-                        icons: [`${window.location.origin}/logo.png`]
-                    }
+                const apr = await contract.methods.currentAPR().call();
+                const referrerRate = await contract.methods.referrerRewardRate().call();
+                const referredRate = await contract.methods.referredRewardRate().call();
+                
+                // 値が取得できた場合のみUIを更新
+                if (apr !== undefined) {
+                    document.getElementById('currentAPR').textContent = (apr / 100).toFixed(2);
+                    document.getElementById('referrerReward').textContent = (referrerRate / 100).toFixed(2);
+                    document.getElementById('referredReward').textContent = (referredRate / 100).toFixed(2);
+                } else if (retryCount < 2) {  // 最大2回まで再試行
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return getAPR(retryCount + 1);
+                }
+            } catch (error) {
+                if (retryCount < 2) {  // エラー時も最大2回まで再試行
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return getAPR(retryCount + 1);
+                }
+                throw error;
+            }
+        };
+
+        await getAPR();
+        showDebugInfo('Platform info updated successfully');
+    } catch (error) {
+        console.error('Error updating platform info:', error);
+        showDebugInfo('Platform info update error: ' + error.message);
+    }
+}
+
+    // Web3 Initialization
+    async function initWeb3() {
+    try {
+        // イベントリスナーの設定（この部分は常に実行）
+        document.getElementById('connectWallet').addEventListener('click', connectWallet);
+        document.getElementById('stakeButton').addEventListener('click', stake);
+        document.getElementById('withdrawButton').addEventListener('click', withdraw);
+        document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
+        document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
+        document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
+        document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
+        document.getElementById('applyReferralButton').addEventListener('click', applyReferral);
+
+        const provider = detectEthereumProvider();
+        if (provider) {
+            web3 = new Web3(provider);
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+            
+            provider.on("accountsChanged", handleAccountsChanged);
+            provider.on("chainChanged", handleChainChanged);
+            
+            const accounts = await web3.eth.getAccounts();
+            if (accounts.length > 0) {
+                userAddress = accounts[0];
+                onConnect();
+            }
+        } else {
+            // 読み取り専用の初期化
+            const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
+            web3 = new Web3(readOnlyProvider);
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+        }
+
+        await updatePlatformInfo();
+        setInterval(updatePlatformInfo, 15 * 60 * 1000);
+        
+        showDebugInfo('Web3 initialized successfully');
+    } catch (error) {
+        console.error("Error initializing Web3:", error);
+        showAlert('Failed to initialize Web3: ' + error.message, 'error');
+        showDebugInfo('Web3 initialization error: ' + error.message);
+    }
+}
+
+function detectEthereumProvider() {
+    if (window.ethereum) {
+        return window.ethereum;
+    }
+    if (window.coinbaseWalletExtension) {
+        return window.coinbaseWalletExtension;
+    }
+    return null;
+}
+
+async function connectWallet() {
+    try {
+        showLoading(true);
+        
+        if (window.ethereum) {
+            try {
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
                 });
-
-                // イベントリスナーの設定
-                walletConnectClient.on("connect", onConnect);
-                walletConnectClient.on("disconnect", onDisconnect);
-                walletConnectClient.on("session_update", onSessionUpdate);
-
-                // Web3 の初期化
-                web3 = new Web3(walletConnectClient.provider);
+                userAddress = accounts[0];
+                
                 contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
                 usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-                await updatePlatformInfo();
-                setInterval(updatePlatformInfo, 15 * 60 * 1000);
-
-                showDebugInfo('Web3 initialized successfully');
-            } catch (error) {
-                console.error("Error initializing Web3:", error);
-                showAlert('Failed to initialize Web3: ' + error.message, 'error');
-                showDebugInfo('Web3 initialization error: ' + error.message);
-            }
-        }
-
-        async function connectWallet() {
-            try {
-                showLoading(true);
-
-                // WalletConnect v2 を使用して接続
-                const session = await walletConnectClient.connect({
-                    chains: [parseInt(BASE_CHAIN_ID, 16)], // BASE Network のチェーンID
-                    methods: ["eth_sendTransaction", "eth_signTransaction", "eth_sign"]
+                
+                window.ethereum.on("accountsChanged", handleAccountsChanged);
+                window.ethereum.on("chainChanged", handleChainChanged);
+                window.ethereum.on("disconnect", () => {
+                    handleAccountsChanged([]);
                 });
+            } catch (err) {
+                throw new Error('Failed to connect to MetaMask: ' + err.message);
+            }
+} else {
+    const providerOptions = {
+        walletconnect: {
+            package: WalletConnectProvider.default,
+            options: {
+                rpc: {
+                    8453: "https://mainnet.base.org"
+                }
+            }
+        }
+    };
 
-                userAddress = session.accounts[0];
-                onConnect();
-                showAlert('Wallet connected successfully!', 'success');
-            } catch (error) {
-                console.error("Connection error:", error);
-                showAlert('Failed to connect wallet: ' + error.message, 'error');
-            } finally {
-                showLoading(false);
+    const web3Modal = new window.Web3Modal({
+        network: "mainnet", 
+        cacheProvider: false,
+        providerOptions
+    });
+
+    try {
+        const provider = await web3Modal.connect();
+        web3 = new Web3(provider);
+
+        const accounts = await web3.eth.getAccounts();
+        if (!accounts || accounts.length === 0) {
+            throw new Error('No accounts found');
+        }
+        userAddress = accounts[0];
+        
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+        
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
+            handleAccountsChanged([]);
+            if (provider.disconnect) {
+                provider.disconnect();
+            }
+        });
+                
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 8453) {
+                    showAlert('Please switch to BASE Network in your wallet', 'error');
+                    throw new Error('Incorrect network');
+                }
+            } catch (err) {
+                throw new Error('Failed to connect with WalletConnect: ' + err.message);
             }
         }
 
-        function onConnect() {
-            const connectWalletButton = document.getElementById('connectWallet');
-            if (userAddress && connectWalletButton) {
-                connectWalletButton.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
-            }
-            document.getElementById('mainContent').style.display = 'block';
-            document.getElementById('landingContent').style.display = 'none';
-            updateUI();
-        }
+        showDebugInfo('Wallet connected: ' + userAddress);
+        await checkAndSwitchNetwork();
+        onConnect();
+        showAlert('Wallet connected successfully!', 'success');
+        
+    } catch (error) {
+        console.error("Connection error:", error);
+        showAlert('Failed to connect wallet: ' + error.message, 'error');
+        showDebugInfo('Wallet connection error: ' + error.message);
+    } finally {
+        showLoading(false);
+    }
+}
 
-        function onDisconnect() {
+    function handleAccountsChanged(accounts) {
+        if (accounts.length === 0) {
             userAddress = null;
             document.getElementById('connectWallet').textContent = 'Connect Wallet';
             document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('landingContent').style.display = 'block';
+              document.getElementById('landingContent').style.display = 'block'; // 追加
             updateNetworkStatus(false);
             showDebugInfo('Wallet disconnected');
+        } else if (accounts[0] !== userAddress) {
+            userAddress = accounts[0];
+            onConnect();
+            showDebugInfo('Account changed to: ' + userAddress);
         }
+    }
 
-        function onSessionUpdate(session) {
-            if (session.accounts.length > 0) {
-                userAddress = session.accounts[0];
-                onConnect();
-            } else {
-                onDisconnect();
-            }
+    function handleChainChanged(chainId) {
+        showDebugInfo('Chain changed to: ' + chainId);
+        if (chainId !== BASE_CHAIN_ID) {
+            showAlert('Please switch to BASE Network', 'error');
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('landingContent').style.display = 'block'; // 追加
+            updateNetworkStatus(false);
+        } else {
+            document.getElementById('mainContent').style.display = 'block';
+              document.getElementById('landingContent').style.display = 'none'; // 追加
+            updateNetworkStatus(true);
+            updateUI();
         }
+    }
+
     async function checkNetwork() {
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
         showDebugInfo('Current chain ID: ' + chainId);
@@ -1672,7 +2022,6 @@ async function claimReferralRewards() {
             showDebugInfo('UI updated due to page visibility change');
         }
     });
-        // その他の関数は変更なし
     </script>
 </body>
 </html>
