@@ -37,14 +37,11 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
- <!-- 既存のスクリプトタグ -->
+<!-- 既存のスクリプト -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-    <!-- Wagmi関連のCDNを追加 -->
-    <script src="https://cdn.jsdelivr.net/npm/@wagmi/core@1.4.7/dist/index.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@web3modal/wagmi@3.4.0/dist/index.umd.js"></script>
-    <!-- その他の既存のスクリプトタグ -->
-    <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@latest/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+    <!-- AppKitの依存関係を正しい順序で読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@3.0.0/dist/wagmi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@3.0.0/dist/index.min.js"></script>
 
     <style>
         body {
