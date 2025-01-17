@@ -1433,46 +1433,39 @@ async function connectWallet() {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         let provider;
 
-        // MetaMaskまたはその他のイーサリアムプロバイダーの確認
         if (window.ethereum) {
             provider = window.ethereum;
             try {
                 await provider.request({ method: 'eth_requestAccounts' });
                 web3 = new Web3(provider);
             } catch (error) {
-                throw new Error('Wallet connection was rejected');
+                throw new Error('Wallet connection was rejected. Please try again.');
             }
-        }
-        // MetaMaskが利用できない場合のWalletConnect処理
-        else {
+        } else {
             try {
-                // WalletConnectの初期化
-                provider = await WalletConnect.init({
-                    projectId: "9b35dd5097e09b9acfe04c3d8dc60b7b", // WalletConnectのプロジェクトID
-                    chains: [8453], // BASE Network
-                    showQrModal: true,
-                    metadata: {
-                        name: 'BASEUSDC.COM',
-                        description: 'BASEUSDC Staking Platform',
-                        url: window.location.host,
-                        icons: ['https://baseusdc.com/logo.png']
-                    }
+                provider = new WalletConnectProvider.default({
+                    infuraId: "YOUR_INFURA_ID", // 必要に応じて設定
+                    rpc: {
+                        8453: 'https://mainnet.base.org'
+                    },
+                    chainId: 8453,
+                    qrcode: true
                 });
 
-                await provider.connect();
+                await provider.enable();
                 web3 = new Web3(provider);
+
+                provider.on('disconnect', (code, reason) => {
+                    handleAccountsChanged([]);
+                });
             } catch (error) {
-                if (error.message.includes('User rejected')) {
-                    throw new Error('Wallet connection was cancelled');
-                }
-                throw new Error('Unable to connect wallet. Please try again.');
+                throw new Error('Please install MetaMask or use a WalletConnect compatible wallet');
             }
         }
 
-        // 接続後の処理
         const accounts = await web3.eth.getAccounts();
         if (!accounts || accounts.length === 0) {
-            throw new Error('No accounts found');
+            throw new Error('No accounts found. Please check your wallet connection.');
         }
 
         userAddress = accounts[0];
