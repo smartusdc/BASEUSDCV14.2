@@ -1434,15 +1434,10 @@ async function connectWallet() {
     try {
         showLoading(true);
 
-        const projectId = '9b35dd5097e09b9acfe04c3d8dc60b7b'; // Reown Cloud から取得したプロジェクトID
-        const wagmiAdapter = new WagmiAdapter({
-            projectId,
-            networks: [mainnet, base],
-            ssr: false
-        });
-
-        const appKit = createAppKit({
-            adapters: [wagmiAdapter],
+        const projectId = '9b35dd5097e09b9acfe04c3d8dc60b7b';
+        
+        // AppKitの初期化
+        const appKit = window.AppKit.createAppKit({
             projectId,
             metadata: {
                 name: 'BASEUSDC.COM',
@@ -1471,11 +1466,11 @@ async function connectWallet() {
     } catch (error) {
         console.error("Connection error:", error);
         showAlert('Failed to connect wallet: ' + error.message, 'error');
-        showDebugInfo('Wallet connection error: ' + error.message);
     } finally {
         showLoading(false);
     }
 }
+
 
 
     function handleAccountsChanged(accounts) {
