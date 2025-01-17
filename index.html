@@ -1431,8 +1431,8 @@ async function connectWallet() {
     try {
         showLoading(true);
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        
         let provider;
+
         if (isMobile) {
             const WalletConnectProvider = window.WalletConnectProvider.default;
             provider = new WalletConnectProvider({
@@ -1440,28 +1440,24 @@ async function connectWallet() {
                     8453: 'https://mainnet.base.org'
                 },
                 chainId: 8453,
-                qrcode: true,
                 bridge: 'https://bridge.walletconnect.org',
                 qrcodeModalOptions: {
-                    desktopLinks: [
-                        'metamask',
-                        'ledger',
-                        'coinbase'
-                    ],
+                    desktopLinks: [],
                     mobileLinks: [
-                        'metamask',
-                        'trust',
-                        'rainbow',
-                        'ledger',
-                        'coinbase'
-                    ]
+                        "metamask",
+                        "trust",
+                        "rainbow",
+                        "ledger",
+                        "coinbase"
+                    ],
+                    showQrcodeModal: true
                 }
             });
 
             try {
                 await provider.enable();
+                web3 = new Web3(provider);
                 
-                // イベントリスナーの設定
                 provider.on('accountsChanged', handleAccountsChanged);
                 provider.on('chainChanged', (chainId) => {
                     const hexChainId = '0x' + Number(chainId).toString(16);
@@ -1472,7 +1468,7 @@ async function connectWallet() {
                     provider.disconnect();
                 });
             } catch (error) {
-                if (error.message.includes('User closed modal')) {
+                if (error.message.includes('User closed')) {
                     throw new Error('Wallet connection cancelled. Please try again.');
                 }
                 throw error;
@@ -1480,16 +1476,34 @@ async function connectWallet() {
         } else {
             provider = detectEthereumProvider();
             if (!provider) {
-                throw new Error('Please install MetaMask or use a WalletConnect compatible wallet');
+                provider = new WalletConnectProvider({
+                    rpc: {
+                        8453: 'https://mainnet.base.org'
+                    },
+                    chainId: 8453,
+                    bridge: 'https://bridge.walletconnect.org',
+                    qrcodeModalOptions: {
+                        desktopLinks: [],
+                        mobileLinks: [
+                            "metamask",
+                            "trust",
+                            "rainbow",
+                            "ledger",
+                            "coinbase"
+                        ],
+                    }
+                });
+                await provider.enable();
+            } else {
+                await provider.request({ method: 'eth_requestAccounts' });
             }
             
-            await provider.request({ method: 'eth_requestAccounts' });
+            web3 = new Web3(provider);
             provider.on('accountsChanged', handleAccountsChanged);
             provider.on('chainChanged', handleChainChanged);
             provider.on('disconnect', () => handleAccountsChanged([]));
         }
 
-        web3 = new Web3(provider);
         const accounts = await web3.eth.getAccounts();
         if (!accounts || accounts.length === 0) {
             throw new Error('No accounts found. Please check your wallet connection.');
