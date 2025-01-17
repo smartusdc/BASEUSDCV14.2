@@ -1433,92 +1433,58 @@ async function connectWallet() {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         let provider;
 
-        if (isMobile) {
-            const WalletConnectProvider = window.WalletConnectProvider.default;
-            provider = new WalletConnectProvider({
-                rpc: {
-                    8453: 'https://mainnet.base.org'
-                },
-                chainId: 8453,
-                bridge: 'https://bridge.walletconnect.org',
-                qrcodeModalOptions: {
-                    desktopLinks: [],
-                    mobileLinks: [
-                        "metamask",
-                        "trust",
-                        "rainbow",
-                        "ledger",
-                        "coinbase"
-                    ],
-                    showQrcodeModal: true
-                }
-            });
-
+        // MetaMaskまたはその他のイーサリアムプロバイダーの確認
+        if (window.ethereum) {
+            provider = window.ethereum;
             try {
-                await provider.enable();
+                await provider.request({ method: 'eth_requestAccounts' });
                 web3 = new Web3(provider);
-                
-                provider.on('accountsChanged', handleAccountsChanged);
-                provider.on('chainChanged', (chainId) => {
-                    const hexChainId = '0x' + Number(chainId).toString(16);
-                    handleChainChanged(hexChainId);
-                });
-                provider.on('disconnect', () => {
-                    handleAccountsChanged([]);
-                    provider.disconnect();
-                });
             } catch (error) {
-                if (error.message.includes('User closed')) {
-                    throw new Error('Wallet connection cancelled. Please try again.');
-                }
-                throw error;
+                throw new Error('Wallet connection was rejected');
             }
-        } else {
-            provider = detectEthereumProvider();
-            if (!provider) {
-                provider = new WalletConnectProvider({
-                    rpc: {
-                        8453: 'https://mainnet.base.org'
-                    },
-                    chainId: 8453,
-                    bridge: 'https://bridge.walletconnect.org',
-                    qrcodeModalOptions: {
-                        desktopLinks: [],
-                        mobileLinks: [
-                            "metamask",
-                            "trust",
-                            "rainbow",
-                            "ledger",
-                            "coinbase"
-                        ],
+        }
+        // MetaMaskが利用できない場合のWalletConnect処理
+        else {
+            try {
+                // WalletConnectの初期化
+                provider = await WalletConnect.init({
+                    projectId: "YOUR_PROJECT_ID", // WalletConnectのプロジェクトID
+                    chains: [8453], // BASE Network
+                    showQrModal: true,
+                    metadata: {
+                        name: 'BASEUSDC.COM',
+                        description: 'BASEUSDC Staking Platform',
+                        url: window.location.host,
+                        icons: ['https://baseusdc.com/logo.png']
                     }
                 });
-                await provider.enable();
-            } else {
-                await provider.request({ method: 'eth_requestAccounts' });
+
+                await provider.connect();
+                web3 = new Web3(provider);
+            } catch (error) {
+                if (error.message.includes('User rejected')) {
+                    throw new Error('Wallet connection was cancelled');
+                }
+                throw new Error('Unable to connect wallet. Please try again.');
             }
-            
-            web3 = new Web3(provider);
-            provider.on('accountsChanged', handleAccountsChanged);
-            provider.on('chainChanged', handleChainChanged);
-            provider.on('disconnect', () => handleAccountsChanged([]));
         }
 
+        // 接続後の処理
         const accounts = await web3.eth.getAccounts();
         if (!accounts || accounts.length === 0) {
-            throw new Error('No accounts found. Please check your wallet connection.');
+            throw new Error('No accounts found');
         }
-        
+
         userAddress = accounts[0];
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-        
+
         await checkAndSwitchNetwork();
         onConnect();
         showAlert('Wallet connected successfully!', 'success');
     } catch (error) {
         console.error("Connection error:", error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
+        showAlert(error.message, 'error');
     } finally {
         showLoading(false);
     }
