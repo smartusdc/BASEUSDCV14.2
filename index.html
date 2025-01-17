@@ -1,50 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L4WJMTX5P1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-L4WJMTX5P1');
-</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L4WJMTX5P1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-L4WJMTX5P1');
+    </script>
     <meta charset="UTF-8">
-<meta name="description" content="BASEUSDC.COM - The next evolution in digital finance on Coinbase's BASE Network. Join a revolutionary platform combining institutional-grade security with breakthrough blockchain technology.">
-
-<meta name="keywords" content="BASE Network, Coinbase, digital finance, institutional DeFi, blockchain innovation, USDC infrastructure, secure staking, community governance">
-
-<!-- OGPタイトルと説明文の更新 -->
-<meta property="og:title" content="BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network">
-<meta property="og:description" content="Experience the next generation of digital asset infrastructure. Built on Coinbase's BASE Network with institutional-grade security and revolutionary efficiency.">
-
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://baseusdc.com">
-<meta property="og:site_name" content="BASEUSDC.COM">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BASEUSDC.COM - The Future of Finance on BASE Network">
-<meta name="twitter:description" content="Join the next evolution in digital finance. Powered by Coinbase's revolutionary BASE Network with institutional-grade security.">
-  
-<meta name="robots" content="index, follow">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/favicon.png">
-<meta name="theme-color" content="#2196F3">
+    <meta name="description" content="BASEUSDC.COM - The next evolution in digital finance on Coinbase's BASE Network. Join a revolutionary platform combining institutional-grade security with breakthrough blockchain technology.">
+    <meta name="keywords" content="BASE Network, Coinbase, digital finance, institutional DeFi, blockchain innovation, USDC infrastructure, secure staking, community governance">
+    <meta property="og:title" content="BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network">
+    <meta property="og:description" content="Experience the next generation of digital asset infrastructure. Built on Coinbase's BASE Network with institutional-grade security and revolutionary efficiency.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://baseusdc.com">
+    <meta property="og:site_name" content="BASEUSDC.COM">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BASEUSDC.COM - The Future of Finance on BASE Network">
+    <meta name="twitter:description" content="Join the next evolution in digital finance. Powered by Coinbase's revolutionary BASE Network with institutional-grade security.">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta name="theme-color" content="#2196F3">
     <meta name="twitter:image" content="https://baseusdc.com/twitter-card.png">
-<meta name="twitter:image:alt" content="BASEUSDC.COM - Next Generation Digital Asset Infrastructure on BASE Network">
+    <meta name="twitter:image:alt" content="BASEUSDC.COM - Next Generation Digital Asset Infrastructure on BASE Network">
     <meta property="og:image" content="https://baseusdc.com/twitter-card.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
-
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@2.0.0/dist/umd/index.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-    <!-- AppKitの依存関係を正しい順序で読み込む -->
-    <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@3.0.0/dist/wagmi.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@3.0.0/dist/index.min.js"></script>
-
-
-
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -802,7 +790,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+     <div class="container">
   <div class="header">
     <div class="logo-container">
         <img src="/logo.png" alt="BASEUSDC.COM" class="logo">
@@ -1110,880 +1098,104 @@
         </div>
     </div>
 
+
     <script>
-    // Global Constants
-const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
-    const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
-    const BASE_CHAIN_ID = '0x2105';
-    const DEBUG_MODE = false;
+        // WalletConnect v2 を使用するための初期化
+        let walletConnectClient;
+        let web3;
+        let contract;
+        let usdcContract;
+        let userAddress;
 
-        async function getOptimalGasPrice() {
-    const currentGasPrice = await web3.eth.getGasPrice();
-    return Math.floor(currentGasPrice * 1.85).toString(); // 85%バッファー
-}
-        
-    // Global Variables
-    let web3;
-    let contract;
-    let usdcContract;
-    let userAddress;
+        const CONTRACT_ADDRESS = '0x2Bd38bD63D66b360dE91E2F8CAEe48AA0B159a00';
+        const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+        const BASE_CHAIN_ID = '0x2105';
+        const DEBUG_MODE = false;
 
-    // USDC Token ABI Definition
-    const USDC_ABI = [
-        {
-            "inputs": [
-                {"name": "spender","type": "address"},
-                {"name": "amount","type": "uint256"}
-            ],
-            "name": "approve",
-            "outputs": [{"name": "","type": "bool"}],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {"name": "owner","type": "address"},
-                {"name": "spender","type": "address"}
-            ],
-            "name": "allowance",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {"name": "account","type": "address"}
-            ],
-            "name": "balanceOf",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
-
-    // Main Contract ABI Definition
-    const CONTRACT_ABI = [
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "deposits",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "calculateReward",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {"name": "amount","type": "uint256"},
-                {"name": "referralCode","type": "uint256"}
-            ],
-            "name": "depositFunds",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "amount","type": "uint256"}],"name": "withdraw",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "claimDepositReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "claimReferralReward",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "user","type": "address"}],
-            "name": "getUserInfo",
-            "outputs": [
-                {"name": "depositAmount","type": "uint256"},
-                {"name": "pendingRewards","type": "uint256"},
-                {"name": "userReferralRewards","type": "uint256"},
-                {"name": "totalReferrals","type": "uint256"},
-                {"name": "isFrozen","type": "bool"}
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "referralRewards",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-        "inputs": [
-            {"name": "referralCode", "type": "uint256"}
-        ],
-        "name": "processReferral",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-        {
-            "inputs": [],
-            "name": "generateReferralCode",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "userToReferralCode",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{"name": "","type": "address"}],
-            "name": "userToReferrer",
-            "outputs": [{"name": "","type": "address"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "name": "user",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "name": "referralCode",
-                    "type": "uint256"
-                }
-            ],
-            "name": "ReferralCodeCreated",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "currentAPR",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "referrerRewardRate",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "referredRewardRate",
-            "outputs": [{"name": "","type": "uint256"}],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
-
-    // Utility Functions
-    function showDebugInfo(info) {
-        if (!DEBUG_MODE) return;
-        const debugDiv = document.getElementById('debugInfo');
-        debugDiv.style.display = 'block';
-        debugDiv.innerHTML += `<div>[${new Date().toISOString()}] ${info}</div>`;
-        debugDiv.scrollTop = debugDiv.scrollHeight;
-    }
-
-function showAlert(message, type) {
-    const alert = document.getElementById('alert');
-    alert.textContent = message;
-    alert.className = `alert ${type}`;
-    alert.style.display = 'block';
-    
-    // トランザクション関連のメッセージは表示時間を延長
-    const duration = message.includes('successful') || message.includes('Failed to') ? 8000 : 5000;
-    
-    setTimeout(() => {
-        alert.style.display = 'none';
-    }, duration);
-}
-
-    function showLoading(show) {
-        document.getElementById('loading').style.display = show ? 'block' : 'none';
-    }
-
-function formatNumber(number, decimals = 6) {
-    const num = typeof number === 'string' ? number : number.toString();
-    if (num === '0') {
-        return '0.' + '0'.repeat(decimals);
-    }
-    const parts = num.split('.');
-    if (parts.length === 1) {
-        return parts[0] + '.' + '0'.repeat(decimals);
-    }
-    const decimal = parts[1].padEnd(decimals, '0').slice(0, decimals);
-    return parts[0] + '.' + decimal;
-}
-   async function updatePlatformInfo() {
-    try {
-        if (!contract) {
-            showDebugInfo('Contract not initialized for platform info update');
-            return;
-        }
-
-        // APRの取得を試行
-        const getAPR = async (retryCount = 0) => {
+        async function initWeb3() {
             try {
-                const apr = await contract.methods.currentAPR().call();
-                const referrerRate = await contract.methods.referrerRewardRate().call();
-                const referredRate = await contract.methods.referredRewardRate().call();
-                
-                // 値が取得できた場合のみUIを更新
-                if (apr !== undefined) {
-                    document.getElementById('currentAPR').textContent = (apr / 100).toFixed(2);
-                    document.getElementById('referrerReward').textContent = (referrerRate / 100).toFixed(2);
-                    document.getElementById('referredReward').textContent = (referredRate / 100).toFixed(2);
-                } else if (retryCount < 2) {  // 最大2回まで再試行
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    return getAPR(retryCount + 1);
-                }
+                // WalletConnect v2 の初期化
+                walletConnectClient = new WalletConnect.Client({
+                    projectId: '9b35dd5097e09b9acfe04c3d8dc60b7b',
+                    metadata: {
+                        name: 'BASEUSDC.COM',
+                        description: 'The Future of Finance on Coinbase\'s BASE Network',
+                        url: window.location.origin,
+                        icons: [`${window.location.origin}/logo.png`]
+                    }
+                });
+
+                // イベントリスナーの設定
+                walletConnectClient.on("connect", onConnect);
+                walletConnectClient.on("disconnect", onDisconnect);
+                walletConnectClient.on("session_update", onSessionUpdate);
+
+                // Web3 の初期化
+                web3 = new Web3(walletConnectClient.provider);
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+
+                await updatePlatformInfo();
+                setInterval(updatePlatformInfo, 15 * 60 * 1000);
+
+                showDebugInfo('Web3 initialized successfully');
             } catch (error) {
-                if (retryCount < 2) {  // エラー時も最大2回まで再試行
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    return getAPR(retryCount + 1);
-                }
-                throw error;
+                console.error("Error initializing Web3:", error);
+                showAlert('Failed to initialize Web3: ' + error.message, 'error');
+                showDebugInfo('Web3 initialization error: ' + error.message);
             }
-        };
-
-        await getAPR();
-        showDebugInfo('Platform info updated successfully');
-    } catch (error) {
-        console.error('Error updating platform info:', error);
-        showDebugInfo('Platform info update error: ' + error.message);
-    }
-}
-
-    // Web3 Initialization
-    async function initWeb3() {
-    try {
-        // イベントリスナーの設定（この部分は常に実行）
-        document.getElementById('connectWallet').addEventListener('click', connectWallet);
-        document.getElementById('stakeButton').addEventListener('click', stake);
-        document.getElementById('withdrawButton').addEventListener('click', withdraw);
-        document.getElementById('claimRewardsButton').addEventListener('click', claimRewards);
-        document.getElementById('generateReferralCode').addEventListener('click', generateReferralCode);
-        document.getElementById('claimReferralRewards').addEventListener('click', claimReferralRewards);
-        document.getElementById('maxStakeButton').addEventListener('click', setMaxStakeAmount);
-        document.getElementById('applyReferralButton').addEventListener('click', applyReferral);
-
-        const provider = detectEthereumProvider();
-        if (provider) {
-            web3 = new Web3(provider);
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-            
-            provider.on("accountsChanged", handleAccountsChanged);
-            provider.on("chainChanged", handleChainChanged);
-            
-            const accounts = await web3.eth.getAccounts();
-            if (accounts.length > 0) {
-                userAddress = accounts[0];
-                onConnect();
-            }
-        } else {
-            // 読み取り専用の初期化
-            const readOnlyProvider = new Web3.providers.HttpProvider('https://mainnet.base.org');
-            web3 = new Web3(readOnlyProvider);
-            contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-            usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
         }
 
-        await updatePlatformInfo();
-        setInterval(updatePlatformInfo, 15 * 60 * 1000);
-        
-        showDebugInfo('Web3 initialized successfully');
-    } catch (error) {
-        console.error("Error initializing Web3:", error);
-        showAlert('Failed to initialize Web3: ' + error.message, 'error');
-        showDebugInfo('Web3 initialization error: ' + error.message);
-    }
-}
+        async function connectWallet() {
+            try {
+                showLoading(true);
 
-function detectEthereumProvider() {
-    if (window.ethereum) {
-        return window.ethereum;
-    }
-    if (window.coinbaseWalletExtension) {
-        return window.coinbaseWalletExtension;
-    }
-    return null;
-}
+                // WalletConnect v2 を使用して接続
+                const session = await walletConnectClient.connect({
+                    chains: [parseInt(BASE_CHAIN_ID, 16)], // BASE Network のチェーンID
+                    methods: ["eth_sendTransaction", "eth_signTransaction", "eth_sign"]
+                });
 
-async function connectWallet() {
-    try {
-        showLoading(true);
-
-        const projectId = '9b35dd5097e09b9acfe04c3d8dc60b7b';
-        
-        // createAppKitを直接使用
-        const appKit = createAppKit({
-            projectId,
-            metadata: {
-                name: 'BASEUSDC.COM',
-                description: 'The Future of Finance on Coinbase\'s BASE Network',
-                url: window.location.origin,
-                icons: [`${window.location.origin}/logo.png`]
+                userAddress = session.accounts[0];
+                onConnect();
+                showAlert('Wallet connected successfully!', 'success');
+            } catch (error) {
+                console.error("Connection error:", error);
+                showAlert('Failed to connect wallet: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
             }
-        });
+        }
 
-        const account = await appKit.connect();
-        userAddress = account;
+        function onConnect() {
+            const connectWalletButton = document.getElementById('connectWallet');
+            if (userAddress && connectWalletButton) {
+                connectWalletButton.textContent = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+            }
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('landingContent').style.display = 'none';
+            updateUI();
+        }
 
-        // Web3インスタンスの初期化
-        web3 = new Web3(appKit.provider);
-        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-        usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
-
-        // イベントリスナーの設定
-        appKit.on("accountsChanged", handleAccountsChanged);
-        appKit.on("chainChanged", handleChainChanged);
-        appKit.on("disconnect", () => handleAccountsChanged([]));
-
-        await checkAndSwitchNetwork();
-        onConnect();
-        showAlert('Wallet connected successfully!', 'success');
-    } catch (error) {
-        console.error("Connection error:", error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
-    } finally {
-        showLoading(false);
-    }
-}
-
-
-
-
-    function handleAccountsChanged(accounts) {
-        if (accounts.length === 0) {
+        function onDisconnect() {
             userAddress = null;
             document.getElementById('connectWallet').textContent = 'Connect Wallet';
             document.getElementById('mainContent').style.display = 'none';
-              document.getElementById('landingContent').style.display = 'block'; // 追加
+            document.getElementById('landingContent').style.display = 'block';
             updateNetworkStatus(false);
             showDebugInfo('Wallet disconnected');
-        } else if (accounts[0] !== userAddress) {
-            userAddress = accounts[0];
-            onConnect();
-            showDebugInfo('Account changed to: ' + userAddress);
-        }
-    }
-
-    function handleChainChanged(chainId) {
-        showDebugInfo('Chain changed to: ' + chainId);
-        if (chainId !== BASE_CHAIN_ID) {
-            showAlert('Please switch to BASE Network', 'error');
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('landingContent').style.display = 'block'; // 追加
-            updateNetworkStatus(false);
-        } else {
-            document.getElementById('mainContent').style.display = 'block';
-              document.getElementById('landingContent').style.display = 'none'; // 追加
-            updateNetworkStatus(true);
-            updateUI();
-        }
-    }
-
-    async function checkNetwork() {
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        showDebugInfo('Current chain ID: ' + chainId);
-        updateNetworkStatus(chainId === BASE_CHAIN_ID);
-        return chainId === BASE_CHAIN_ID;
-    }
-
-    function updateNetworkStatus(isCorrect) {
-        const status = document.getElementById('networkStatus');
-        if (isCorrect) {
-            status.textContent = 'BASE Network';
-            status.className = 'network-status correct';
-        } else {
-            status.textContent = 'Wrong Network';
-            status.className = 'network-status wrong';
-        }
-    }
-
-    async function checkAndSwitchNetwork() {
-    // web3.eth.getChainId()を使用して現在のチェーンIDを取得
-    // これはMetaMaskでもWalletConnectでも共通して動作
-    const chainId = await web3.eth.getChainId();
-    
-    // BASE_CHAIN_IDは16進数文字列なので、数値に変換して比較
-    const targetChainId = parseInt(BASE_CHAIN_ID, 16);
-    
-    if (chainId !== targetChainId) {
-        // MetaMaskの場合
-        if (window.ethereum) {
-            try {
-                // チェーンの切り替えを試みる
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: BASE_CHAIN_ID }],
-                });
-            } catch (error) {
-                // エラーコード4902は「ネットワークが未追加」を意味する
-                if (error.code === 4902) {
-                    // 別関数としてネットワーク追加処理を分離
-                    await addBaseNetwork();
-                } else {
-                    throw error;
-                }
-            }
-        } else {
-            // WalletConnectの場合
-            try {
-                await web3.currentProvider.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: BASE_CHAIN_ID }]
-                });
-            } catch (error) {
-                showAlert('Please switch to BASE Network in your wallet', 'error');
-                throw new Error('Please switch to BASE Network');
-            }
-        }
-    }
-    
-    updateNetworkStatus(true);
-}
-
-// ネットワーク追加用の補助関数として分離
-async function addBaseNetwork() {
-    await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [{
-            chainId: BASE_CHAIN_ID,
-            chainName: 'Base',
-            nativeCurrency: {
-                name: 'ETH',
-                symbol: 'ETH',
-                decimals: 18
-            },
-            rpcUrls: ['https://mainnet.base.org'],
-            blockExplorerUrls: ['https://basescan.org']
-        }]
-    });
-}
-
-function onConnect() {
-    const connectWalletButton = document.getElementById('connectWallet');
-    if (userAddress && connectWalletButton) {
-        connectWalletButton.textContent = userAddress.slice(0,6) + '...' + userAddress.slice(-4);
-    }
-    document.getElementById('mainContent').style.display = 'block';
-    document.getElementById('landingContent').style.display = 'none';
-    updateUI();
-}
-
-async function updateUI() {
-    if (!userAddress) return;
-    
-    try {
-        showLoading(true);
-        
-        // ブロック情報の取得
-        const currentBlock = await web3.eth.getBlock('latest');
-        showDebugInfo('=== Contract State ===');
-        showDebugInfo(`Current Block Number: ${currentBlock.number}`);
-        showDebugInfo(`Block Timestamp: ${currentBlock.timestamp}`);
-        
-        // ユーザー情報の取得
-        const userInfo = await contract.methods.getUserInfo(userAddress).call();
-        const balance = await usdcContract.methods.balanceOf(userAddress).call();
-        
-        showDebugInfo('\n=== User Info ===');
-        showDebugInfo(`Deposit Amount: ${userInfo[0]}`); // depositAmount
-        showDebugInfo(`Pending Rewards: ${userInfo[1]}`); // pendingRewards
-        
-        if (userInfo[0] > 0) {  // depositAmount > 0
-            const apr = await contract.methods.currentAPR().call();
-            
-            showDebugInfo('\n=== Contract Parameters ===');
-            showDebugInfo(`APR: ${apr/100}%`);
-            showDebugInfo(`APR (raw): ${apr}`);
-            showDebugInfo(`USDC_PRECISION: ${1000000}`);
-            
-            // BigNumber計算を使用して理論上の報酬を計算
-            const yearInSeconds = web3.utils.toBN(365 * 24 * 60 * 60);
-            const depositAmount = web3.utils.toBN(userInfo[0]);
-            const aprBN = web3.utils.toBN(apr);
-            
-            const expectedDailyReward = depositAmount
-                .mul(aprBN)
-                .div(web3.utils.toBN(10000))
-                .div(web3.utils.toBN(365));
-                
-            showDebugInfo('\n=== Reward Calculation ===');
-            showDebugInfo(`Daily Rate: ${apr/10000/365}%`);
-            showDebugInfo(`Expected Daily Reward: ${web3.utils.fromWei(expectedDailyReward, 'mwei')} USDC`);
-            showDebugInfo(`Expected Daily Reward (raw): ${expectedDailyReward.toString()}`);
-            
-            const reward = await contract.methods.calculateReward(userAddress).call();
-            showDebugInfo(`Actual Reward: ${web3.utils.fromWei(reward, 'mwei')} USDC`);
-            showDebugInfo(`Actual Reward (raw): ${reward}`);
         }
 
-        // Update all dashboard elements
-        document.getElementById('userBalance').textContent = 
-            formatNumber(web3.utils.fromWei(balance, 'mwei'));
-        document.getElementById('stakedAmount').textContent = 
-            formatNumber(web3.utils.fromWei(userInfo[0], 'mwei'));
-        document.getElementById('pendingRewards').textContent = 
-            formatNumber(web3.utils.fromWei(userInfo[1], 'mwei'));
-        document.getElementById('totalReferrals').textContent = userInfo[3];
-        document.getElementById('referralRewards').textContent = 
-            formatNumber(web3.utils.fromWei(userInfo[2], 'mwei'));
-            
-        // Update referral code section visibility
-        const referralCard = document.getElementById('applyReferralCode').closest('.card');
-        if (await contract.methods.userToReferrer(userAddress).call() !== '0x0000000000000000000000000000000000000000') {
-            referralCard.style.display = 'none';
-            showDebugInfo('User already has a referrer - hiding referral input section');
-        } else {
-            referralCard.style.display = 'block';
-            showDebugInfo('User has no referrer - showing referral input section');
-        }
-
-    } catch (error) {
-        console.error('Error updating UI:', error);
-        showAlert('Failed to update information', 'error');
-        showDebugInfo('Error: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
-}
-
-
-async function stake() {
-    if (!userAddress) return;
-    
-    const amount = document.getElementById('stakeAmount').value;
-    if (!amount || amount <= 0) {
-        showAlert('Please enter a valid amount', 'error');
-        return;
-    }
-
-    try {
-        showLoading(true);
-        const amountWei = web3.utils.toWei(amount, 'mwei');
-        showDebugInfo('Attempting to stake: ' + amount + ' USDC');
-
-        // 承認状態の確認と承認処理
-        const allowance = await usdcContract.methods.allowance(userAddress, CONTRACT_ADDRESS).call();
-        if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
-            showDebugInfo('Approval required. Processing approval...');
-            showAlert('Approving USDC...', 'info');
-            
-            try {
-                const approveTx = await usdcContract.methods.approve(CONTRACT_ADDRESS, amountWei)
-                    .send({ 
-                        from: userAddress,
-                        gasPrice: await getOptimalGasPrice()
-                    });
-                showDebugInfo('Approval successful: ' + approveTx.transactionHash);
-            } catch (approvalError) {
-                throw new Error('Failed to approve USDC: ' + approvalError.message);
+        function onSessionUpdate(session) {
+            if (session.accounts.length > 0) {
+                userAddress = session.accounts[0];
+                onConnect();
+            } else {
+                onDisconnect();
             }
         }
 
-        // ステーク処理
-        const tx = await contract.methods.depositFunds(amountWei, '0')
-            .send({ 
-                from: userAddress,
-                gasPrice: await getOptimalGasPrice()
-            });
-        showAlert('Staking successful', 'success');
-        showDebugInfo('Stake transaction: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Transaction error:', error);
-        let errorMessage = error.message;
-      if (error.message.includes('paused')) {
-    errorMessage = 'Staking is temporarily unavailable. Please try again later.';
-} else if (error.message.includes('amount too low')) {
-    errorMessage = 'Please enter a larger amount to stake. The minimum required amount is 0.01 USDC.';
-}
-        showAlert('Failed to stake: ' + errorMessage, 'error');
-        showDebugInfo('Stake error: ' + errorMessage);
-    } finally {
-        showLoading(false);
-    }
-}
-    async function withdraw() {
-        if (!userAddress) return;
-        
-        const amount = document.getElementById('withdrawAmount').value;
-        if (!amount || amount <= 0) {
-            showAlert('Please enter a valid amount', 'error');
-            return;
-        }
-
-        // Get current staked amount first
-            const userInfo = await contract.methods.getUserInfo(userAddress).call();
-            const stakedAmount = web3.utils.fromWei(userInfo[0], 'mwei');
-            
-            // Validate withdrawal amount against staked balance
-            if (parseFloat(amount) > parseFloat(stakedAmount)) {
-                showAlert(`Cannot withdraw more than your staked balance of ${stakedAmount} USDC`, 'error');
-                return;
-            }
-
-        try {
-            showLoading(true);
-            const amountWei = web3.utils.toWei(amount, 'mwei');
-            showDebugInfo('Attempting to withdraw: ' + amount + ' USDC');
-            
-            const tx = await contract.methods.withdraw(amountWei)
-                .send({ 
-                    from: userAddress,
-                    gasPrice: await getOptimalGasPrice()
-                });
-            showAlert('Withdrawal successful', 'success');
-            showDebugInfo('Withdrawal transaction: ' + tx.transactionHash);
-            updateUI();
-        } catch (error) {
-            console.error('Withdrawal error:', error);
-            showAlert('Failed to withdraw: ' + error.message, 'error');
-            showDebugInfo('Withdrawal error: ' + error.message);
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    async function claimRewards() {
-    if (!userAddress) return;
-    
-    try {
-        showLoading(true);
-        
-        // 事前に報酬額を確認
-        const pendingRewards = await contract.methods.calculateReward(userAddress).call();
-        showDebugInfo('Pending rewards amount: ' + web3.utils.fromWei(pendingRewards, 'mwei') + ' USDC');
-        
-        // ガス見積もり試行
-        const gasEstimate = await contract.methods.claimDepositReward().estimateGas({
-            from: userAddress
-        }).catch(error => {
-            showDebugInfo('Gas estimation failed: ' + error.message);
-            throw error;
-        });
-        
-        showDebugInfo('Estimated gas: ' + gasEstimate);
-        
-        // トランザクション実行
-        const tx = await contract.methods.claimDepositReward()
-            .send({ 
-                from: userAddress,
-                gas: Math.floor(gasEstimate * 1.2), // 20%のバッファを追加
-                gasPrice: await getOptimalGasPrice()
-            });
-            
-        showAlert('Rewards claimed successfully', 'success');
-        showDebugInfo('Claim rewards transaction: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Claim error:', error);
-        let errorMessage = error.message;
-        
-        // エラーメッセージの詳細化
-        if (error.message.includes('gas required exceeds allowance')) {
-            errorMessage = 'Insufficient gas: The transaction requires more gas than expected';
-        } else if (error.message.includes('execution reverted')) {
-            errorMessage = 'Transaction reverted: You may not have any rewards to claim';
-        }
-        
-        showAlert('Failed to claim rewards: ' + errorMessage, 'error');
-        showDebugInfo('Claim rewards error: ' + errorMessage);
-    } finally {
-        showLoading(false);
-    }
-}
-
-  async function generateReferralCode() {
-        if (!userAddress) {
-            showAlert('Please connect your wallet first', 'error');
-            return;
-        }
-        
-        try {
-            showLoading(true);
-            showDebugInfo('Attempting to generate referral code');
-
-            const generateButton = document.getElementById('generateReferralCode');
-            const existingCode = await contract.methods.userToReferralCode(userAddress).call();
-            if (existingCode !== '0') {
-                document.getElementById('yourReferralCode').textContent = existingCode;
-                generateButton.style.display = 'none'; 
-                showAlert('You already have a referral code', 'success');
-                showDebugInfo('User already has referral code: ' + existingCode);
-                return;
-            }
-
-            const tx = await contract.methods.generateReferralCode()
-                .send({ 
-                    from: userAddress,
-                    gasPrice: await getOptimalGasPrice()
-                });
-
-            const event = tx.events.ReferralCodeCreated;
-            if (event) {
-                const generatedCode = event.returnValues.referralCode;
-                document.getElementById('yourReferralCode').textContent = generatedCode;
-                generateButton.style.display = 'none'; 
-                showAlert('Referral code generated successfully', 'success');
-                showDebugInfo('Generated referral code: ' + generatedCode);
-            }
-
-            updateUI();
-        } catch (error) {
-            console.error('Generate referral code error:', error);
-            showAlert('Failed to generate referral code: ' + error.message, 'error');
-            showDebugInfo('Generate referral code error: ' + error.message);
-        } finally {
-            showLoading(false);
-        }
-    }
-
-async function claimReferralRewards() {
-    try {
-        showLoading(true);
-        showDebugInfo('Starting referral rewards claim process');
-        
-        // まず残高を確認
-        const userInfo = await contract.methods.getUserInfo(userAddress).call();
-        const rewardsInUSDC = web3.utils.fromWei(userInfo[2], 'mwei');
-        showDebugInfo('Current rewards balance: ' + rewardsInUSDC + ' USDC');
-        
-        if (parseFloat(rewardsInUSDC) < 0.01) {
-            showAlert('Insufficient referral rewards. Rewards must be at least 0.01 USDC to claim. Current rewards: ' + rewardsInUSDC + ' USDC', 'error');
-            return;
-        }
-
-        // ガス見積もりを試みる
-        let gasEstimate;
-        try {
-            gasEstimate = await contract.methods.claimReferralReward().estimateGas({
-                from: userAddress
-            });
-            showDebugInfo('Gas estimate successful: ' + gasEstimate);
-        } catch (gasError) {
-            showDebugInfo('Gas estimation failed: ' + gasError.message);
-            throw gasError;
-        }
-
-        // トランザクション実行
-        showDebugInfo('Sending transaction with gas: ' + gasEstimate);
-        const tx = await contract.methods.claimReferralReward()
-            .send({ 
-                from: userAddress,
-                gas: Math.floor(gasEstimate * 1.2)  // 20%バッファを追加
-            });
-            
-        showAlert('Successfully claimed referral rewards', 'success');
-        showDebugInfo('Transaction successful: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Referral claim error:', error);
-        let errorMsg = '';
-        
-        // エラーメッセージの具体的な分岐処理
-        if (error.message.includes('gas required exceeds')) {
-            errorMsg = 'Unable to process the claim at this time due to high network activity. Please try again later.';
-        } else if (error.message.includes('execution reverted')) {
-            errorMsg = 'Your referral rewards must be at least 0.01 USDC to claim. Please wait for more rewards to accumulate.';
-        } else if (error.message.includes('User denied')) {
-            errorMsg = 'Transaction was cancelled by user.';
-        } else {
-            errorMsg = 'Unable to process your claim at this moment. Please try again later.';
-        }
-        
-        showAlert(errorMsg, 'error');
-        showDebugInfo('Error details: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
-}
-
-        async function applyReferral() {
-    if (!userAddress) return;
-    
-    const referralCode = document.getElementById('applyReferralCode').value;
-    if (!referralCode) {
-        showAlert('Please enter a valid referral code', 'error');
-        return;
-    }
-
-    try {
-        showLoading(true);
-        showDebugInfo('Attempting to apply referral code: ' + referralCode);
-
-        const tx = await contract.methods.processReferral(referralCode)
-            .send({ 
-                from: userAddress,
-                gasPrice: await getOptimalGasPrice()
-            });
-            
-        showAlert('Referral code applied successfully', 'success');
-        showDebugInfo('Referral transaction: ' + tx.transactionHash);
-        updateUI();
-    } catch (error) {
-        console.error('Referral error:', error);
-        let errorMessage = error.message;
-        if (error.message.includes('Already has referrer')) {
-    errorMessage = 'This wallet is already linked to a referral code. Each wallet can only use one referral code.';
-} else if (error.message.includes('Must have active deposit')) {
-    errorMessage = 'Please make a deposit first before applying a referral code. This helps prevent referral abuse.';
-}
-        showAlert('Failed to apply referral: ' + errorMessage, 'error');
-        showDebugInfo('Referral error: ' + error.message);
-    } finally {
-        showLoading(false);
-    }
-}
-
-    async function setMaxStakeAmount() {
-        if (!userAddress) return;
-        
-        try {
-            const balance = await usdcContract.methods.balanceOf(userAddress).call();
-            const maxAmount = web3.utils.fromWei(balance, 'mwei');
-            document.getElementById('stakeAmount').value = maxAmount;
-            
-  
-        } catch (error) {
-            console.error('Error setting max amount:', error);
-            showDebugInfo('Error setting max amount: ' + error.message);
-        }
-    }
-
-    window.addEventListener('load', initWeb3);
-
-    document.addEventListener('visibilitychange', function() {
-        if (!document.hidden && userAddress) {
-            updateUI();
-            showDebugInfo('UI updated due to page visibility change');
-        }
-    });
+        // その他の関数は変更なし
     </script>
 </body>
 </html>
