@@ -39,8 +39,6 @@
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <!-- 既存のスクリプト -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-    <!-- AppKitの依存関係を正しい順序で読み込む -->
-    <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@3.0.0/dist/wagmi.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@3.0.0/dist/index.min.js"></script>
 
     <style>
@@ -1436,8 +1434,8 @@ async function connectWallet() {
 
         const projectId = '9b35dd5097e09b9acfe04c3d8dc60b7b';
         
-        // AppKitの初期化
-        const appKit = window.AppKit.createAppKit({
+        // createAppKitを直接使用
+        const appKit = createAppKit({
             projectId,
             metadata: {
                 name: 'BASEUSDC.COM',
@@ -1470,6 +1468,7 @@ async function connectWallet() {
         showLoading(false);
     }
 }
+
 
 
 
