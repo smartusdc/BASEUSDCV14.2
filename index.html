@@ -38,10 +38,8 @@
 <meta property="og:image:height" content="630">
 <title>BASEUSDC.COM - The Future of Finance on Coinbase's BASE Network</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.10.0/web3.min.js"></script>
-<script src="https://unpkg.com/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.7/dist/index.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/@reown/appkit-cdn@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -1432,69 +1430,78 @@ function detectEthereumProvider() {
 async function connectWallet() {
     try {
         showLoading(true);
-        showDebugInfo('Initializing wallet connection...');
-
-        // Web3Modal設定
-        const providerOptions = {
-            walletconnect: {
-                package: WalletConnectProvider.default,
-                options: {
-                    rpc: {
-                        8453: "https://mainnet.base.org"
-                    },
-                    chainId: 8453,
-                    network: "base"
+        
+        if (window.ethereum) {
+            try {
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+                userAddress = accounts[0];
+                
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+                
+                window.ethereum.on("accountsChanged", handleAccountsChanged);
+                window.ethereum.on("chainChanged", handleChainChanged);
+                window.ethereum.on("disconnect", () => {
+                    handleAccountsChanged([]);
+                });
+            } catch (err) {
+                throw new Error('Failed to connect to MetaMask: ' + err.message);
+            }
+} else {
+    const providerOptions = {
+        walletconnect: {
+            package: WalletConnectProvider.default,
+            options: {
+                rpc: {
+                    8453: "https://mainnet.base.org"
                 }
             }
-        };
+        }
+    };
 
-        const web3Modal = new Web3Modal({
-            network: "base",
-            cacheProvider: false,
-            providerOptions
-        });
+    const web3Modal = new window.Web3Modal({
+        network: "mainnet", 
+        cacheProvider: false,
+        providerOptions
+    });
 
-        // プロバイダーの取得
+    try {
         const provider = await web3Modal.connect();
-        showDebugInfo('Provider connected');
-
-        // Web3インスタンスの初期化
         web3 = new Web3(provider);
-        
-        // アカウントの取得
+
         const accounts = await web3.eth.getAccounts();
         if (!accounts || accounts.length === 0) {
             throw new Error('No accounts found');
         }
         userAddress = accounts[0];
         
-        // コントラクトインスタンスの初期化
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
         usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
         
-        // イベントリスナーの設定
-        provider.on("accountsChanged", (accounts) => {
-            handleAccountsChanged(accounts);
-            showDebugInfo('Accounts changed');
-        });
-
-        provider.on("chainChanged", (chainId) => {
-            handleChainChanged(chainId);
-            showDebugInfo('Chain changed');
-        });
-
-        provider.on("disconnect", (error) => {
+        provider.on("accountsChanged", handleAccountsChanged);
+        provider.on("chainChanged", handleChainChanged);
+        provider.on("disconnect", () => {
             handleAccountsChanged([]);
-            web3Modal.clearCachedProvider();
-            showDebugInfo('Wallet disconnected');
+            if (provider.disconnect) {
+                provider.disconnect();
+            }
         });
-
-        // ネットワーク確認と切り替え
-        const chainId = await web3.eth.getChainId();
-        if (chainId !== 8453) {
-            await checkAndSwitchNetwork();
+                
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 8453) {
+                    showAlert('Please switch to BASE Network in your wallet', 'error');
+                    throw new Error('Incorrect network');
+                }
+            } catch (err) {
+                throw new Error('Failed to connect with WalletConnect: ' + err.message);
+            }
         }
 
+        showDebugInfo('Wallet connected: ' + userAddress);
+        await checkAndSwitchNetwork();
         onConnect();
         showAlert('Wallet connected successfully!', 'success');
         
@@ -1506,7 +1513,6 @@ async function connectWallet() {
         showLoading(false);
     }
 }
-
 
     function handleAccountsChanged(accounts) {
         if (accounts.length === 0) {
